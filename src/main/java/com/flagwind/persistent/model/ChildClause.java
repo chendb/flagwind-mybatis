@@ -1,10 +1,6 @@
 package com.flagwind.persistent.model;
 
-/**
- * @Description: 子查询项
- * @author chendb
- * @date 2015年10月5日 下午4:07:05
- */
+
 public class ChildClause extends CombineClause {
 
     private static final long serialVersionUID = 5776135358546775949L;

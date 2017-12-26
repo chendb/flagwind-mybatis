@@ -2,16 +2,11 @@ package com.flagwind.persistent.model;
 
 import java.io.Serializable;
 
-/**
- * Pageing
- * 
- * @describe：分页
- * @author：chendb @since：2015-9-16
- */
+
 public class Paging implements Serializable {
 
 	private static final long serialVersionUID = 754828768811350476L;
-	// {{ 私有变量
+
 	// 总条数
 	private Long totalCount;
 	// 页码
@@ -19,9 +14,9 @@ public class Paging implements Serializable {
 	// 每页显示多少条
 	private long pageSize;
 	private boolean enableTotalCount;
-	// }}
 
-	// {{ 构造函数
+
+
 	public Paging() {
 		this(1l, 10l);
 	}
@@ -40,9 +35,8 @@ public class Paging implements Serializable {
 		this.pageIndex = pageIndex;
 		this.enableTotalCount = true;
 	}
-	// }}
 
-	// {{ 公共属性
+
 
 	/** 返回每页的条数 */
 	public Long getTotalCount() {
@@ -89,7 +83,7 @@ public class Paging implements Serializable {
 		this.enableTotalCount = enableTotalCount;
 	}
 
-	// }}
+
 
 
 
