@@ -1,7 +1,7 @@
 package com.flagwind.mybatis.provider.base;
 
-import com.flagwind.mybatis.entity.EntityColumn;
-import com.flagwind.mybatis.entity.MapperHelper;
+import com.flagwind.mybatis.common.MapperResolver;
+import com.flagwind.mybatis.meta.EntityColumn;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.helpers.EntityHelper;
 import com.flagwind.mybatis.provider.MapperTemplate;
@@ -14,8 +14,8 @@ import java.util.Set;
 
 public class BaseInsertProvider extends MapperTemplate {
 
-    public BaseInsertProvider(Class<?> mapperClass, MapperHelper mapperHelper) {
-        super(mapperClass, mapperHelper);
+    public BaseInsertProvider(Class<?> mapperClass, MapperResolver mapperResolver) {
+        super(mapperClass, mapperResolver);
     }
 
     /**

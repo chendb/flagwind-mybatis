@@ -1,6 +1,6 @@
 package com.flagwind.mybatis.spring;
 
-import com.flagwind.mybatis.entity.MapperHelper;
+import com.flagwind.mybatis.common.MapperResolver;
 import com.flagwind.mybatis.utils.StringUtil;
 import com.flagwind.persistent.AbstractRepository;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -10,21 +10,21 @@ import org.springframework.beans.factory.support.GenericBeanDefinition;
 import java.util.Properties;
 
 public class MapperScannerConfigurer extends org.mybatis.spring.mapper.MapperScannerConfigurer {
-    private MapperHelper mapperHelper = new MapperHelper();
+    private MapperResolver mapperResolver = new MapperResolver();
 
     public void setMarkerInterface(Class<?> superClass) {
         super.setMarkerInterface(superClass);
         if (AbstractRepository.class.isAssignableFrom(superClass)) {
-            mapperHelper.registerMapper(superClass);
+            mapperResolver.registerMapper(superClass);
         }
     }
 
-    public MapperHelper getMapperHelper() {
-        return mapperHelper;
+    public MapperResolver getMapperResolver() {
+        return mapperResolver;
     }
 
-    public void setMapperHelper(MapperHelper mapperHelper) {
-        this.mapperHelper = mapperHelper;
+    public void setMapperResolver(MapperResolver mapperResolver) {
+        this.mapperResolver = mapperResolver;
     }
 
     /**
@@ -33,7 +33,7 @@ public class MapperScannerConfigurer extends org.mybatis.spring.mapper.MapperSca
      * @param properties
      */
     public void setProperties(Properties properties) {
-        mapperHelper.setProperties(properties);
+        mapperResolver.setProperties(properties);
     }
 
     /**
@@ -45,7 +45,7 @@ public class MapperScannerConfigurer extends org.mybatis.spring.mapper.MapperSca
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
         super.postProcessBeanDefinitionRegistry(registry);
         //如果没有注册过接口，就注册默认的Mapper接口
-        this.mapperHelper.ifEmptyRegisterDefaultInterface();
+        this.mapperResolver.ifEmptyRegisterDefaultInterface();
         String[] names = registry.getBeanDefinitionNames();
         GenericBeanDefinition definition;
         for (String name : names) {
@@ -55,7 +55,7 @@ public class MapperScannerConfigurer extends org.mybatis.spring.mapper.MapperSca
                 if (StringUtil.isNotEmpty(definition.getBeanClassName())
                         && definition.getBeanClassName().equals("org.mybatis.spring.mapper.MapperFactoryBean")) {
                     definition.setBeanClass(MapperFactoryBean.class);
-                    definition.getPropertyValues().add("mapperHelper", this.mapperHelper);
+                    definition.getPropertyValues().add("mapperResolver", this.mapperResolver);
                 }
             }
         }

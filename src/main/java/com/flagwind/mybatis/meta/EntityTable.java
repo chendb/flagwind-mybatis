@@ -1,4 +1,4 @@
-package com.flagwind.mybatis.entity;
+package com.flagwind.mybatis.meta;
 
 import com.flagwind.mybatis.exceptions.MapperException;
 import org.apache.ibatis.mapping.ResultFlag;
@@ -220,7 +220,7 @@ public class EntityTable {
 	 * 初始化 - Example 会使用
 	 */
 	public void initPropertyMap() {
-		propertyMap = new HashMap<String, EntityColumn>(getEntityClassColumns().size());
+		propertyMap = new HashMap<>(getEntityClassColumns().size());
 		for (EntityColumn column : getEntityClassColumns()) {
 			propertyMap.put(column.getProperty(), column);
 		}

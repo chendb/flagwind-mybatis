@@ -1,11 +1,11 @@
 package com.flagwind.mybatis.provider;
 
-import com.flagwind.mybatis.entity.MapperHelper;
+import com.flagwind.mybatis.common.MapperResolver;
 
 public class EmptyProvider extends MapperTemplate {
 
-    public EmptyProvider(Class<?> mapperClass, MapperHelper mapperHelper) {
-        super(mapperClass, mapperHelper);
+    public EmptyProvider(Class<?> mapperClass, MapperResolver mapperResolver) {
+        super(mapperClass, mapperResolver);
     }
 
     @Override

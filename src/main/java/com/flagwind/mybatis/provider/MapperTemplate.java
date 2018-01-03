@@ -1,10 +1,12 @@
 package com.flagwind.mybatis.provider;
 
-import com.flagwind.mybatis.entity.EntityColumn;
-import com.flagwind.mybatis.entity.EntityTable;
-import com.flagwind.mybatis.entity.MapperHelper;
+import com.flagwind.mybatis.common.MapperResolver;
+import com.flagwind.mybatis.meta.EntityColumn;
+import com.flagwind.mybatis.meta.EntityTable;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.helpers.EntityHelper;
+import com.flagwind.mybatis.swapper.ResultMapSwapper;
+import com.flagwind.mybatis.swapper.ResultMapSwapperHolder;
 import com.flagwind.mybatis.utils.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.mapping.*;
@@ -14,6 +16,8 @@ import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
 import org.apache.ibatis.scripting.xmltags.SqlNode;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -30,11 +34,11 @@ public abstract class MapperTemplate {
     protected Map<String, Method> methodMap = new ConcurrentHashMap<String, Method>();
     protected Map<String, Class<?>> entityClassMap = new ConcurrentHashMap<String, Class<?>>();
     protected Class<?> mapperClass;
-    protected MapperHelper mapperHelper;
+    protected MapperResolver mapperResolver;
 
-    public MapperTemplate(Class<?> mapperClass, MapperHelper mapperHelper) {
+    public MapperTemplate(Class<?> mapperClass, MapperResolver mapperResolver) {
         this.mapperClass = mapperClass;
-        this.mapperHelper = mapperHelper;
+        this.mapperResolver = mapperResolver;
     }
 
     /**
@@ -58,11 +62,11 @@ public abstract class MapperTemplate {
     }
 
     public String getUUID() {
-        return mapperHelper.getConfig().getUUID();
+        return mapperResolver.getConfig().getUUID();
     }
 
     public String getIDENTITY() {
-        return mapperHelper.getConfig().getIDENTITY();
+        return mapperResolver.getConfig().getIDENTITY();
     }
     /**
      * 获取IDENTITY值的表达式
@@ -71,14 +75,14 @@ public abstract class MapperTemplate {
      * @return
      */
     public String getIDENTITY(EntityColumn column) {
-        return MessageFormat.format(mapperHelper.getConfig().getIDENTITY(), column.getSequenceName(), column.getColumn(), column.getProperty(), column.getTable().getName());
+        return MessageFormat.format(mapperResolver.getConfig().getIDENTITY(), column.getSequenceName(), column.getColumn(), column.getProperty(), column.getTable().getName());
     }
     public boolean isBEFORE() {
-        return mapperHelper.getConfig().isBEFORE();
+        return mapperResolver.getConfig().isBEFORE();
     }
 
     public boolean isNotEmpty() {
-        return mapperHelper.getConfig().isNotEmpty();
+        return mapperResolver.getConfig().isNotEmpty();
     }
 
 
@@ -104,11 +108,21 @@ public abstract class MapperTemplate {
      * @param entityClass
      */
     protected void setResultType(MappedStatement ms, Class<?> entityClass) {
+
         EntityTable entityTable = EntityHelper.getEntityTable(entityClass);
-        List<ResultMap> resultMaps = new ArrayList<ResultMap>();
-        resultMaps.add(entityTable.getResultMap(ms.getConfiguration()));
-        MetaObject metaObject = SystemMetaObject.forObject(ms);
-        metaObject.setValue("resultMaps", Collections.unmodifiableList(resultMaps));
+        if (entityClass.isAnnotationPresent(Entity.class) || entityClass.isAnnotationPresent(Table.class)) {
+            ResultMapSwapper swapper = ResultMapSwapperHolder.getSwapper(ms.getConfiguration());
+            ResultMap newResultMap = swapper.reloadResultMap(ms.getResource(), entityClass.getSimpleName(), entityTable.getEntityClass(), mapperResolver.getConfig().getStyle());
+            List<ResultMap> newResultMaps = new ArrayList<>();
+            newResultMaps.add(newResultMap);
+            MetaObject metaObject = SystemMetaObject.forObject(ms);
+            metaObject.setValue("resultMaps", Collections.unmodifiableList(newResultMaps));
+        } else {
+            List<ResultMap> resultMaps = new ArrayList<ResultMap>();
+            resultMaps.add(entityTable.getResultMap(ms.getConfiguration()));
+            MetaObject metaObject = SystemMetaObject.forObject(ms);
+            metaObject.setValue("resultMaps", Collections.unmodifiableList(resultMaps));
+        }
     }
 
     /**
@@ -191,7 +205,7 @@ public abstract class MapperTemplate {
                     if (t.getRawType() == this.mapperClass || this.mapperClass.isAssignableFrom((Class<?>) t.getRawType())) {
                         Class<?> returnType = (Class<?>) t.getActualTypeArguments()[0];
                         //获取该类型后，第一次对该类型进行初始化
-                        EntityHelper.initEntityNameMap(returnType, mapperHelper.getConfig());
+                        EntityHelper.initEntityNameMap(returnType, mapperResolver.getConfig());
                         entityClassMap.put(msId, returnType);
                         return returnType;
                     }
@@ -228,7 +242,7 @@ public abstract class MapperTemplate {
      * @return
      */
     protected String getSeqNextVal(EntityColumn column) {
-        return MessageFormat.format(mapperHelper.getConfig().getSeqFormat(), column.getSequenceName(), column.getColumn(), column.getProperty(), column.getTable().getName());
+        return MessageFormat.format(mapperResolver.getConfig().getSeqFormat(), column.getSequenceName(), column.getColumn(), column.getProperty(), column.getTable().getName());
     }
 
     /**
@@ -242,7 +256,7 @@ public abstract class MapperTemplate {
         String prefix = entityTable.getPrefix();
         if (StringUtil.isEmpty(prefix)) {
             //使用全局配置
-            prefix = mapperHelper.getConfig().getPrefix();
+            prefix = mapperResolver.getConfig().getPrefix();
         }
         if (StringUtil.isNotEmpty(prefix)) {
             return prefix + "." + entityTable.getName();

@@ -1,6 +1,6 @@
 package com.flagwind.mybatis.helpers;
 
-import com.flagwind.mybatis.entity.EntityColumn;
+import com.flagwind.mybatis.meta.EntityColumn;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;

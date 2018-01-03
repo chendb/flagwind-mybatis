@@ -1,6 +1,6 @@
 package com.flagwind.mybatis.utils;
 
-import com.flagwind.mybatis.entity.IDynamicTableName;
+import com.flagwind.mybatis.common.IDynamicTableName;
 import com.flagwind.persistent.model.*;
 
 /**

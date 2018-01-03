@@ -1,7 +1,7 @@
 package com.flagwind.mybatis.helpers;
 
-import com.flagwind.mybatis.entity.EntityColumn;
-import com.flagwind.mybatis.entity.IDynamicTableName;
+import com.flagwind.mybatis.meta.EntityColumn;
+import com.flagwind.mybatis.common.IDynamicTableName;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.utils.StringUtil;
 
