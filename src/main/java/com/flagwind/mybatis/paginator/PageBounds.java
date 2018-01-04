@@ -13,7 +13,7 @@ import com.flagwind.persistent.model.Sorting;
  *  分页查询对象
  *  @author badqiu
  *  @author hunhun
- *  @author miemiedev
+ *  @author chendb
  */
 public class PageBounds extends RowBounds implements Serializable {
     private static final long serialVersionUID = -6414350656252331011L;
@@ -97,6 +97,7 @@ public class PageBounds extends RowBounds implements Serializable {
         this.pageIndex = pageIndex;
     }
 
+    @Override
     public int getLimit() {
         return pageSize;
     }
@@ -121,9 +122,6 @@ public class PageBounds extends RowBounds implements Serializable {
         this.orders = orders;
     }
 
-/*    public Boolean getAsyncTotalCount() {
-        return asyncTotalCount;
-    }*/
 
     public void setAsyncTotalCount(Boolean asyncTotalCount) {
         this.asyncTotalCount = asyncTotalCount;

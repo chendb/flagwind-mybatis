@@ -9,14 +9,24 @@ import java.util.List;
 
 public interface BaseUpdateRepository<E> {
 
+    /**
+     * 单条更新
+     * @param entity 实体
+     * @param <S> 实体类型
+     */
     @UpdateProvider(type = BaseUpdateProvider.class, method = "dynamicSQL")
-    public <S extends E> void update(S entity);
+    <S extends E> void update(S entity);
 
 
-    public <S extends E> void updateList(@Param("_list")List<S> entities);
+    /**
+     * 批量更新
+     * @param entities 实体集
+     * @param <S> 实体类型
+     */
+    <S extends E> void updateList(@Param("_list")List<S> entities);
 
 
     @UpdateProvider(type = BaseUpdateProvider.class, method = "dynamicSQL")
-    public <S extends E> void updatePart(@Param("_map") HashMap<String, Object> map, @Param("_clause")Clause clause);
+    void modify(@Param("_map") HashMap<String, Object> map, @Param("_clause")Clause clause);
 
 }

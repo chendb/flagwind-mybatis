@@ -26,7 +26,13 @@ public class BaseUpdateProvider extends MapperTemplate {
         return sql.toString();
     }
 
-    public String updatePart(MappedStatement ms) {
+    /**
+     * 批量更新部分字段
+     *
+     * @param ms
+     * @return
+     */
+    public String modify(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.updateTable(entityClass, tableName(entityClass)));

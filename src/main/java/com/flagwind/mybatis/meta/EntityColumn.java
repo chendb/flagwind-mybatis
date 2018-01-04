@@ -6,6 +6,7 @@ import org.apache.ibatis.type.TypeHandler;
 
 /**
  * 实体字段对应数据库列的信息
+ * @author chendb
  */
 public class EntityColumn {
 	private EntityTable table;
@@ -19,14 +20,23 @@ public class EntityColumn {
 	private boolean uuid = false;
 	private boolean identity = false;
 	private String generator;
-	//排序
+
+	/**
+	 * 排序
+	 */
 	private String orderBy;
-	//可插入
+
+	/**
+	 * 可插入
+	 */
 	private boolean insertable = true;
-	//可更新
+
+	/**
+	 * 可更新
+	 */
 	private boolean updatable = true;
 
-	private String relationShipTable;
+
 
 	public EntityColumn() {
 	}
@@ -51,10 +61,7 @@ public class EntityColumn {
 	}
 
 	public String getColumn() {
-		if (StringUtils.isBlank(relationShipTable))
 			return column;
-		else
-			return relationShipTable + "." + column;
 	}
 
 	public void setColumn(String column) {
@@ -234,7 +241,8 @@ public class EntityColumn {
 		} else if (this.typeHandler != null) {
 			sb.append(",typeHandler=");
 			sb.append(this.typeHandler.getCanonicalName());
-		} else if (!this.javaType.isArray()) {//当类型为数组时，不设置javaType#103
+			//当类型为数组时，不设置javaType#103
+		} else if (!this.javaType.isArray()) {
 			sb.append(",javaType=");
 			sb.append(javaType.getCanonicalName());
 		}
@@ -247,22 +255,48 @@ public class EntityColumn {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		EntityColumn that = (EntityColumn) o;
 
-		if (id != that.id) return false;
-		if (uuid != that.uuid) return false;
-		if (identity != that.identity) return false;
-		if (table != null ? !table.equals(that.table) : that.table != null) return false;
-		if (property != null ? !property.equals(that.property) : that.property != null) return false;
-		if (column != null ? !column.equals(that.column) : that.column != null) return false;
-		if (javaType != null ? !javaType.equals(that.javaType) : that.javaType != null) return false;
-		if (jdbcType != that.jdbcType) return false;
-		if (typeHandler != null ? !typeHandler.equals(that.typeHandler) : that.typeHandler != null) return false;
-		if (sequenceName != null ? !sequenceName.equals(that.sequenceName) : that.sequenceName != null) return false;
-		if (generator != null ? !generator.equals(that.generator) : that.generator != null) return false;
+		if (id != that.id) {
+			return false;
+		}
+		if (uuid != that.uuid) {
+			return false;
+		}
+		if (identity != that.identity) {
+			return false;
+		}
+		if (table != null ? !table.equals(that.table) : that.table != null) {
+			return false;
+		}
+		if (property != null ? !property.equals(that.property) : that.property != null) {
+			return false;
+		}
+		if (column != null ? !column.equals(that.column) : that.column != null) {
+			return false;
+		}
+		if (javaType != null ? !javaType.equals(that.javaType) : that.javaType != null) {
+			return false;
+		}
+		if (jdbcType != that.jdbcType) {
+			return false;
+		}
+		if (typeHandler != null ? !typeHandler.equals(that.typeHandler) : that.typeHandler != null) {
+			return false;
+		}
+		if (sequenceName != null ? !sequenceName.equals(that.sequenceName) : that.sequenceName != null) {
+			return false;
+		}
+		if (generator != null ? !generator.equals(that.generator) : that.generator != null) {
+			return false;
+		}
 		return !(orderBy != null ? !orderBy.equals(that.orderBy) : that.orderBy != null);
 
 	}
@@ -282,13 +316,5 @@ public class EntityColumn {
 		result = 31 * result + (generator != null ? generator.hashCode() : 0);
 		result = 31 * result + (orderBy != null ? orderBy.hashCode() : 0);
 		return result;
-	}
-
-	public String getRelationShipTable() {
-		return relationShipTable;
-	}
-
-	public void setRelationShipTable(String relationShipTable) {
-		this.relationShipTable = relationShipTable;
 	}
 }

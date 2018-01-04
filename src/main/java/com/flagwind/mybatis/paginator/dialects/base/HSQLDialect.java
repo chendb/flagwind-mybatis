@@ -12,7 +12,8 @@ public class HSQLDialect extends Dialect {
         super(mappedStatement, parameterObject, pageBounds);
     }
 
-    protected String getLimitString(String sql, String offsetName,int offset, String limitName, int limit) {
+    @Override
+	protected String getLimitString(String sql, String offsetName, int offset, String limitName, int limit) {
 		boolean hasOffset = offset>0;
 		return new StringBuffer( sql.length() + 10 )
 		.append( sql )

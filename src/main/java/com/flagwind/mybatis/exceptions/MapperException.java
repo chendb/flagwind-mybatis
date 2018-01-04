@@ -1,5 +1,8 @@
 package com.flagwind.mybatis.exceptions;
 
+/**
+ * @author chendb
+ */
 public class MapperException extends RuntimeException {
     public MapperException() {
         super();

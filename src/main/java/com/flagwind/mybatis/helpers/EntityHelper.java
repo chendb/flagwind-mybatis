@@ -167,23 +167,6 @@ public class EntityHelper {
         return whereBuilder.substring(0, whereBuilder.length() - 4);
     }
 
-    private static void setRelationshipTable(EntityTable entityTable, Class<?> entityClass) {
-
-        RelationshipEntity[] relationships = entityClass.getDeclaredAnnotationsByType(RelationshipEntity.class);
-
-        if (relationships == null || relationships.length == 0)
-            return;
-
-        for (RelationshipEntity relationship : relationships) {
-            RelationshipTable t = new RelationshipTable();
-            t.setFromTable(relationship.fromTable());
-            t.setToTable(relationship.toTable());
-            t.setJoin(relationship.join());
-            t.setFromFeild(relationship.fromFeild());
-            t.setToFeild(relationship.toFeild());
-            entityTable.getRelationshipTables().add(t);
-        }
-    }
 
     /**
      * 初始化实体属性
@@ -216,7 +199,7 @@ public class EntityHelper {
             //可以通过stye控制
             entityTable.setName(StringUtil.convertByStyle(entityClass.getSimpleName(), style));
         }
-        setRelationshipTable(entityTable, entityClass);
+
         entityTable.setEntityClassColumns(new LinkedHashSet<>());
         entityTable.setEntityClassPKColumns(new LinkedHashSet<>());
         //处理所有列

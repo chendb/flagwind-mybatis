@@ -9,6 +9,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+@Deprecated
 @Repeatable(RelationshipEntities.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ TYPE, METHOD, FIELD })

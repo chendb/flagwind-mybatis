@@ -13,5 +13,5 @@ public interface BaseMultipleIdsRepository<E, ID extends Serializable> {
     int deleteByIds(@Param("_keys") String keys);
 
     @SelectProvider(type = MultipleIdsProvider.class, method = "dynamicSQL")
-    List<E> findByIds(@Param("_keys") String keys);
+    List<E> fetchByIds(@Param("_keys") String keys);
 }

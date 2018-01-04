@@ -16,7 +16,6 @@ public class BaseSelectProvider extends MapperTemplate {
 
     public BaseSelectProvider(Class<?> mapperClass, MapperResolver mapperResolver) {
         super(mapperClass, mapperResolver);
-<<<<<<< HEAD
     }
 
     protected String selectAllColumnsFromTable(Class<?> entityClass){
@@ -29,24 +28,40 @@ public class BaseSelectProvider extends MapperTemplate {
             sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
         }
         return sql.toString();
-=======
->>>>>>> b3035d9660c4df4b8e3799eba2eda828bdc7778d
+
     }
 
     /**
-     * 查询
+     * 根据主键进行关联查询（当没有关联信息时与getById一样）
+     *
+     * @param ms
+     */
+    public String seekById(MappedStatement ms) {
+        final Class<?> entityClass = getEntityClass(ms);
+        //将返回值修改为实体类型
+        setResultType(ms, entityClass);
+        StringBuilder sql = new StringBuilder();
+        sql.append(selectAllColumnsFromTable(entityClass));
+        if (AssociationSqlHelper.hasAssociation(entityClass)) {
+            sql.append(AssociationSqlHelper.wherePKColumn(entityClass.getSimpleName(), entityClass, "_key"));
+        } else {
+            sql.append(SqlHelper.wherePKColumn(entityClass, "_key"));
+        }
+        return sql.toString();
+    }
+
+    /**
+     * 关联查询（当没有关联信息时与query一样）
      *
      * @param ms
      * @return
      */
-    public String first(MappedStatement ms) {
+    public String seek(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
         //修改返回值类型为实体类型
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
         sql.append(selectAllColumnsFromTable(entityClass));
-//      sql.append(SqlHelper.selectAllColumns(entityClass));
-//      sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
         sql.append(ClauseUtils.getWhereSql("_clause", 5));
         return sql.toString();
     }
@@ -57,15 +72,14 @@ public class BaseSelectProvider extends MapperTemplate {
      * @param ms
      * @return
      */
-    public String find(MappedStatement ms) {
+    public String query(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
         //修改返回值类型为实体类型
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
-        sql.append(selectAllColumnsFromTable(entityClass));
-//      sql.append(SqlHelper.selectAllColumns(entityClass));
-//      sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
-        sql.append(ClauseUtils.getWhereSql("_clause",5));
+        sql.append(SqlHelper.selectAllColumns(entityClass));
+        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
+        sql.append(ClauseUtils.getWhereSql("_clause", 5));
         sql.append(SqlHelper.orderByDefault(entityClass));
         return sql.toString();
     }
@@ -77,11 +91,11 @@ public class BaseSelectProvider extends MapperTemplate {
      * @return
      */
     public String take(MappedStatement ms) {
-        return find(ms);
+        return query(ms);
     }
 
     public String page(MappedStatement ms) {
-        return find(ms);
+        return query(ms);
     }
 
     /**
@@ -94,14 +108,9 @@ public class BaseSelectProvider extends MapperTemplate {
         //将返回值修改为实体类型
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
-        sql.append(selectAllColumnsFromTable(entityClass));
-//      sql.append(SqlHelper.selectAllColumns(entityClass));
-//      sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
-        if (AssociationSqlHelper.hasAssociation(entityClass)) {
-            sql.append(AssociationSqlHelper.wherePKColumn(entityClass.getSimpleName(), entityClass, "_key"));
-        } else {
-            sql.append(SqlHelper.wherePKColumn(entityClass, "_key"));
-        }
+        sql.append(SqlHelper.selectCount(entityClass));
+        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
+        sql.append(SqlHelper.wherePKColumn(entityClass, "_key"));
         return sql.toString();
     }
 
@@ -155,9 +164,8 @@ public class BaseSelectProvider extends MapperTemplate {
         //修改返回值类型为实体类型
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
-        sql.append(selectAllColumnsFromTable(entityClass));
-//      sql.append(SqlHelper.selectAllColumns(entityClass));
-//      sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
+        sql.append(SqlHelper.selectAllColumns(entityClass));
+        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
         sql.append(SqlHelper.orderByDefault(entityClass));
         return sql.toString();
     }

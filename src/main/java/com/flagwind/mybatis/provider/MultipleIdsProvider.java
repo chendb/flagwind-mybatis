@@ -9,6 +9,9 @@ import org.apache.ibatis.mapping.MappedStatement;
 
 import java.util.Set;
 
+/**
+ * @author chendb
+ */
 public class MultipleIdsProvider extends MapperTemplate {
 
     public MultipleIdsProvider(Class<?> mapperClass, MapperResolver mapperResolver) {
@@ -43,7 +46,7 @@ public class MultipleIdsProvider extends MapperTemplate {
      * @param ms
      * @return
      */
-    public String findByIds(MappedStatement ms) {
+    public String selectByIds(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
         //将返回值修改为实体类型
         setResultType(ms, entityClass);

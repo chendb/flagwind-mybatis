@@ -13,7 +13,8 @@ public class H2Dialect extends Dialect {
         super(mappedStatement, parameterObject, pageBounds);
     }
 
-    protected String getLimitString(String sql, String offsetName,int offset, String limitName, int limit) {
+    @Override
+	protected String getLimitString(String sql, String offsetName, int offset, String limitName, int limit) {
 		return new StringBuffer(sql.length() + 40).
 			append(sql).
 			append((offset > 0) ? " limit "+String.valueOf(limit)+" offset "+String.valueOf(offset) : " limit "+String.valueOf(limit)).

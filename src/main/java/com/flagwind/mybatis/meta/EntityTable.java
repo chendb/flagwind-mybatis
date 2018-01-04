@@ -43,27 +43,34 @@ public class EntityTable {
 	}
 
 
-
-	//resultMap对象
+	/**
+	 * resultMap对象
+	 */
 	private ResultMap resultMap;
-	//属性和列对应
+
+	/**
+	 * 属性和列对应
+	 */
 	protected Map<String, EntityColumn> propertyMap;
-	//类
+
+	/**
+	 * 类
+	 */
 	private Class<?> entityClass;
 
-	private List<RelationshipTable> relationshipTables;
-
-	public List<RelationshipTable> getRelationshipTables() {
-
-		if (relationshipTables == null) {
-			relationshipTables = new ArrayList<>();
-		}
-		return relationshipTables;
-	}
-
-	public void setRelationshipTables(List<RelationshipTable> relationshipTables) {
-		this.relationshipTables = relationshipTables;
-	}
+//	private List<RelationshipTable> relationshipTables;
+//
+//	public List<RelationshipTable> getRelationshipTables() {
+//
+//		if (relationshipTables == null) {
+//			relationshipTables = new ArrayList<>();
+//		}
+//		return relationshipTables;
+//	}
+//
+//	public void setRelationshipTables(List<RelationshipTable> relationshipTables) {
+//		this.relationshipTables = relationshipTables;
+//	}
 
 
 	public EntityTable(Class<?> entityClass) {

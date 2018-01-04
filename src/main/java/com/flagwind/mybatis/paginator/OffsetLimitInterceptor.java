@@ -40,15 +40,18 @@ import com.flagwind.mybatis.paginator.dialects.base.PostgreSQLDialect;
 import com.flagwind.mybatis.paginator.dialects.base.SQLServer2005Dialect;
 import com.flagwind.mybatis.paginator.dialects.base.SQLServerDialect;
 import com.flagwind.mybatis.paginator.dialects.base.SybaseDialect;
-import com.flagwind.persistent.model.Paging;
 import com.flagwind.persistent.model.Sorting;
 
 /**
  * 为MyBatis提供基于方言(Dialect)的分页查询的插件 将拦截Executor.query()方法实现分页方言的插入.
+ * @author hbche
  */
 
-@Intercepts({ @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class,
-        RowBounds.class, ResultHandler.class }) })
+@Intercepts({
+        @Signature(type = Executor.class,
+                method = "query",
+                args = { MappedStatement.class, Object.class,RowBounds.class, ResultHandler.class })
+})
 public class OffsetLimitInterceptor implements Interceptor {
     private static Log logger = LogFactory.getLog(OffsetLimitInterceptor.class);
     static int MAPPED_STATEMENT_INDEX = 0;
@@ -66,6 +69,7 @@ public class OffsetLimitInterceptor implements Interceptor {
 
     boolean asyncTotalCount = false;
 
+    @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public Object intercept(final Invocation invocation) throws Throwable {
         final Executor executor = (Executor) invocation.getTarget();
@@ -242,10 +246,12 @@ public class OffsetLimitInterceptor implements Interceptor {
         return builder.build();
     }
 
+    @Override
     public Object plugin(Object target) {
         return Plugin.wrap(target, this);
     }
 
+    @Override
     public void setProperties(Properties properties) {
         if (properties == null) {
             return;
@@ -267,6 +273,7 @@ public class OffsetLimitInterceptor implements Interceptor {
             this.boundSql = boundSql;
         }
 
+        @Override
         public BoundSql getBoundSql(Object parameterObject) {
             return boundSql;
         }

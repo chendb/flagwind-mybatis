@@ -10,6 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ TYPE, METHOD, FIELD })
 public @interface Relationship {

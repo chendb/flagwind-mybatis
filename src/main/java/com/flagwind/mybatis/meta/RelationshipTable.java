@@ -1,5 +1,6 @@
 package com.flagwind.mybatis.meta;
 
+@Deprecated
 public class RelationshipTable {
 
 	private String fromTable; 

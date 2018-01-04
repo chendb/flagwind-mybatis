@@ -10,16 +10,25 @@ import org.apache.ibatis.annotations.SelectProvider;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * 查询操作
+ * @author chendb
+ */
 public interface BaseSelectRepository<E, ID extends Serializable> {
     @SelectProvider(type = BaseSelectProvider.class, method = "dynamicSQL")
     E getById(@Param("_key") ID id);
 
     @SelectProvider(type = BaseSelectProvider.class, method = "dynamicSQL")
-    long count(@Param("_clause") Clause clause);
-
+    E seekById(@Param("_key") ID id);
 
     @SelectProvider(type = BaseSelectProvider.class, method = "dynamicSQL")
-    List<E> find(@Param("_clause") Clause clause);
+    List<E> seek(@Param("_clause") Clause clause);
+
+    @SelectProvider(type = BaseSelectProvider.class, method = "dynamicSQL")
+    long count(@Param("_clause") Clause clause);
+
+    @SelectProvider(type = BaseSelectProvider.class, method = "dynamicSQL")
+    List<E> query(@Param("_clause") Clause clause);
 
     @SelectProvider(type = BaseSelectProvider.class, method = "dynamicSQL")
     List<E> page(@Param("_clause") Clause clause, @Param("_paging") Paging page, @Param("_sorts") Sorting[] sorts);

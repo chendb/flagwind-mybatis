@@ -111,11 +111,7 @@ public abstract class MapperTemplate {
     protected void setResultType(MappedStatement ms, Class<?> entityClass) {
 
         EntityTable entityTable = EntityHelper.getEntityTable(entityClass);
-<<<<<<< HEAD
         if (AssociationSqlHelper.hasAssociation(entityClass)) {
-=======
-        if (entityClass.isAnnotationPresent(Entity.class) || entityClass.isAnnotationPresent(Table.class)) {
->>>>>>> b3035d9660c4df4b8e3799eba2eda828bdc7778d
             ResultMapSwapper swapper = ResultMapSwapperHolder.getSwapper(ms.getConfiguration());
             ResultMap newResultMap = swapper.reloadResultMap(ms.getResource(), entityClass.getSimpleName(), entityTable.getEntityClass(), mapperResolver.getConfig().getStyle());
             List<ResultMap> newResultMaps = new ArrayList<>();
@@ -256,7 +252,7 @@ public abstract class MapperTemplate {
      * @param entityClass
      * @return
      */
-    protected String getTableName(Class<?> entityClass) {
+    private String getTableName(Class<?> entityClass) {
         EntityTable entityTable = EntityHelper.getEntityTable(entityClass);
         String prefix = entityTable.getPrefix();
         if (StringUtil.isEmpty(prefix)) {
@@ -269,45 +265,30 @@ public abstract class MapperTemplate {
         return entityTable.getName();
     }
 
-
     /**
-     * 获取实体的表名以及关联表名
+     * 获取实体的表名
      * @param entityClass
      * @return
      */
     protected String tableName(Class<?> entityClass) {
-        EntityTable entityTable = EntityHelper.getEntityTable(entityClass);
-        StringBuilder sb = new StringBuilder();
-        String table = getTableName(entityClass);
-        sb.append(table);
-        if (entityTable.getAssociationFields().size() > 0) {
-            sb.append(" ").append(entityClass.getSimpleName());
-        }
-//        if (!entityTable.getRelationshipTables().isEmpty()) {
-//            sb.append(" ").append(getRelationship(entityTable, table));
-//        }
-        return sb.toString();
+       return tableName(entityClass,true);
     }
 
     /**
-     * 获取关联表信息
-     * @param entityTable
-     * @param masterTable 主表名
+     * 获取实体的表名
+     * @param entityClass 实体类型
+     * @param addDefultAlias 是否增加默认别名
      * @return
      */
-	private String getRelationship(EntityTable entityTable,String masterTable) {
+    protected String tableName(Class<?> entityClass,boolean addDefultAlias) {
         StringBuilder sb = new StringBuilder();
-        entityTable.getRelationshipTables().stream()
-                .filter(g -> StringUtils.equals(g.getFromTable(), masterTable))
-                .forEach(g -> {
-                    sb.append(g.getJoin() + " join " + g.getToTable() + " on " + g.getFromTable() + "."
-                            + g.getFromFeild() + " = " + g.getToTable() + "." + g.getToFeild());
-                    String tmp = getRelationship(entityTable, g.getToTable());
-                    if (!StringUtils.isBlank(tmp))
-                        sb.append(" " + tmp);
-                });
-
+        String table = getTableName(entityClass);
+        sb.append(table);
+        if (addDefultAlias) {
+            sb.append(" ").append(entityClass.getSimpleName());
+        }
         return sb.toString();
     }
+
 
 }

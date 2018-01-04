@@ -8,6 +8,9 @@ import org.apache.ibatis.mapping.MappedStatement;
 
 import java.util.Set;
 
+/**
+ * 特殊的数据操作提供器
+ */
 public class SpecialProvider extends MapperTemplate {
 
     public SpecialProvider(Class<?> mapperClass, MapperResolver mapperResolver) {

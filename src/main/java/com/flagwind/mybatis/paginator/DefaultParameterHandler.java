@@ -33,6 +33,9 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 
+/**
+ * @author chendb
+ */
 public class DefaultParameterHandler implements ParameterHandler {
 
     private final TypeHandlerRegistry typeHandlerRegistry;
@@ -50,10 +53,12 @@ public class DefaultParameterHandler implements ParameterHandler {
         this.boundSql = boundSql;
     }
 
+    @Override
     public Object getParameterObject() {
         return parameterObject;
     }
 
+    @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setParameters(PreparedStatement ps) throws SQLException {
         ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
