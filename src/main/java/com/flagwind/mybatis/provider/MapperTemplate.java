@@ -111,7 +111,11 @@ public abstract class MapperTemplate {
     protected void setResultType(MappedStatement ms, Class<?> entityClass) {
 
         EntityTable entityTable = EntityHelper.getEntityTable(entityClass);
+<<<<<<< HEAD
         if (AssociationSqlHelper.hasAssociation(entityClass)) {
+=======
+        if (entityClass.isAnnotationPresent(Entity.class) || entityClass.isAnnotationPresent(Table.class)) {
+>>>>>>> b3035d9660c4df4b8e3799eba2eda828bdc7778d
             ResultMapSwapper swapper = ResultMapSwapperHolder.getSwapper(ms.getConfiguration());
             ResultMap newResultMap = swapper.reloadResultMap(ms.getResource(), entityClass.getSimpleName(), entityTable.getEntityClass(), mapperResolver.getConfig().getStyle());
             List<ResultMap> newResultMaps = new ArrayList<>();

@@ -23,7 +23,6 @@ import org.apache.ibatis.type.TypeHandler;
  *
  */
 public class AssociationUtils {
-
     public static Class<?> getTargetType(Field field) {
         if (field.isAnnotationPresent(OneToOne.class)) {
             OneToOne one = field.getAnnotation(OneToOne.class);

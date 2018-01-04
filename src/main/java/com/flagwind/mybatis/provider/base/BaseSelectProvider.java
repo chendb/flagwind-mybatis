@@ -16,6 +16,7 @@ public class BaseSelectProvider extends MapperTemplate {
 
     public BaseSelectProvider(Class<?> mapperClass, MapperResolver mapperResolver) {
         super(mapperClass, mapperResolver);
+<<<<<<< HEAD
     }
 
     protected String selectAllColumnsFromTable(Class<?> entityClass){
@@ -28,6 +29,8 @@ public class BaseSelectProvider extends MapperTemplate {
             sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
         }
         return sql.toString();
+=======
+>>>>>>> b3035d9660c4df4b8e3799eba2eda828bdc7778d
     }
 
     /**
