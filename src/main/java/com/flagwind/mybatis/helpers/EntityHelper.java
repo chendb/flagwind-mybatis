@@ -1,24 +1,38 @@
 package com.flagwind.mybatis.helpers;
 
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.flagwind.mybatis.code.IdentityDialect;
+import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.common.Config;
-import com.flagwind.mybatis.meta.*;
+import com.flagwind.mybatis.exceptions.MapperException;
+import com.flagwind.mybatis.meta.EntityColumn;
+import com.flagwind.mybatis.meta.EntityField;
+import com.flagwind.mybatis.meta.EntityTable;
 import com.flagwind.mybatis.utils.AssociationUtils;
 import com.flagwind.mybatis.utils.SimpleTypeUtils;
 import com.flagwind.mybatis.utils.StringUtil;
 import com.flagwind.persistent.annotation.ColumnType;
 import com.flagwind.persistent.annotation.NameStyle;
-import com.flagwind.mybatis.code.IdentityDialect;
-import com.flagwind.mybatis.code.Style;
-import com.flagwind.mybatis.exceptions.MapperException;
-import com.flagwind.persistent.annotation.RelationshipEntity;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.MutableTriple;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
-
-import javax.persistence.*;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 实体类工具类 - 处理实体和数据库表以及字段关键的一个类

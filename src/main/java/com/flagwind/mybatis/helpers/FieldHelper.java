@@ -1,26 +1,28 @@
 package com.flagwind.mybatis.helpers;
 
 
-import com.flagwind.mybatis.code.Style;
-import com.flagwind.mybatis.meta.EntityField;
-import com.flagwind.mybatis.exceptions.MapperException;
-import com.flagwind.mybatis.utils.StringUtil;
-import com.flagwind.persistent.annotation.ColumnType;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.MutableTriple;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.type.UnknownTypeHandler;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.*;
-import java.sql.Timestamp;
-import java.util.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.persistence.Entity;
+
+import com.flagwind.mybatis.exceptions.MapperException;
+import com.flagwind.mybatis.meta.EntityField;
 
 public class FieldHelper {
 

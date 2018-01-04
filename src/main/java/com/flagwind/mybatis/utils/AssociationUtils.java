@@ -1,8 +1,6 @@
 package com.flagwind.mybatis.utils;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -10,11 +8,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.flagwind.mybatis.meta.EntityField;
-import org.apache.ibatis.builder.MapperBuilderAssistant;
-import org.apache.ibatis.mapping.ResultFlag;
-import org.apache.ibatis.mapping.ResultMapping;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeHandler;
 
 /***
  * 关联性字段工具类

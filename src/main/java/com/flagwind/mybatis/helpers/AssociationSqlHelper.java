@@ -1,20 +1,19 @@
 package com.flagwind.mybatis.helpers;
 
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
 import com.flagwind.mybatis.common.Config;
-import com.flagwind.mybatis.common.MapperResolver;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.meta.EntityColumn;
 import com.flagwind.mybatis.meta.EntityField;
 import com.flagwind.mybatis.meta.EntityTable;
 import com.flagwind.mybatis.utils.AssociationUtils;
 import com.flagwind.mybatis.utils.StringUtil;
-
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class AssociationSqlHelper {
 
