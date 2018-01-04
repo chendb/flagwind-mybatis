@@ -1,4 +1,4 @@
-package com.flagwind.mybatis.entity;
+package com.flagwind.mybatis.meta;
 
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.provider.EmptyProvider;
