@@ -1,7 +1,6 @@
 package com.flagwind.mybatis.utils;
 
 import com.flagwind.mybatis.exceptions.MapperException;
-
 import org.apache.ibatis.mapping.MappedStatement;
 
 

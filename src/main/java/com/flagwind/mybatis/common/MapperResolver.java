@@ -1,4 +1,4 @@
-package com.flagwind.mybatis.meta;
+package com.flagwind.mybatis.common;
 
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.provider.EmptyProvider;
@@ -16,26 +16,26 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class MapperHelper {
+public class MapperResolver {
     /**
      * 缓存skip结果
      */
-    private final Map<String, Boolean> msIdSkip = new ConcurrentHashMap<String, Boolean>();
+    private final Map<String, Boolean> msIdSkip = new ConcurrentHashMap<>();
 
     /**
      * 注册的接口
      */
-    private List<Class<?>> registerClass = new ArrayList<Class<?>>();
+    private List<Class<?>> registerClass = new ArrayList<>();
 
     /**
      * 注册的通用Mapper接口
      */
-    private Map<Class<?>, MapperTemplate> registerMapper = new ConcurrentHashMap<Class<?>, MapperTemplate>();
+    private Map<Class<?>, MapperTemplate> registerMapper = new ConcurrentHashMap<>();
 
     /**
      * 缓存msid和MapperTemplate
      */
-    private Map<String, MapperTemplate> msIdCache = new ConcurrentHashMap<String, MapperTemplate>();
+    private Map<String, MapperTemplate> msIdCache = new ConcurrentHashMap<>();
 
     /**
      * 通用Mapper配置
@@ -45,7 +45,7 @@ public class MapperHelper {
     /**
      * 默认构造方法
      */
-    public MapperHelper() {
+    public MapperResolver() {
     }
 
     /**
@@ -53,7 +53,7 @@ public class MapperHelper {
      *
      * @param properties
      */
-    public MapperHelper(Properties properties) {
+    public MapperResolver(Properties properties) {
         this();
         setProperties(properties);
     }
@@ -117,7 +117,7 @@ public class MapperHelper {
         }
         MapperTemplate mapperTemplate = null;
         try {
-            mapperTemplate = (MapperTemplate) templateClass.getConstructor(Class.class, MapperHelper.class).newInstance(mapperClass, this);
+            mapperTemplate = (MapperTemplate) templateClass.getConstructor(Class.class, MapperResolver.class).newInstance(mapperClass, this);
         } catch (Exception e) {
             throw new MapperException("实例化MapperTemplate对象失败:" + e.getMessage());
         }
@@ -247,16 +247,6 @@ public class MapperHelper {
         if (registerClass.size() == 0) {
             registerMapper("tk.mybatis.mapper.common.Mapper");
         }
-    }
-
-    /**
-     * 配置完成后，执行下面的操作
-     * <br>处理configuration中全部的MappedStatement
-     *
-     * @param configuration
-     */
-    public void processConfiguration(Configuration configuration) {
-        processConfiguration(configuration, null);
     }
 
     /**

@@ -1,6 +1,8 @@
 package com.flagwind.mybatis.helpers;
 
-import com.flagwind.mybatis.entity.*;
+import com.flagwind.mybatis.common.Config;
+import com.flagwind.mybatis.meta.*;
+import com.flagwind.mybatis.utils.AssociationUtils;
 import com.flagwind.mybatis.utils.SimpleTypeUtils;
 import com.flagwind.mybatis.utils.StringUtil;
 import com.flagwind.persistent.annotation.ColumnType;
@@ -9,11 +11,12 @@ import com.flagwind.mybatis.code.IdentityDialect;
 import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.persistent.annotation.RelationshipEntity;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.MutableTriple;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.UnknownTypeHandler;
+import org.apache.ibatis.type.TypeHandler;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -213,7 +216,7 @@ public class EntityHelper {
             //可以通过stye控制
             entityTable.setName(StringUtil.convertByStyle(entityClass.getSimpleName(), style));
         }
-        setRelationshipTable(entityTable,entityClass);
+        setRelationshipTable(entityTable, entityClass);
         entityTable.setEntityClassColumns(new LinkedHashSet<>());
         entityTable.setEntityClassPKColumns(new LinkedHashSet<>());
         //处理所有列
@@ -228,6 +231,10 @@ public class EntityHelper {
             if (config.isUseSimpleType() && !SimpleTypeUtils.isSimpleType(field.getJavaType())) {
                 continue;
             }
+            if (AssociationUtils.isAssociationField(field)) {
+                entityTable.getAssociationFields().add(field);
+                continue;
+            }
             processField(entityTable, style, field);
         }
         //当pk.size=0的时候使用所有列作为主键
@@ -238,48 +245,7 @@ public class EntityHelper {
         entityTableMap.put(entityClass, entityTable);
     }
 
-    private static JdbcType formJavaType(Class<?> javaType){
-        if(javaType.isAssignableFrom(String.class)){
-            return JdbcType.VARCHAR;
-        }
-        if(javaType.isAssignableFrom(Integer.class)
-                ||javaType.isAssignableFrom(int.class)){
-            return JdbcType.INTEGER;
-        }
-        if(javaType.isAssignableFrom(Number.class)){
-            return JdbcType.NUMERIC;
-        }
-        if(javaType.isAssignableFrom(Long.class)
-                ||javaType.isAssignableFrom(long.class)){
-            return JdbcType.NUMERIC;
-        }
-        if(javaType.isAssignableFrom(Double.class)
-                ||javaType.isAssignableFrom(double.class)){
-            return JdbcType.NUMERIC;
-        }
-        if(javaType.isAssignableFrom(Boolean.class)
-                ||javaType.isAssignableFrom(boolean.class)){
-            return JdbcType.TINYINT;
-        }
-        if(javaType.isAssignableFrom(Float.class)
-                ||javaType.isAssignableFrom(float.class)){
-            return JdbcType.FLOAT;
-        }
-        if(javaType.isAssignableFrom(java.sql.Date.class)
-                ||javaType.isAssignableFrom(java.util.Date.class)){
-            return JdbcType.DATE;
-        }
-        if(javaType.isAssignableFrom(Timestamp.class) ){
-            return JdbcType.TIMESTAMP;
-        }
-        if(javaType.isAssignableFrom(byte[].class) ){
-            return JdbcType.BINARY;
-        }
-        if(javaType.isEnum()){
-            return JdbcType.VARCHAR;
-        }
-        return JdbcType.UNDEFINED;
-    }
+
 
     /**
      * 处理一列
@@ -299,38 +265,33 @@ public class EntityHelper {
             entityColumn.setId(true);
         }
         //Column
-        String columnName = null;
-        if (field.isAnnotationPresent(Column.class)) {
-            Column column = field.getAnnotation(Column.class);
-            columnName = column.name();
-            entityColumn.setUpdatable(column.updatable());
-            entityColumn.setInsertable(column.insertable());
+
+        MutablePair<String, Column> columnDuplex = ColumnHelper.getColumnName(field, style);
+        String columnName = columnDuplex.left;
+        if ((columnDuplex.right) != null) {
+            entityColumn.setUpdatable(columnDuplex.right.updatable());
+            entityColumn.setInsertable(columnDuplex.right.insertable());
         }
+
         //ColumnType
-        if (field.isAnnotationPresent(ColumnType.class)) {
-            ColumnType columnType = field.getAnnotation(ColumnType.class);
-            //column可以起到别名的作用
-            if (StringUtil.isEmpty(columnName) && StringUtil.isNotEmpty(columnType.column())) {
-                columnName = columnType.column();
-            }
-            if (columnType.jdbcType() != JdbcType.UNDEFINED) {
-                entityColumn.setJdbcType(columnType.jdbcType());
-            }
-            if (columnType.typeHandler() != UnknownTypeHandler.class) {
-                entityColumn.setTypeHandler(columnType.typeHandler());
-            }
+        MutableTriple<ColumnType, JdbcType, Class<? extends TypeHandler<?>>> columnTypeTriple = ColumnHelper.getColumnType(field);
+
+        //column可以起到别名的作用
+        if (columnTypeTriple.left != null && StringUtil.isEmpty(columnName) && StringUtil.isNotEmpty(columnTypeTriple.left.column())) {
+            columnName = columnTypeTriple.left.column();
         }
-        //表名
-        if (StringUtil.isEmpty(columnName)) {
-            columnName = StringUtil.convertByStyle(field.getName(), style);
+
+        if (columnTypeTriple.middle != null) {
+            entityColumn.setJdbcType(columnTypeTriple.middle);
         }
+        if (columnTypeTriple.right != null) {
+            entityColumn.setTypeHandler(columnTypeTriple.right);
+        }
+
         entityColumn.setProperty(field.getName());
         entityColumn.setColumn(columnName);
         entityColumn.setJavaType(field.getJavaType());
 
-        if (entityColumn.getJdbcType() == JdbcType.UNDEFINED || entityColumn.getJdbcType() == null) {
-            entityColumn.setJdbcType(formJavaType(field.getJavaType()));
-        }
 
         //OrderBy
         if (field.isAnnotationPresent(OrderBy.class)) {

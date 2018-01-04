@@ -1,10 +1,10 @@
 package com.flagwind.mybatis.spring;
 
-import com.flagwind.mybatis.entity.MapperHelper;
+import com.flagwind.mybatis.common.MapperResolver;
 
 public class MapperFactoryBean<T> extends org.mybatis.spring.mapper.MapperFactoryBean<T> {
 
-    private MapperHelper mapperHelper;
+    private MapperResolver mapperResolver;
 
     public MapperFactoryBean() {
     }
@@ -19,12 +19,12 @@ public class MapperFactoryBean<T> extends org.mybatis.spring.mapper.MapperFactor
     @Override
     protected void checkDaoConfig() {
         super.checkDaoConfig();
-        if (mapperHelper.isExtendCommonMapper(getObjectType())) {
-            mapperHelper.processConfiguration(getSqlSession().getConfiguration(), getObjectType());
+        if (mapperResolver.isExtendCommonMapper(getObjectType())) {
+            mapperResolver.processConfiguration(getSqlSession().getConfiguration(), getObjectType());
         }
     }
 
-    public void setMapperHelper(MapperHelper mapperHelper) {
-        this.mapperHelper = mapperHelper;
+    public void setMapperResolver(MapperResolver mapperResolver) {
+        this.mapperResolver = mapperResolver;
     }
 }

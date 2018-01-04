@@ -1,10 +1,13 @@
 package com.flagwind.mybatis.helpers;
 
-import com.flagwind.mybatis.entity.EntityColumn;
-import com.flagwind.mybatis.entity.IDynamicTableName;
+import com.flagwind.mybatis.meta.EntityColumn;
+import com.flagwind.mybatis.common.IDynamicTableName;
 import com.flagwind.mybatis.exceptions.MapperException;
+import com.flagwind.mybatis.meta.EntityField;
+import com.flagwind.mybatis.meta.EntityTable;
 import com.flagwind.mybatis.utils.StringUtil;
 
+import java.util.List;
 import java.util.Set;
 
 public class SqlHelper {
@@ -217,6 +220,8 @@ public class SqlHelper {
         }
         return sql.substring(0, sql.length() - 1);
     }
+
+
 
     /**
      * select xxx,xxx...

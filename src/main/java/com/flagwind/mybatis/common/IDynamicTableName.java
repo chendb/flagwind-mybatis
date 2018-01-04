@@ -1,4 +1,4 @@
-package com.flagwind.mybatis.meta;
+package com.flagwind.mybatis.common;
 
 public interface IDynamicTableName {
 

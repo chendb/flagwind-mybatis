@@ -1,18 +1,18 @@
 package com.flagwind.mybatis.provider;
 
-import com.flagwind.mybatis.entity.EntityColumn;
-import com.flagwind.mybatis.entity.MapperHelper;
+import com.flagwind.mybatis.meta.EntityColumn;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.helpers.EntityHelper;
 import com.flagwind.mybatis.helpers.SqlHelper;
+import com.flagwind.mybatis.common.MapperResolver;
 import org.apache.ibatis.mapping.MappedStatement;
 
 import java.util.Set;
 
 public class MultipleIdsProvider extends MapperTemplate {
 
-    public MultipleIdsProvider(Class<?> mapperClass, MapperHelper mapperHelper) {
-        super(mapperClass, mapperHelper);
+    public MultipleIdsProvider(Class<?> mapperClass, MapperResolver mapperResolver) {
+        super(mapperClass, mapperResolver);
     }
 
     /**

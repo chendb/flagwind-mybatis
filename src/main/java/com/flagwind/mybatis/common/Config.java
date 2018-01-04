@@ -1,4 +1,4 @@
-package com.flagwind.mybatis.meta;
+package com.flagwind.mybatis.common;
 
 
 import com.flagwind.mybatis.code.IdentityDialect;

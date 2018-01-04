@@ -1,13 +1,13 @@
 package com.flagwind.mybatis.provider;
 
-import com.flagwind.mybatis.entity.MapperHelper;
 import com.flagwind.mybatis.helpers.SqlHelper;
+import com.flagwind.mybatis.common.MapperResolver;
 import org.apache.ibatis.mapping.MappedStatement;
 
 public class SqlServerProvider extends MapperTemplate {
 
-    public SqlServerProvider(Class<?> mapperClass, MapperHelper mapperHelper) {
-        super(mapperClass, mapperHelper);
+    public SqlServerProvider(Class<?> mapperClass, MapperResolver mapperResolver) {
+        super(mapperClass, mapperResolver);
     }
 
     /**
