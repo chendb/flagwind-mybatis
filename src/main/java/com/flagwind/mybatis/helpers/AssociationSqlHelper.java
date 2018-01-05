@@ -17,6 +17,29 @@ import com.flagwind.mybatis.utils.StringUtil;
 
 public class AssociationSqlHelper {
 
+    public static void  registerEntityClass(Class<?> entityClass,Config config) {
+        EntityTable table = EntityHelper.getEntityTable(entityClass);
+        if (table.isAssociationRegisted()) {
+            return;
+        }
+        List<EntityField> fields = table.getAssociationFields();
+        for (EntityField field : fields) {
+            if (field.isAnnotationPresent(OneToOne.class)) {
+                OneToOne oneToOne = field.getAnnotation(OneToOne.class);
+                if (oneToOne.targetEntity() != null) {
+                    EntityHelper.initEntityNameMap(oneToOne.targetEntity(), config);
+                }
+            }
+            if (field.isAnnotationPresent(OneToMany.class)) {
+                OneToMany oneToMany = field.getAnnotation(OneToMany.class);
+                if (oneToMany.targetEntity() != null) {
+                    EntityHelper.initEntityNameMap(oneToMany.targetEntity(), config);
+                }
+            }
+        }
+        table.setAssociationRegisted(true);
+    }
+
     /**
      * where主键条件(参数为单个值如userReository.getById("123456"))
      * @param entityClass
@@ -164,7 +187,7 @@ public class AssociationSqlHelper {
 
     public static String getSelectColumnsFromAssociationTable(EntityField field,String columnPrefix,String aliasPrefix) {
         Class<?> entityClass = getAssociationEntityClass(field);
-        EntityTable entityTable = EntityHelper.getEntityTable(entityClass);
+        //EntityTable entityTable = EntityHelper.getEntityTable(entityClass);
 //        if (entityTable.getBaseSelect() != null) {
 //            return entityTable.getBaseSelect();
 //        }

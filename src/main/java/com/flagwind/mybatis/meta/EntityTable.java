@@ -31,6 +31,16 @@ public class EntityTable {
 	private List<String> keyColumns;
 	private List<EntityField> associationFields;
 
+	public boolean isAssociationRegisted() {
+		return associationRegisted;
+	}
+
+	public void setAssociationRegisted(boolean associationRegisted) {
+		this.associationRegisted = associationRegisted;
+	}
+
+	private boolean associationRegisted=false;
+
 	public List<EntityField> getAssociationFields() {
 		if (associationFields == null) {
 			associationFields = new ArrayList<>();

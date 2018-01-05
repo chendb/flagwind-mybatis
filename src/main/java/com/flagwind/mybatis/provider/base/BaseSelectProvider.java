@@ -18,9 +18,10 @@ public class BaseSelectProvider extends MapperTemplate {
         super(mapperClass, mapperResolver);
     }
 
-    protected String selectAllColumnsFromTable(Class<?> entityClass){
+    protected String selectAllColumnsFromTable(Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
         if (AssociationSqlHelper.hasAssociation(entityClass)) {
+            AssociationSqlHelper.registerEntityClass(entityClass, mapperResolver.getConfig());
             sql.append(AssociationSqlHelper.selectAllColumns(entityClass));
             sql.append(AssociationSqlHelper.fromTable(entityClass, mapperResolver.getConfig()));
         } else {

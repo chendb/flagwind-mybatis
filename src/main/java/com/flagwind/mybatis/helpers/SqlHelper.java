@@ -20,7 +20,7 @@ public class SqlHelper {
         if (IDynamicTableName.class.isAssignableFrom(entityClass)) {
             StringBuilder sql = new StringBuilder();
             sql.append("<choose>");
-            sql.append("<when test=\"@tk.mybatis.mapper.util.OGNL@isDynamicParameter(_parameter) and dynamicTableName != null and dynamicTableName != ''\">");
+            sql.append("<when test=\"@tk.mybatis.repository.util.OGNL@isDynamicParameter(_parameter) and dynamicTableName != null and dynamicTableName != ''\">");
             sql.append("${dynamicTableName}\n");
             sql.append("</when>");
             //不支持指定列的时候查询全部列
@@ -47,7 +47,7 @@ public class SqlHelper {
             if (StringUtil.isNotEmpty(parameterName)) {
                 StringBuilder sql = new StringBuilder();
                 sql.append("<choose>");
-                sql.append("<when test=\"@tk.mybatis.mapper.util.OGNL@isDynamicParameter(" + parameterName + ") and " + parameterName + ".dynamicTableName != null and " + parameterName + ".dynamicTableName != ''\">");
+                sql.append("<when test=\"@tk.mybatis.repository.util.OGNL@isDynamicParameter(" + parameterName + ") and " + parameterName + ".dynamicTableName != null and " + parameterName + ".dynamicTableName != ''\">");
                 sql.append("${" + parameterName + ".dynamicTableName}");
                 sql.append("</when>");
                 //不支持指定列的时候查询全部列
@@ -518,7 +518,7 @@ public class SqlHelper {
     public static String exampleSelectColumns(Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
         sql.append("<choose>");
-        sql.append("<when test=\"@tk.mybatis.mapper.util.OGNL@hasSelectColumns(_parameter)\">");
+        sql.append("<when test=\"@tk.mybatis.repository.util.OGNL@hasSelectColumns(_parameter)\">");
         sql.append("<foreach collection=\"_parameter.selectColumns\" item=\"selectColumn\" separator=\",\">");
         sql.append("${selectColumn}");
         sql.append("</foreach>");
@@ -539,7 +539,7 @@ public class SqlHelper {
     public static String exampleCountColumn(Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
         sql.append("<choose>");
-        sql.append("<when test=\"@tk.mybatis.mapper.util.OGNL@hasCountColumn(_parameter)\">");
+        sql.append("<when test=\"@tk.mybatis.repository.util.OGNL@hasCountColumn(_parameter)\">");
         sql.append("COUNT(${countColumn})");
         sql.append("</when>");
         sql.append("<otherwise>");
@@ -547,7 +547,7 @@ public class SqlHelper {
         sql.append("</otherwise>");
         sql.append("</choose>");
         //不支持指定列的时候查询全部列
-        sql.append("<if test=\"@tk.mybatis.mapper.util.OGNL@hasNoSelectColumns(_parameter)\">");
+        sql.append("<if test=\"@tk.mybatis.repository.util.OGNL@hasNoSelectColumns(_parameter)\">");
         sql.append(getAllColumns(entityClass));
         sql.append("</if>");
         return sql.toString();
@@ -579,7 +579,7 @@ public class SqlHelper {
      */
     public static String exampleForUpdate() {
         StringBuilder sql = new StringBuilder();
-        sql.append("<if test=\"@tk.mybatis.mapper.util.OGNL@hasForUpdate(_parameter)\">");
+        sql.append("<if test=\"@tk.mybatis.repository.util.OGNL@hasForUpdate(_parameter)\">");
         sql.append("FOR UPDATE");
         sql.append("</if>");
         return sql.toString();
@@ -592,7 +592,7 @@ public class SqlHelper {
      */
     public static String exampleCheck(Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
-        sql.append("<bind name=\"checkExampleEntityClass\" value=\"@tk.mybatis.mapper.util.OGNL@checkExampleEntityClass(_parameter, '");
+        sql.append("<bind name=\"checkExampleEntityClass\" value=\"@tk.mybatis.repository.util.OGNL@checkExampleEntityClass(_parameter, '");
         sql.append(entityClass.getCanonicalName());
         sql.append("')\"/>");
         return sql.toString();
@@ -608,21 +608,21 @@ public class SqlHelper {
                 "<where>\n" +
                 "  <foreach collection=\"oredCriteria\" item=\"criteria\">\n" +
                 "    <if test=\"criteria.valid\">\n" +
-                "      ${@tk.mybatis.mapper.util.OGNL@andOr(criteria)}" +
+                "      ${@tk.mybatis.repository.util.OGNL@andOr(criteria)}" +
                 "      <trim prefix=\"(\" prefixOverrides=\"and |or \" suffix=\")\">\n" +
                 "        <foreach collection=\"criteria.criteria\" item=\"criterion\">\n" +
                 "          <choose>\n" +
                 "            <when test=\"criterion.noValue\">\n" +
-                "              ${@tk.mybatis.mapper.util.OGNL@andOr(criterion)} ${criterion.condition}\n" +
+                "              ${@tk.mybatis.repository.util.OGNL@andOr(criterion)} ${criterion.condition}\n" +
                 "            </when>\n" +
                 "            <when test=\"criterion.singleValue\">\n" +
-                "              ${@tk.mybatis.mapper.util.OGNL@andOr(criterion)} ${criterion.condition} #{criterion.value}\n" +
+                "              ${@tk.mybatis.repository.util.OGNL@andOr(criterion)} ${criterion.condition} #{criterion.value}\n" +
                 "            </when>\n" +
                 "            <when test=\"criterion.betweenValue\">\n" +
-                "              ${@tk.mybatis.mapper.util.OGNL@andOr(criterion)} ${criterion.condition} #{criterion.value} and #{criterion.secondValue}\n" +
+                "              ${@tk.mybatis.repository.util.OGNL@andOr(criterion)} ${criterion.condition} #{criterion.value} and #{criterion.secondValue}\n" +
                 "            </when>\n" +
                 "            <when test=\"criterion.listValue\">\n" +
-                "              ${@tk.mybatis.mapper.util.OGNL@andOr(criterion)} ${criterion.condition}\n" +
+                "              ${@tk.mybatis.repository.util.OGNL@andOr(criterion)} ${criterion.condition}\n" +
                 "              <foreach close=\")\" collection=\"criterion.value\" item=\"listItem\" open=\"(\" separator=\",\">\n" +
                 "                #{listItem}\n" +
                 "              </foreach>\n" +
@@ -645,21 +645,21 @@ public class SqlHelper {
         return "<where>\n" +
                 "  <foreach collection=\"example.oredCriteria\" item=\"criteria\">\n" +
                 "    <if test=\"criteria.valid\">\n" +
-                "      ${@tk.mybatis.mapper.util.OGNL@andOr(criteria)}" +
+                "      ${@tk.mybatis.repository.util.OGNL@andOr(criteria)}" +
                 "      <trim prefix=\"(\" prefixOverrides=\"and |or \" suffix=\")\">\n" +
                 "        <foreach collection=\"criteria.criteria\" item=\"criterion\">\n" +
                 "          <choose>\n" +
                 "            <when test=\"criterion.noValue\">\n" +
-                "              ${@tk.mybatis.mapper.util.OGNL@andOr(criterion)} ${criterion.condition}\n" +
+                "              ${@tk.mybatis.repository.util.OGNL@andOr(criterion)} ${criterion.condition}\n" +
                 "            </when>\n" +
                 "            <when test=\"criterion.singleValue\">\n" +
-                "              ${@tk.mybatis.mapper.util.OGNL@andOr(criterion)} ${criterion.condition} #{criterion.value}\n" +
+                "              ${@tk.mybatis.repository.util.OGNL@andOr(criterion)} ${criterion.condition} #{criterion.value}\n" +
                 "            </when>\n" +
                 "            <when test=\"criterion.betweenValue\">\n" +
-                "              ${@tk.mybatis.mapper.util.OGNL@andOr(criterion)} ${criterion.condition} #{criterion.value} and #{criterion.secondValue}\n" +
+                "              ${@tk.mybatis.repository.util.OGNL@andOr(criterion)} ${criterion.condition} #{criterion.value} and #{criterion.secondValue}\n" +
                 "            </when>\n" +
                 "            <when test=\"criterion.listValue\">\n" +
-                "              ${@tk.mybatis.mapper.util.OGNL@andOr(criterion)} ${criterion.condition}\n" +
+                "              ${@tk.mybatis.repository.util.OGNL@andOr(criterion)} ${criterion.condition}\n" +
                 "              <foreach close=\")\" collection=\"criterion.value\" item=\"listItem\" open=\"(\" separator=\",\">\n" +
                 "                #{listItem}\n" +
                 "              </foreach>\n" +

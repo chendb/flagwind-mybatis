@@ -245,7 +245,7 @@ public class MapperResolver {
      */
     public void ifEmptyRegisterDefaultInterface() {
         if (registerClass.size() == 0) {
-            registerMapper("tk.mybatis.mapper.common.Mapper");
+            registerMapper("tk.mybatis.repository.common.Mapper");
         }
     }
 

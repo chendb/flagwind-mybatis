@@ -53,7 +53,7 @@ public class MapperScannerConfigurer extends org.mybatis.spring.mapper.MapperSca
             if (beanDefinition instanceof GenericBeanDefinition) {
                 definition = (GenericBeanDefinition) beanDefinition;
                 if (StringUtil.isNotEmpty(definition.getBeanClassName())
-                        && definition.getBeanClassName().equals("org.mybatis.spring.mapper.MapperFactoryBean")) {
+                        && definition.getBeanClassName().equals("org.mybatis.spring.repository.MapperFactoryBean")) {
                     definition.setBeanClass(MapperFactoryBean.class);
                     definition.getPropertyValues().add("mapperResolver", this.mapperResolver);
                 }

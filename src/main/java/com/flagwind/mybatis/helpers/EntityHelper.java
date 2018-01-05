@@ -45,6 +45,18 @@ public class EntityHelper {
     private static final Map<Class<?>, EntityTable> entityTableMap = new ConcurrentHashMap<Class<?>, EntityTable>();
 
     /**
+     * 判断实体类型是否注册
+     * @param entityClass
+     * @return
+     */
+    public static boolean hasEntityTable(Class<?> entityClass) {
+        EntityTable entityTable = entityTableMap.get(entityClass);
+        return entityTable != null;
+    }
+
+
+
+    /**
      * 获取表对象
      *
      * @param entityClass
