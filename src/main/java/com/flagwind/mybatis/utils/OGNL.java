@@ -1,7 +1,9 @@
 package com.flagwind.mybatis.utils;
 
-import com.flagwind.mybatis.common.IDynamicTableName;
-import com.flagwind.persistent.model.*;
+import com.flagwind.persistent.model.ChildClause;
+import com.flagwind.persistent.model.ClauseOperator;
+import com.flagwind.persistent.model.CombineClause;
+import com.flagwind.persistent.model.SingleClause;
 
 /**
  * OGNL静态方法
@@ -100,27 +102,5 @@ public abstract class OGNL {
 
 
 
-    /**
-     * 判断参数是否支持动态表名
-     *
-     * @param parameter
-     * @return true支持，false不支持
-     */
-    public static boolean isDynamicParameter(Object parameter) {
-        if (parameter != null && parameter instanceof IDynamicTableName) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 判断参数是否b支持动态表名
-     *
-     * @param parameter
-     * @return true不支持，false支持
-     */
-    public static boolean isNotDynamicParameter(Object parameter) {
-        return !isDynamicParameter(parameter);
-    }
 
 }

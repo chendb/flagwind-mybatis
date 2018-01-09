@@ -1,70 +1,16 @@
 package com.flagwind.mybatis.helpers;
 
-import java.util.Set;
-
-import com.flagwind.mybatis.common.IDynamicTableName;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.meta.EntityColumn;
 import com.flagwind.mybatis.utils.StringUtil;
 
+import java.util.Set;
+
 public class SqlHelper {
 
-    /**
-     * 获取表名 - 支持动态表名
-     *
-     * @param entityClass
-     * @param tableName
-     * @return
-     */
-    public static String getDynamicTableName(Class<?> entityClass, String tableName) {
-        if (IDynamicTableName.class.isAssignableFrom(entityClass)) {
-            StringBuilder sql = new StringBuilder();
-            sql.append("<choose>");
-            sql.append("<when test=\"@tk.mybatis.repository.util.OGNL@isDynamicParameter(_parameter) and dynamicTableName != null and dynamicTableName != ''\">");
-            sql.append("${dynamicTableName}\n");
-            sql.append("</when>");
-            //不支持指定列的时候查询全部列
-            sql.append("<otherwise>");
-            sql.append(tableName);
-            sql.append("</otherwise>");
-            sql.append("</choose>");
-            return sql.toString();
-        } else {
-            return tableName;
-        }
+    public static String getTableName(Class<?> entityClass, String defaultTableName) {
+        return defaultTableName;
     }
-
-    /**
-     * 获取表名 - 支持动态表名，该方法用于多个入参时，通过parameterName指定入参中实体类的@Param的注解值
-     *
-     * @param entityClass
-     * @param tableName
-     * @param parameterName
-     * @return
-     */
-    public static String getDynamicTableName(Class<?> entityClass, String tableName, String parameterName) {
-        if (IDynamicTableName.class.isAssignableFrom(entityClass)) {
-            if (StringUtil.isNotEmpty(parameterName)) {
-                StringBuilder sql = new StringBuilder();
-                sql.append("<choose>");
-                sql.append("<when test=\"@tk.mybatis.repository.util.OGNL@isDynamicParameter(" + parameterName + ") and " + parameterName + ".dynamicTableName != null and " + parameterName + ".dynamicTableName != ''\">");
-                sql.append("${" + parameterName + ".dynamicTableName}");
-                sql.append("</when>");
-                //不支持指定列的时候查询全部列
-                sql.append("<otherwise>");
-                sql.append(tableName);
-                sql.append("</otherwise>");
-                sql.append("</choose>");
-                return sql.toString();
-            } else {
-                return getDynamicTableName(entityClass, tableName);
-            }
-
-        } else {
-            return tableName;
-        }
-    }
-
     /**
      * <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
      *
@@ -281,37 +227,29 @@ public class SqlHelper {
     public static String fromTable(Class<?> entityClass, String defaultTableName) {
         StringBuilder sql = new StringBuilder();
         sql.append(" FROM ");
-        sql.append(getDynamicTableName(entityClass, defaultTableName));
+        sql.append(getTableName(entityClass, defaultTableName));
         sql.append(" ");
         return sql.toString();
     }
 
-    /**
-     * update tableName - 动态表名
-     *
-     * @param entityClass
-     * @param defaultTableName
-     * @return
-     */
-    public static String updateTable(Class<?> entityClass, String defaultTableName) {
-        return updateTable(entityClass, defaultTableName, null);
-    }
+
+
 
     /**
      * update tableName - 动态表名
      *
      * @param entityClass
      * @param defaultTableName 默认表名
-     * @param entityName       别名
      * @return
      */
-    public static String updateTable(Class<?> entityClass, String defaultTableName, String entityName) {
+    public static String updateTable(Class<?> entityClass, String defaultTableName) {
         StringBuilder sql = new StringBuilder();
         sql.append("UPDATE ");
-        sql.append(getDynamicTableName(entityClass, defaultTableName, entityName));
+        sql.append(getTableName(entityClass, defaultTableName));
         sql.append(" ");
         return sql.toString();
     }
+
 
     /**
      * delete tableName - 动态表名
@@ -323,7 +261,7 @@ public class SqlHelper {
     public static String deleteFromTable(Class<?> entityClass, String defaultTableName) {
         StringBuilder sql = new StringBuilder();
         sql.append("DELETE FROM ");
-        sql.append(getDynamicTableName(entityClass, defaultTableName));
+        sql.append(getTableName(entityClass, defaultTableName));
         sql.append(" ");
         return sql.toString();
     }
@@ -338,7 +276,7 @@ public class SqlHelper {
     public static String insertIntoTable(Class<?> entityClass, String defaultTableName) {
         StringBuilder sql = new StringBuilder();
         sql.append("INSERT INTO ");
-        sql.append(getDynamicTableName(entityClass, defaultTableName));
+        sql.append(getTableName(entityClass, defaultTableName));
         sql.append(" ");
         return sql.toString();
     }
@@ -510,166 +448,5 @@ public class SqlHelper {
         return sql.toString();
     }
 
-    /**
-     * example支持查询指定列时
-     *
-     * @return
-     */
-    public static String exampleSelectColumns(Class<?> entityClass) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("<choose>");
-        sql.append("<when test=\"@tk.mybatis.repository.util.OGNL@hasSelectColumns(_parameter)\">");
-        sql.append("<foreach collection=\"_parameter.selectColumns\" item=\"selectColumn\" separator=\",\">");
-        sql.append("${selectColumn}");
-        sql.append("</foreach>");
-        sql.append("</when>");
-        //不支持指定列的时候查询全部列
-        sql.append("<otherwise>");
-        sql.append(getAllColumns(entityClass));
-        sql.append("</otherwise>");
-        sql.append("</choose>");
-        return sql.toString();
-    }
-
-    /**
-     * example支持查询指定列时
-     *
-     * @return
-     */
-    public static String exampleCountColumn(Class<?> entityClass) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("<choose>");
-        sql.append("<when test=\"@tk.mybatis.repository.util.OGNL@hasCountColumn(_parameter)\">");
-        sql.append("COUNT(${countColumn})");
-        sql.append("</when>");
-        sql.append("<otherwise>");
-        sql.append("COUNT(0)");
-        sql.append("</otherwise>");
-        sql.append("</choose>");
-        //不支持指定列的时候查询全部列
-        sql.append("<if test=\"@tk.mybatis.repository.util.OGNL@hasNoSelectColumns(_parameter)\">");
-        sql.append(getAllColumns(entityClass));
-        sql.append("</if>");
-        return sql.toString();
-    }
-
-    /**
-     * example查询中的orderBy条件，会判断默认orderBy
-     *
-     * @return
-     */
-    public static String exampleOrderBy(Class<?> entityClass) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("<if test=\"orderByClause != null\">");
-        sql.append("order by ${orderByClause}");
-        sql.append("</if>");
-        String orderByClause = EntityHelper.getOrderByClause(entityClass);
-        if (orderByClause.length() > 0) {
-            sql.append("<if test=\"orderByClause == null\">");
-            sql.append("ORDER BY " + orderByClause);
-            sql.append("</if>");
-        }
-        return sql.toString();
-    }
-
-    /**
-     * example 支持 for update
-     *
-     * @return
-     */
-    public static String exampleForUpdate() {
-        StringBuilder sql = new StringBuilder();
-        sql.append("<if test=\"@tk.mybatis.repository.util.OGNL@hasForUpdate(_parameter)\">");
-        sql.append("FOR UPDATE");
-        sql.append("</if>");
-        return sql.toString();
-    }
-
-    /**
-     * example 支持 for update
-     *
-     * @return
-     */
-    public static String exampleCheck(Class<?> entityClass) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("<bind name=\"checkExampleEntityClass\" value=\"@tk.mybatis.repository.util.OGNL@checkExampleEntityClass(_parameter, '");
-        sql.append(entityClass.getCanonicalName());
-        sql.append("')\"/>");
-        return sql.toString();
-    }
-
-    /**
-     * Example查询中的where结构，用于只有一个Example参数时
-     *
-     * @return
-     */
-    public static String exampleWhereClause() {
-        return "<if test=\"_parameter != null\">" +
-                "<where>\n" +
-                "  <foreach collection=\"oredCriteria\" item=\"criteria\">\n" +
-                "    <if test=\"criteria.valid\">\n" +
-                "      ${@tk.mybatis.repository.util.OGNL@andOr(criteria)}" +
-                "      <trim prefix=\"(\" prefixOverrides=\"and |or \" suffix=\")\">\n" +
-                "        <foreach collection=\"criteria.criteria\" item=\"criterion\">\n" +
-                "          <choose>\n" +
-                "            <when test=\"criterion.noValue\">\n" +
-                "              ${@tk.mybatis.repository.util.OGNL@andOr(criterion)} ${criterion.condition}\n" +
-                "            </when>\n" +
-                "            <when test=\"criterion.singleValue\">\n" +
-                "              ${@tk.mybatis.repository.util.OGNL@andOr(criterion)} ${criterion.condition} #{criterion.value}\n" +
-                "            </when>\n" +
-                "            <when test=\"criterion.betweenValue\">\n" +
-                "              ${@tk.mybatis.repository.util.OGNL@andOr(criterion)} ${criterion.condition} #{criterion.value} and #{criterion.secondValue}\n" +
-                "            </when>\n" +
-                "            <when test=\"criterion.listValue\">\n" +
-                "              ${@tk.mybatis.repository.util.OGNL@andOr(criterion)} ${criterion.condition}\n" +
-                "              <foreach close=\")\" collection=\"criterion.value\" item=\"listItem\" open=\"(\" separator=\",\">\n" +
-                "                #{listItem}\n" +
-                "              </foreach>\n" +
-                "            </when>\n" +
-                "          </choose>\n" +
-                "        </foreach>\n" +
-                "      </trim>\n" +
-                "    </if>\n" +
-                "  </foreach>\n" +
-                "</where>" +
-                "</if>";
-    }
-
-    /**
-     * Example-Update中的where结构，用于多个参数时，Example带@Param("example")注解时
-     *
-     * @return
-     */
-    public static String updateByExampleWhereClause() {
-        return "<where>\n" +
-                "  <foreach collection=\"example.oredCriteria\" item=\"criteria\">\n" +
-                "    <if test=\"criteria.valid\">\n" +
-                "      ${@tk.mybatis.repository.util.OGNL@andOr(criteria)}" +
-                "      <trim prefix=\"(\" prefixOverrides=\"and |or \" suffix=\")\">\n" +
-                "        <foreach collection=\"criteria.criteria\" item=\"criterion\">\n" +
-                "          <choose>\n" +
-                "            <when test=\"criterion.noValue\">\n" +
-                "              ${@tk.mybatis.repository.util.OGNL@andOr(criterion)} ${criterion.condition}\n" +
-                "            </when>\n" +
-                "            <when test=\"criterion.singleValue\">\n" +
-                "              ${@tk.mybatis.repository.util.OGNL@andOr(criterion)} ${criterion.condition} #{criterion.value}\n" +
-                "            </when>\n" +
-                "            <when test=\"criterion.betweenValue\">\n" +
-                "              ${@tk.mybatis.repository.util.OGNL@andOr(criterion)} ${criterion.condition} #{criterion.value} and #{criterion.secondValue}\n" +
-                "            </when>\n" +
-                "            <when test=\"criterion.listValue\">\n" +
-                "              ${@tk.mybatis.repository.util.OGNL@andOr(criterion)} ${criterion.condition}\n" +
-                "              <foreach close=\")\" collection=\"criterion.value\" item=\"listItem\" open=\"(\" separator=\",\">\n" +
-                "                #{listItem}\n" +
-                "              </foreach>\n" +
-                "            </when>\n" +
-                "          </choose>\n" +
-                "        </foreach>\n" +
-                "      </trim>\n" +
-                "    </if>\n" +
-                "  </foreach>\n" +
-                "</where>";
-    }
 
 }
