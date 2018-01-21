@@ -4,7 +4,6 @@ import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.meta.EntityField;
 import com.flagwind.mybatis.utils.StringUtil;
 import com.flagwind.persistent.annotation.ColumnType;
-import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.MutableTriple;
 import org.apache.ibatis.type.*;
