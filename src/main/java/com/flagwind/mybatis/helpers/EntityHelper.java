@@ -297,6 +297,11 @@ public class EntityHelper {
             entityColumn.setTypeHandler(columnTypeTriple.right);
         }
 
+        // 设置枚举转换器
+        if(field.getJavaType().isEnum()){
+            entityColumn.setTypeHandler(ColumnHelper.getEnumTypeHandler(field));
+        }
+
         entityColumn.setProperty(field.getName());
         entityColumn.setColumn(columnName);
         entityColumn.setJavaType(field.getJavaType());

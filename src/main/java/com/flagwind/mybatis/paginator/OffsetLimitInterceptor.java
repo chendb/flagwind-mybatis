@@ -53,7 +53,7 @@ import com.flagwind.persistent.model.Sorting;
                 args = { MappedStatement.class, Object.class,RowBounds.class, ResultHandler.class })
 })
 public class OffsetLimitInterceptor implements Interceptor {
-    private static Log logger = LogFactory.getLog(OffsetLimitInterceptor.class);
+    private static Log LOG = LogFactory.getLog(OffsetLimitInterceptor.class);
     static int MAPPED_STATEMENT_INDEX = 0;
     static int PARAMETER_INDEX = 1;
     static int ROWBOUNDS_INDEX = 2;
@@ -280,14 +280,14 @@ public class OffsetLimitInterceptor implements Interceptor {
     }
 
     public void setAsyncTotalCount(boolean asyncTotalCount) {
-        logger.debug(String.format("asyncTotalCount: {} ", asyncTotalCount));
+        LOG.debug(String.format("asyncTotalCount: {} ", asyncTotalCount));
         this.asyncTotalCount = asyncTotalCount;
     }
 
     public void setPoolMaxSize(int poolMaxSize) {
 
         if (poolMaxSize > 0) {
-            logger.debug(String.format("poolMaxSize: {} ", poolMaxSize));
+            LOG.debug(String.format("poolMaxSize: {} ", poolMaxSize));
             Pool = Executors.newFixedThreadPool(poolMaxSize);
         }
         else {

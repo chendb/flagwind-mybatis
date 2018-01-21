@@ -4,13 +4,14 @@ import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.meta.EntityField;
 import com.flagwind.mybatis.utils.StringUtil;
 import com.flagwind.persistent.annotation.ColumnType;
+import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.MutableTriple;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.type.UnknownTypeHandler;
+import org.apache.ibatis.type.*;
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.sql.Timestamp;
 
 public class ColumnHelper {
@@ -56,6 +57,24 @@ public class ColumnHelper {
             return JdbcType.VARCHAR;
         }
         return JdbcType.UNDEFINED;
+    }
+
+    public static Class<? extends  TypeHandler<?>> getEnumTypeHandler(EntityField field) {
+
+        if (field.getJavaType().isEnum()) {
+            if (field.isAnnotationPresent(Enumerated.class)) {
+                // 获取注解对象
+                Enumerated enumerated = field.getAnnotation(Enumerated.class);
+                // 设置了value属性
+                if (enumerated.value() == EnumType.ORDINAL) {
+                    EnumOrdinalTypeHandler<? extends Enum<?>> typeHandler = new EnumOrdinalTypeHandler(field.getJavaType());
+                    return (Class<? extends TypeHandler<?>>) typeHandler.getClass();
+                }
+            }
+            EnumTypeHandler<? extends Enum<?>> typeHandler = new EnumTypeHandler(field.getClass());
+            return (Class<? extends TypeHandler<?>>) typeHandler.getClass();
+        }
+        return null;
     }
 
     public static MutableTriple<ColumnType,JdbcType ,Class<? extends TypeHandler<?>>> getColumnType(EntityField field){
