@@ -13,6 +13,7 @@ import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.mapping.ResultFlag;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
+import org.apache.ibatis.reflection.wrapper.BeanWrapper;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
@@ -261,7 +262,6 @@ public class ResultMapSwapper {
 
                 registerResultMap(resolveResultMap(columnPrefix, resource, nestedResultMap, javaType, style));
             }
-
             String notNullColumn = null;
             // String columnPrefix = null;
 

@@ -1,58 +1,52 @@
 package com.flagwind.persistent;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import java.util.concurrent.ConcurrentHashMap;
+public class DiscoveryFactory {
 
-public class ServiceResolverFactory {
+    Log LOG = LogFactory.getLog(DiscoveryFactory.class);
+    //#region 单例字段
+    private static DiscoveryFactory instance;
+    //#endregion
 
-    // #region 单例字段
-    private static ServiceResolverFactory instance;
-    // #endregion
+    //#region 成员字段
+    private Discovery discovery;
+    //#endregion
 
-    // #region 成员字段
-    private String defaultName;
-    private ConcurrentHashMap<String, ServiceResolver> resolvers;
-    // #endregion
+    //#region 构造函数
+    public DiscoveryFactory(){
+    }
+    //#endregion
 
-    public static ServiceResolverFactory instance() {
+    public static DiscoveryFactory instance() {
         if (instance == null) {
-            instance = new ServiceResolverFactory();
+            instance = new DiscoveryFactory();
         }
         return instance;
     }
 
-
-
-
-    // #region 公共方法
-    public void register(String name, ServiceResolver provider) {
-        this.register(name, provider, true);
+    public void initialize(Discovery discovery) {
+        this.discovery = discovery;
     }
 
-    public boolean register(String name, ServiceResolver resolver, boolean replaceOnExists) {
 
-        name = StringUtils.isEmpty(name) ? "" : name.trim();
+    //#region 公共方法
 
-        if (replaceOnExists) {
-            resolvers.put(name, resolver);
-        } else {
-            resolvers.putIfAbsent(name, resolver);
+
+    public <R> R resolve(String source) {
+
+        R r = (R) this.discovery.discover(source);
+        if (r == null) {
+            LOG.warn(String.format("Discover %s 没有找到", source));
         }
-
-        //返回成功
-        return true;
+        return r;
     }
 
-
-    /**
-     * 注销服务供应程序
-     * @param name 要注销服务供应程序的名称
-     */
-    public void unregister(String name) {
-        name = StringUtils.isEmpty(name) ? "" : name.trim();
-        resolvers.remove(name);
+    public <R> R resolve(Class<?> serviceType) {
+        return this.resolve(serviceType.getSimpleName());
     }
-    // #endregion
+
+    //#endregion
 
 }

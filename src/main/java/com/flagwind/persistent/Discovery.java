@@ -1,7 +1,7 @@
 package com.flagwind.persistent;
 
 /**
- * 服务分析器
+ * 服务或对象查找接口
  */
 public interface Discovery{
 
@@ -10,12 +10,12 @@ public interface Discovery{
      * @param  {string} name 服务名称。
      * @returns any
      */
-    <T> T  discover(String name);
+  <T>  T  discover(String name);
 
     /**
      * 根据指定服务类型获取服务实例。
      * @param  {Function|string} serviceType 服务类型。
      * @returns T
      */
-    <T> T   discover(Class<?> serviceType);
+    <T>   T   discover(Class<?> serviceType);
 }

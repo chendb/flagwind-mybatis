@@ -3,6 +3,8 @@ package com.flagwind.mybatis.spring;
 import com.flagwind.mybatis.common.MapperResolver;
 import com.flagwind.mybatis.utils.StringUtil;
 import com.flagwind.persistent.AbstractRepository;
+import com.flagwind.persistent.Discovery;
+import com.flagwind.persistent.DiscoveryFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
@@ -12,6 +14,15 @@ import java.util.Properties;
 public class MapperScannerConfigurer extends org.mybatis.spring.mapper.MapperScannerConfigurer {
     private MapperResolver mapperResolver = new MapperResolver();
 
+
+    public void setDiscovery(Discovery discovery) {
+        this.discovery = discovery;
+        DiscoveryFactory.instance().initialize(discovery);
+    }
+
+    private Discovery discovery;
+
+    @Override
     public void setMarkerInterface(Class<?> superClass) {
         super.setMarkerInterface(superClass);
         if (AbstractRepository.class.isAssignableFrom(superClass)) {

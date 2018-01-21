@@ -37,6 +37,11 @@ public class FieldHelper {
         }
     }
 
+    public static  EntityField getField(Class<?> entityClass,String name) {
+        return getFields(entityClass).stream()
+                .filter(g -> g.getName().equalsIgnoreCase(name))
+                .findFirst().orElse(null);
+    }
     /**
      * 获取全部的Field
      *
