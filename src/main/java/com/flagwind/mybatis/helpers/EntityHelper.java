@@ -26,6 +26,8 @@ import com.flagwind.mybatis.meta.EntityTable;
 import com.flagwind.mybatis.utils.AssociationUtils;
 import com.flagwind.mybatis.utils.SimpleTypeUtils;
 import com.flagwind.mybatis.utils.StringUtil;
+import com.flagwind.persistent.ColumnTypeEntry;
+import com.flagwind.persistent.annotation.Aggregate;
 import com.flagwind.persistent.annotation.ColumnType;
 import com.flagwind.persistent.annotation.NameStyle;
 
@@ -106,7 +108,9 @@ public class EntityHelper {
 
     public static EntityColumn getColumn(Class<?> entityClass,String name) {
         Set<EntityColumn> columns = getColumns(entityClass);
-        if (columns == null || columns.size() == 0) return null;
+        if (columns == null || columns.size() == 0) {
+            return null;
+        }
         Iterator<EntityColumn> iterator = columns.iterator();
         while (iterator.hasNext()) {
             EntityColumn col = iterator.next();
@@ -273,7 +277,8 @@ public class EntityHelper {
         if (field.isAnnotationPresent(Id.class)) {
             entityColumn.setId(true);
         }
-        //Column
+
+        // region Column 注解处理
 
         MutablePair<String, Column> columnDuplex = ColumnHelper.getColumnName(field, style);
         String columnName = columnDuplex.left;
@@ -282,32 +287,40 @@ public class EntityHelper {
             entityColumn.setInsertable(columnDuplex.right.insertable());
         }
 
-        //ColumnType
-        MutableTriple<ColumnType, JdbcType, Class<? extends TypeHandler<?>>> columnTypeTriple = ColumnHelper.getColumnType(field);
+        // endregion
 
-        //column可以起到别名的作用
-        if (columnTypeTriple.left != null && StringUtil.isEmpty(columnName) && StringUtil.isNotEmpty(columnTypeTriple.left.column())) {
-            columnName = columnTypeTriple.left.column();
+        // region ColumnType 注解处理
+        if (field.isAnnotationPresent(ColumnType.class)) {
+            ColumnTypeEntry columnTypeEntry = ColumnHelper.getColumnTypeEntry(field);
+            //column可以起到别名的作用
+            columnName = StringUtil.isEmpty(columnName) ? columnTypeEntry.getColumn() : columnName;
+            if (columnTypeEntry.getJdbcType() != null) {
+                entityColumn.setJdbcType(columnTypeEntry.getJdbcType());
+            }
+            if (columnTypeEntry.getTypeHandler() != null) {
+                entityColumn.setTypeHandler(columnTypeEntry.getTypeHandler());
+            }
         }
+        // endregion
 
-        if (columnTypeTriple.middle != null) {
-            entityColumn.setJdbcType(columnTypeTriple.middle);
-        }
-        if (columnTypeTriple.right != null) {
-            entityColumn.setTypeHandler(columnTypeTriple.right);
-        }
-
-        // 设置枚举转换器
-        if(field.getJavaType().isEnum()){
+        // region 设置枚举转换器
+        if (field.getJavaType().isEnum()) {
             entityColumn.setTypeHandler(ColumnHelper.getEnumTypeHandler(field));
         }
+
+        // endregion
+
+        // region Aggregate 聚合注解处理
+        if (field.isAnnotationPresent(Aggregate.class)) {
+            entityColumn.setAggregate(ColumnHelper.getAggregateEntry(field));
+        }
+        // endregion
 
         entityColumn.setProperty(field.getName());
         entityColumn.setColumn(columnName);
         entityColumn.setJavaType(field.getJavaType());
 
-
-        //OrderBy
+        // region OrderBy
         if (field.isAnnotationPresent(OrderBy.class)) {
             OrderBy orderBy = field.getAnnotation(OrderBy.class);
             if (orderBy.value().equals("")) {
@@ -316,7 +329,10 @@ public class EntityHelper {
                 entityColumn.setOrderBy(orderBy.value());
             }
         }
-        //主键策略 - Oracle序列，MySql自动增长，UUID
+
+        // endregion
+
+        // region 主键策略 - Oracle序列，MySql自动增长，UUID
         if (field.isAnnotationPresent(SequenceGenerator.class)) {
             SequenceGenerator sequenceGenerator = field.getAnnotation(SequenceGenerator.class);
             if (sequenceGenerator.sequenceName().equals("")) {
@@ -357,6 +373,8 @@ public class EntityHelper {
                 }
             }
         }
+        // endregion
+
         entityTable.getEntityClassColumns().add(entityColumn);
         if (entityColumn.isId()) {
             entityTable.getEntityClassPKColumns().add(entityColumn);

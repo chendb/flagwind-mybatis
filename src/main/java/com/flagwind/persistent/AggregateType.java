@@ -1,4 +1,8 @@
 package com.flagwind.persistent;
 
-public class AggregateType {
+/**
+ * 聚合函数
+ */
+public enum AggregateType {
+    Avg,Sum,Count,Max,Min
 }

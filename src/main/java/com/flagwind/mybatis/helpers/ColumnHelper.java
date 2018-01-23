@@ -3,6 +3,9 @@ package com.flagwind.mybatis.helpers;
 import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.meta.EntityField;
 import com.flagwind.mybatis.utils.StringUtil;
+import com.flagwind.persistent.AggregateEntry;
+import com.flagwind.persistent.ColumnTypeEntry;
+import com.flagwind.persistent.annotation.Aggregate;
 import com.flagwind.persistent.annotation.ColumnType;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.MutableTriple;
@@ -58,6 +61,17 @@ public class ColumnHelper {
         return JdbcType.UNDEFINED;
     }
 
+
+    public static AggregateEntry getAggregateEntry(EntityField field) {
+        if (field.isAnnotationPresent(Aggregate.class)) {
+            return null;
+        }
+        Aggregate aggregate = field.getAnnotation(Aggregate.class);
+        String column = aggregate.column();
+        column = StringUtil.isEmpty(column) ? field.getName() : column;
+        return new AggregateEntry(aggregate.type(), field.getName(), column);
+    }
+
     public static Class<? extends  TypeHandler<?>> getEnumTypeHandler(EntityField field) {
 
         if (field.getJavaType().isEnum()) {
@@ -76,23 +90,23 @@ public class ColumnHelper {
         return null;
     }
 
-    public static MutableTriple<ColumnType,JdbcType ,Class<? extends TypeHandler<?>>> getColumnType(EntityField field){
-        MutableTriple<ColumnType,JdbcType ,Class<? extends TypeHandler<?>>> triple = new MutableTriple<>();
+    public static ColumnTypeEntry getColumnTypeEntry(EntityField field){
+        ColumnTypeEntry entry = new ColumnTypeEntry();
         if (field.isAnnotationPresent(ColumnType.class)) {
             ColumnType columnType = field.getAnnotation(ColumnType.class);
-            triple.setLeft(columnType);
+
             if (columnType.jdbcType() != JdbcType.UNDEFINED) {
-                triple.setMiddle(columnType.jdbcType());
+                entry.setJdbcType(columnType.jdbcType());
             }
             if (columnType.typeHandler() != UnknownTypeHandler.class) {
-                triple.setRight(columnType.typeHandler());
+                entry.setTypeHandler(columnType.typeHandler());
             }
 
         }
-        if (triple.middle == JdbcType.UNDEFINED ||triple.middle == null) {
-            triple.setMiddle(formJavaType(field.getJavaType()));
+        if (entry.getJdbcType() == JdbcType.UNDEFINED ||entry.getJdbcType() == null) {
+            entry.setJdbcType(formJavaType(field.getJavaType()));
         }
-        return triple;
+        return entry;
     }
 
     public static MutablePair<String,Column> getColumnName(EntityField field, Style style){

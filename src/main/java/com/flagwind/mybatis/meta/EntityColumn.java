@@ -1,5 +1,6 @@
 package com.flagwind.mybatis.meta;
 
+import com.flagwind.persistent.AggregateEntry;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
@@ -20,6 +21,15 @@ public class EntityColumn {
 	private boolean uuid = false;
 	private boolean identity = false;
 	private String generator;
+
+	/**
+	 * 聚合字段定义
+	 */
+	private AggregateEntry aggregate;
+
+
+
+
 
 	/**
 	 * 排序
@@ -71,6 +81,15 @@ public class EntityColumn {
 	public Class<?> getJavaType() {
 		return javaType;
 	}
+
+	public AggregateEntry getAggregate() {
+		return aggregate;
+	}
+
+	public void setAggregate(AggregateEntry aggregate) {
+		this.aggregate = aggregate;
+	}
+
 
 	public void setJavaType(Class<?> javaType) {
 		this.javaType = javaType;

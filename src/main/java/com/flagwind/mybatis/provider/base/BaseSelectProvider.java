@@ -1,6 +1,7 @@
 package com.flagwind.mybatis.provider.base;
 
 import com.flagwind.mybatis.common.MapperResolver;
+import com.flagwind.mybatis.helpers.AggregateSqlHelper;
 import com.flagwind.mybatis.helpers.AssociationSqlHelper;
 import com.flagwind.mybatis.provider.MapperTemplate;
 import com.flagwind.mybatis.utils.ClauseUtils;
@@ -166,7 +167,26 @@ public class BaseSelectProvider extends MapperTemplate {
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.selectAllColumns(entityClass));
+        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass,false)));
+        sql.append(SqlHelper.orderByDefault(entityClass));
+        return sql.toString();
+    }
+
+
+    /**
+     * 聚合多条件查询
+     * @param ms
+     * @return
+     */
+    public String aggregate(MappedStatement ms) {
+        Class<?> entityClass = getEntityClass(ms);
+        //修改返回值类型为实体类型
+        setResultType(ms, entityClass);
+        StringBuilder sql = new StringBuilder();
+        sql.append(AggregateSqlHelper.selectAllColumns(entityClass));
         sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
+        sql.append(ClauseUtils.getWhereSql("_clause", 5));
+        sql.append(AggregateSqlHelper.groupBy(entityClass));
         sql.append(SqlHelper.orderByDefault(entityClass));
         return sql.toString();
     }

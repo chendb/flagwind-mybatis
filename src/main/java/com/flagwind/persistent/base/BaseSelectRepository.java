@@ -39,4 +39,8 @@ public interface BaseSelectRepository<E, ID extends Serializable> {
 
     @SelectProvider(type = BaseSelectProvider.class, method = "dynamicSQL")
     List<E> getAll();
+
+    @SelectProvider(type = BaseSelectProvider.class, method = "dynamicSQL")
+    List<E> aggregate(@Param("_clause") Clause clause);
+
 }
