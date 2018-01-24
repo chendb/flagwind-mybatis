@@ -29,7 +29,7 @@ public class SpecialProvider extends MapperTemplate {
         sql.append(SqlHelper.insertIntoTable(entityClass, tableName(entityClass)));
         sql.append(SqlHelper.insertColumns(entityClass, true, false, false));
         sql.append(" VALUES ");
-        sql.append("<foreach collection=\"list\" item=\"record\" separator=\",\" >");
+        sql.append("<foreach collection=\"_list\" item=\"record\" separator=\",\" >");
         sql.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
         //获取全部列
         Set<EntityColumn> columnList = EntityHelper.getColumns(entityClass);

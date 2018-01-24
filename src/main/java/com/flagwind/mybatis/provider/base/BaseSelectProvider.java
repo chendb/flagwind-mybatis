@@ -6,7 +6,18 @@ import com.flagwind.mybatis.helpers.AssociationSqlHelper;
 import com.flagwind.mybatis.provider.MapperTemplate;
 import com.flagwind.mybatis.utils.ClauseUtils;
 import com.flagwind.mybatis.helpers.SqlHelper;
+import com.flagwind.persistent.model.Sorting;
+import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.SystemMetaObject;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * BaseSelectProvider实现类，基础方法实现类
@@ -110,7 +121,7 @@ public class BaseSelectProvider extends MapperTemplate {
         //将返回值修改为实体类型
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
-        sql.append(SqlHelper.selectCount(entityClass));
+        sql.append(SqlHelper.selectAllColumns(entityClass));
         sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
         sql.append(SqlHelper.wherePKColumn(entityClass, "_key"));
         return sql.toString();
@@ -135,7 +146,7 @@ public class BaseSelectProvider extends MapperTemplate {
      * 根据主键查询总数
      *
      * @param ms
-     * @return
+     * @return String
      */
     public String existsById(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
@@ -178,16 +189,26 @@ public class BaseSelectProvider extends MapperTemplate {
      * @param ms
      * @return
      */
-    public String aggregate(MappedStatement ms) {
-        Class<?> entityClass = getEntityClass(ms);
+    public String querySelective(MappedStatement ms) {
+       // Class<?> entityClass = getEntityClass(ms);
         //修改返回值类型为实体类型
-        setResultType(ms, entityClass);
+
+//        List<ResultMap> resultMaps = new ArrayList<ResultMap>();
+//        ResultMap r= new ResultMap.Builder(ms.getConfiguration(), "map", HashMap.class,null).build();
+//        resultMaps.add(r);
+//        MetaObject metaObject = SystemMetaObject.forObject(ms);
+//        metaObject.setValue("resultMaps", resultMaps);
+//
+//        setResultType(ms, HashMap.class);
         StringBuilder sql = new StringBuilder();
-        sql.append(AggregateSqlHelper.selectAllColumns(entityClass));
-        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
+        sql.append("select ");
+        sql.append(ClauseUtils.getQueryFieldColumnSql());
+        sql.append(" from ${_table} ");
         sql.append(ClauseUtils.getWhereSql("_clause", 5));
-        sql.append(AggregateSqlHelper.groupBy(entityClass));
-        sql.append(SqlHelper.orderByDefault(entityClass));
+        sql.append(" ");
+        sql.append(ClauseUtils.getQueryFieldGroupBySql());
+        sql.append(" ");
+        sql.append(ClauseUtils.getSortingSql());
         return sql.toString();
     }
 }

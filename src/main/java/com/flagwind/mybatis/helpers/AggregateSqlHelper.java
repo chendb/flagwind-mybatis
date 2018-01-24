@@ -10,6 +10,7 @@ import java.util.Set;
  * 聚合查询Sql帮助类
  */
 public class AggregateSqlHelper {
+
     public static String selectAllColumns(Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ").append(getAllColumns(entityClass)).append(" ");

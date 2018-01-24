@@ -11,7 +11,7 @@ public class StringUtil {
      * 空
      *
      * @param str
-     * @return
+     * @return boolean
      */
     public static boolean isEmpty(String str) {
         return str == null || str.length() == 0;
@@ -21,7 +21,7 @@ public class StringUtil {
      * 非空
      *
      * @param str
-     * @return
+     * @return boolean
      */
     public static boolean isNotEmpty(String str) {
         return !isEmpty(str);
@@ -33,7 +33,7 @@ public class StringUtil {
      *
      * @param str
      * @param style
-     * @return
+     * @return String
      */
     public static String convertByStyle(String str, Style style) {
         switch (style) {

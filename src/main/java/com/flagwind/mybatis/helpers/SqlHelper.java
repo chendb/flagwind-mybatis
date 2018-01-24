@@ -3,6 +3,7 @@ package com.flagwind.mybatis.helpers;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.meta.EntityColumn;
 import com.flagwind.mybatis.utils.StringUtil;
+import com.flagwind.persistent.model.Sorting;
 
 import java.util.Set;
 

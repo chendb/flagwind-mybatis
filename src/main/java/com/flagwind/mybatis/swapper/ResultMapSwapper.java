@@ -7,6 +7,7 @@ import com.flagwind.mybatis.meta.EntityField;
 import com.flagwind.mybatis.utils.AssociationUtils;
 import com.flagwind.mybatis.utils.SimpleTypeUtils;
 import com.flagwind.mybatis.utils.StringUtil;
+import com.flagwind.persistent.ColumnTypeEntry;
 import com.flagwind.persistent.annotation.ColumnType;
 import org.apache.commons.lang3.tuple.MutableTriple;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
@@ -74,10 +75,10 @@ public class ResultMapSwapper {
             JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
             column = joinColumn.name();
         }
-        MutableTriple<ColumnType, JdbcType, Class<? extends TypeHandler<?>>> columnTypeTriple = ColumnHelper.getColumnType(field);
+        ColumnTypeEntry columnTypeEntry = ColumnHelper.getColumnTypeEntry(field);
 
-        Class<? extends TypeHandler<?>> typeHandlerClass = columnTypeTriple.right;
-        JdbcType jdbcType = columnTypeTriple.middle;
+       Class<? extends TypeHandler<?>> typeHandlerClass = columnTypeEntry.getTypeHandler();
+       JdbcType jdbcType = columnTypeEntry.getJdbcType();
 
         // 注册关联结果
         String nestedSelect = null;
@@ -111,17 +112,13 @@ public class ResultMapSwapper {
         ResultMapping resultMapping = assistant.buildResultMapping(
                 type,
                 property,
-
                 (StringUtil.isEmpty(columnPrefix) ? "" : columnPrefix) + column,
-
                 javaType,
                 jdbcType,
                 nestedSelect,
                 nestedResultMap,
                 notNullColumn,
-
                 null,
-
                 typeHandlerClass, flags, resultSet, foreignColumn, lazy);
         return resultMapping;
     }
@@ -143,10 +140,10 @@ public class ResultMapSwapper {
             JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
             column = joinColumn.name();
         }
-        MutableTriple<ColumnType, JdbcType, Class<? extends TypeHandler<?>>> columnTypeTriple = ColumnHelper.getColumnType(field);
+        ColumnTypeEntry columnTypeEntry = ColumnHelper.getColumnTypeEntry(field);
 
-        Class<? extends TypeHandler<?>> typeHandlerClass = columnTypeTriple.right;
-        JdbcType jdbcType = columnTypeTriple.middle;
+        Class<? extends TypeHandler<?>> typeHandlerClass = columnTypeEntry.getTypeHandler();
+        JdbcType jdbcType = columnTypeEntry.getJdbcType();
 
         // 注册关联结果
         String nestedSelect = null;
@@ -245,10 +242,10 @@ public class ResultMapSwapper {
             //resultMap is not need jdbcType
 
 
-            MutableTriple<ColumnType, JdbcType, Class<? extends TypeHandler<?>>> columnTypeTriple = ColumnHelper.getColumnType(field);
+            ColumnTypeEntry columnTypeEntry = ColumnHelper.getColumnTypeEntry(field);
 
 
-            JdbcType jdbcType = columnTypeTriple.middle;
+            JdbcType jdbcType = columnTypeEntry.getJdbcType();
 
             String nestedSelect = null;
             String nestedResultMap = null;
@@ -277,7 +274,7 @@ public class ResultMapSwapper {
             boolean lazy = false;
             // enum
 
-            Class<? extends TypeHandler<?>> typeHandlerClass = columnTypeTriple.right;
+            Class<? extends TypeHandler<?>> typeHandlerClass = columnTypeEntry.getTypeHandler();
 
 
             ResultMapping resultMapping = assistant.buildResultMapping(
