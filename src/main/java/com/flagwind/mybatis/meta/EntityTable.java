@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.StringUtils;
@@ -233,6 +234,11 @@ public class EntityTable {
 					builder.typeHandler(getInstance(entityColumn.getJavaType(),entityColumn.getTypeHandler()));
 				} catch (Exception e) {
 					throw new MapperException(e);
+				}
+			}else {
+				TypeHandler<?> typeHandler = configuration.getTypeHandlerRegistry().getTypeHandler(entityColumn.getJavaType(), entityColumn.getJdbcType());
+				if(typeHandler!=null) {
+					builder.typeHandler(typeHandler);
 				}
 			}
 			List<ResultFlag> flags = new ArrayList<ResultFlag>();

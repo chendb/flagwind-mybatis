@@ -109,6 +109,13 @@ public class ResultMapSwapper {
 
         boolean lazy = false;
 
+        if(typeHandlerClass==null) {
+            TypeHandler<?> typeHandler = configuration.getTypeHandlerRegistry().getTypeHandler(javaType, jdbcType);
+            if (typeHandler != null) {
+                typeHandlerClass = (Class<? extends TypeHandler<?>>) typeHandler.getClass();
+            }
+        }
+
         ResultMapping resultMapping = assistant.buildResultMapping(
                 type,
                 property,
@@ -175,6 +182,13 @@ public class ResultMapSwapper {
         }
 
         boolean lazy = false;
+
+        if(typeHandlerClass==null) {
+            TypeHandler<?> typeHandler = configuration.getTypeHandlerRegistry().getTypeHandler(javaType, jdbcType);
+            if (typeHandler != null) {
+                typeHandlerClass = (Class<? extends TypeHandler<?>>) typeHandler.getClass();
+            }
+        }
 
         ResultMapping resultMapping = assistant.buildResultMapping(
                 type,
@@ -275,6 +289,13 @@ public class ResultMapSwapper {
             // enum
 
             Class<? extends TypeHandler<?>> typeHandlerClass = columnTypeEntry.getTypeHandler();
+
+            if(typeHandlerClass==null) {
+                TypeHandler<?> typeHandler = configuration.getTypeHandlerRegistry().getTypeHandler(javaType, jdbcType);
+                if (typeHandler != null) {
+                    typeHandlerClass = (Class<? extends TypeHandler<?>>) typeHandler.getClass();
+                }
+            }
 
 
             ResultMapping resultMapping = assistant.buildResultMapping(

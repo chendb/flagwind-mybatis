@@ -83,9 +83,10 @@ public class ColumnHelper {
                     EnumOrdinalTypeHandler<? extends Enum<?>> typeHandler = new EnumOrdinalTypeHandler(field.getJavaType());
                     return (Class<? extends TypeHandler<?>>) typeHandler.getClass();
                 }
+                EnumTypeHandler<? extends Enum<?>> typeHandler = new EnumTypeHandler(field.getJavaType());
+                return (Class<? extends TypeHandler<?>>) typeHandler.getClass();
             }
-            EnumTypeHandler<? extends Enum<?>> typeHandler = new EnumTypeHandler(field.getClass());
-            return (Class<? extends TypeHandler<?>>) typeHandler.getClass();
+
         }
         return null;
     }
