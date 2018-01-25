@@ -277,7 +277,7 @@ public abstract class MapperTemplate {
      * @return
      */
     protected String tableName(Class<?> entityClass) {
-       return tableName(entityClass,true);
+       return tableName(entityClass,false);
     }
 
     /**

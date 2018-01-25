@@ -35,10 +35,12 @@ public class BaseSelectProvider extends MapperTemplate {
         if (AssociationSqlHelper.hasAssociation(entityClass)) {
             AssociationSqlHelper.registerEntityClass(entityClass, mapperResolver.getConfig());
             sql.append(AssociationSqlHelper.selectAllColumns(entityClass));
+
             sql.append(AssociationSqlHelper.fromTable(entityClass, mapperResolver.getConfig()));
         } else {
             sql.append(SqlHelper.selectAllColumns(entityClass));
-            sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
+            boolean hasTableAlias = sql.toString().contains(".");
+            sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass,hasTableAlias)));
         }
         return sql.toString();
 
@@ -91,7 +93,8 @@ public class BaseSelectProvider extends MapperTemplate {
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.selectAllColumns(entityClass));
-        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
+        boolean hasTableAlias = sql.toString().contains(".");
+        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass, hasTableAlias)));
         sql.append(ClauseUtils.getWhereSql("_clause", 5));
         sql.append(SqlHelper.orderByDefault(entityClass));
         return sql.toString();
@@ -122,7 +125,8 @@ public class BaseSelectProvider extends MapperTemplate {
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.selectAllColumns(entityClass));
-        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
+        boolean hasTableAlias = sql.toString().contains(".");
+        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass,hasTableAlias)));
         sql.append(SqlHelper.wherePKColumn(entityClass, "_key"));
         return sql.toString();
     }
@@ -137,7 +141,8 @@ public class BaseSelectProvider extends MapperTemplate {
         Class<?> entityClass = getEntityClass(ms);
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.selectCount(entityClass));
-        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
+        boolean hasTableAlias = sql.toString().contains(".");
+        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass,hasTableAlias)));
         sql.append(ClauseUtils.getWhereSql("_clause",5));
         return sql.toString();
     }
@@ -178,7 +183,8 @@ public class BaseSelectProvider extends MapperTemplate {
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.selectAllColumns(entityClass));
-        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass,false)));
+        boolean hasTableAlias = sql.toString().contains(".");
+        sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass,hasTableAlias)));
         sql.append(SqlHelper.orderByDefault(entityClass));
         return sql.toString();
     }
@@ -190,16 +196,7 @@ public class BaseSelectProvider extends MapperTemplate {
      * @return
      */
     public String querySelective(MappedStatement ms) {
-       // Class<?> entityClass = getEntityClass(ms);
-        //修改返回值类型为实体类型
 
-//        List<ResultMap> resultMaps = new ArrayList<ResultMap>();
-//        ResultMap r= new ResultMap.Builder(ms.getConfiguration(), "map", HashMap.class,null).build();
-//        resultMaps.add(r);
-//        MetaObject metaObject = SystemMetaObject.forObject(ms);
-//        metaObject.setValue("resultMaps", resultMaps);
-//
-//        setResultType(ms, HashMap.class);
         StringBuilder sql = new StringBuilder();
         sql.append("select ");
         sql.append(ClauseUtils.getQueryFieldColumnSql());
