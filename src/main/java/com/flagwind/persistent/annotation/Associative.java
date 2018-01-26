@@ -13,4 +13,5 @@ import java.lang.annotation.Target;
 public @interface Associative {
     String name();
     String source();
+    String extras() default "";
 }

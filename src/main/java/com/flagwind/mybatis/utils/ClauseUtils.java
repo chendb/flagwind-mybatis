@@ -97,29 +97,29 @@ public class ClauseUtils {
 
     private static String getChildClauseSql(String clauseName,String childClauseName,String childSql) {
         String sql =
-                "<when test=\"@com.flagwind.mybatis.utils.OGNL@isChildClause(" + clauseName + ")\">" +
-                "${" + clauseName + ".name} <if test=\"" + clauseName + ".included==false\"> not </if>  in  (" +
-                "select ${" + clauseName + ".childField} from ${" + clauseName + ".childTable}" +
-                "<where>" +
+                " <when test=\"@com.flagwind.mybatis.utils.OGNL@isChildClause(" + clauseName + ")\">" +
+                " ${" + clauseName + ".name} <if test=\"" + clauseName + ".included==false\"> not </if>  in  (" +
+                " select ${" + clauseName + ".childField} from ${" + clauseName + ".childTable} " +
+                " <where>" +
                         getCombineClauseSql(clauseName, childClauseName, childSql, false) +
-                "</where>" +
+                " </where>" +
                 ")"+
-                "</when>";
+                " </when>";
         return sql;
     }
 
     private static String getCombineClauseSql(String clauseName,String childClauseName,String childSql,boolean isWrapByWhen) {
         String sql =
-                (isWrapByWhen ? "<when test=\"@com.flagwind.mybatis.utils.OGNL@isCombineClause(" + clauseName + ")\">" : "") +
-                "<foreach collection=\"" + clauseName + "\" item=\"" + childClauseName + "\"  open=\"(\"  close=\")\" index=\"idx\"  separator=\"\">" +
-                "<when test=\"@com.flagwind.mybatis.utils.OGNL@isSingleClause(" + childClauseName + ")\">" +
-                "<if test=\"@com.flagwind.mybatis.utils.OGNL@isSingleValue(" + childClauseName + ")\">  " +
+                (isWrapByWhen ? " <when test=\"@com.flagwind.mybatis.utils.OGNL@isCombineClause(" + clauseName + ")\">" : "") +
+                " <foreach collection=\"" + clauseName + "\" item=\"" + childClauseName + "\"  open=\"(\"  close=\")\" index=\"idx\"  separator=\"\">" +
+                " <when test=\"@com.flagwind.mybatis.utils.OGNL@isSingleClause(" + childClauseName + ")\">" +
+                " <if test=\"@com.flagwind.mybatis.utils.OGNL@isSingleValue(" + childClauseName + ")\">  " +
                 "  <if test=\"idx!=0\">${" + clauseName + ".combine.name()}</if>   ${" + childClauseName + ".name} ${" + childClauseName + ".operator.alias} #{" + childClauseName + ".value}" +
-                "</if>" +
-                "<if test=\"@com.flagwind.mybatis.utils.OGNL@isListValue(" + childClauseName + ")\">  " +
-                " <if test=\"idx!=0\">${" + clauseName + ".combine.name()}</if>   ${" + childClauseName + ".name} ${" + childClauseName + ".operator.alias}" +
+                " </if>" +
+                " <if test=\"@com.flagwind.mybatis.utils.OGNL@isListValue(" + childClauseName + ")\">  " +
+                "  <if test=\"idx!=0\">${" + clauseName + ".combine.name()}</if>   ${" + childClauseName + ".name} ${" + childClauseName + ".operator.alias}" +
                 " <foreach collection=\"" + childClauseName + ".values\" item=\"listItem1\" open=\"(\"  close=\")\" separator=\",\">" +
-                "#{listItem1}" +
+                " #{listItem1} " +
                 " </foreach>" +
                 "</if>" +
                 "<if test=\"@com.flagwind.mybatis.utils.OGNL@isBetweenValue(" + childClauseName + ")\">  " +
