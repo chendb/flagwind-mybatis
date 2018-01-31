@@ -56,8 +56,9 @@ public class Paging implements Serializable {
 	/** 返回总的页数 */
 
 	public Long getPageCount() {
-		if (totalCount < 1)
+		if (totalCount < 1) {
 			return 0l;
+		}
 
 		return Math.round(Math.ceil((double) totalCount / pageSize));
 	}
@@ -84,10 +85,6 @@ public class Paging implements Serializable {
 	}
 
 
-
-
-
-
 	@Override
 	public String toString() {
 		return "Paging [" +
@@ -96,5 +93,23 @@ public class Paging implements Serializable {
 				", pageSize=" + pageSize
 				+ ", enableTotalCount=" + enableTotalCount + "]";
 	}
+
+	// region 静态构造方法
+
+	/**
+	 * 构建分页条件
+	 */
+	public static Paging build(Long pageIndex, Long pageSize) {
+		return new Paging(pageIndex, pageSize);
+	}
+
+	/**
+	 * 构建分页条件
+	 */
+	public static Paging build() {
+		return new Paging();
+	}
+
+	// endregion
 
 }

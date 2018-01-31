@@ -16,9 +16,15 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.sql.Timestamp;
 
+/**
+ * 数据列帮助类
+ */
 public class ColumnHelper {
 
     public static JdbcType formJavaType(Class<?> javaType){
+        if(javaType==null){
+            return  JdbcType.UNDEFINED;
+        }
         if(javaType.isAssignableFrom(String.class)){
             return JdbcType.VARCHAR;
         }

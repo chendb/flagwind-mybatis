@@ -61,4 +61,36 @@ public class ChildClause extends CombineClause {
         this.included = included;
     }
 
+
+    // region 链式方法
+
+    /**
+     * 设置组合方法
+     */
+    public ChildClause combine(ClauseCombine combine) {
+        this.setCombine(combine);
+        return this;
+    }
+
+    // endregion
+
+
+    // region 静态方法
+
+    /**
+     * 构建 id in (select id from table where x=xx and y=yy) 子查询条件
+     */
+    public static ChildClause include(String name, String childField, String childTable) {
+        return new ChildClause(name, true, childField, childTable, ClauseCombine.And);
+    }
+
+    /**
+     * 构建 id not in (select id from table where x=xx and y=yy) 子查询条件
+     */
+    public static ChildClause exclude(String name, String childField, String childTable) {
+        return new ChildClause(name, false, childField, childTable, ClauseCombine.And);
+    }
+
+    // endregion
+
 }

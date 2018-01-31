@@ -375,6 +375,9 @@ public class EntityHelper {
         }
         // endregion
 
+        if(entityColumn.getJdbcType()==null){
+            entityColumn.setJdbcType(ColumnHelper.formJavaType(entityColumn.getJavaType()));
+        }
         entityTable.getEntityClassColumns().add(entityColumn);
         if (entityColumn.isId()) {
             entityTable.getEntityClassPKColumns().add(entityColumn);

@@ -37,7 +37,7 @@ public interface BaseSelectRepository<E, ID extends Serializable> {
 
     @SelectProvider(type = BaseSelectProvider.class, method = "dynamicSQL")
     List<E> take(@Param("_clause") Clause clause, @Param("_startIndex") int startIndex,
-                 @Param("_endIndex") int endIndex);
+                 @Param("_endIndex") int endIndex, @Param("_sorts") Sorting[] sorts);
 
     @SelectProvider(type = BaseSelectProvider.class, method = "dynamicSQL")
     List<E> getAll();

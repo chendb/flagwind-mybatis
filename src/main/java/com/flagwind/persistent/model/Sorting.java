@@ -17,8 +17,9 @@ public class Sorting {
 	}
 
 	public Sorting(SortingMode mode, String... fields) {
-		if (fields == null || fields.length == 0)
+		if (fields == null || fields.length == 0) {
 			throw new IllegalArgumentException("fields");
+		}
 
 		this.setMode(mode);
 		this.fields = fields;
@@ -26,18 +27,19 @@ public class Sorting {
 
 	public String getFieldsText() {
 
-		if (this.fields == null || this.fields.length < 1)
+		if (this.fields == null || this.fields.length < 1) {
 			return "";
+		}
 
 		return StringUtils.join(this.fields, ",");
-
 
 	}
 
 	public void setFieldsText(String value) {
 
-		if (StringUtils.isBlank(value))
+		if (StringUtils.isBlank(value)) {
 			throw new NullPointerException("fieldText");
+		}
 
 		this.fields = value.split(",");
 
@@ -45,8 +47,9 @@ public class Sorting {
 
 	public void setFields(String[] fields) {
 
-		if (fields == null || fields.length == 0)
+		if (fields == null || fields.length == 0) {
 			throw new IllegalArgumentException("fields");
+		}
 
 		this.fields = fields;
 
@@ -76,13 +79,27 @@ public class Sorting {
 	@Override
 	public String toString() {
 
-		if (StringUtils.isBlank(getFieldsText()))
+		if (StringUtils.isBlank(getFieldsText())) {
 			return "";
+		}
 
-		if (SortingMode.Ascending == getMode())
+		if (SortingMode.Ascending == getMode()) {
 			return getFieldsText() + (getMode() == null ? "" : "  ASC");
-		else
+		} else {
 			return getFieldsText() + (getMode() == null ? "" : "  DESC");
+		}
 	}
+
+	// region 静态构造方法
+
+	public static Sorting ascending(String... fields) {
+		return new Sorting(SortingMode.Ascending, fields);
+	}
+
+	public static Sorting descending(String... fields) {
+		return new Sorting(SortingMode.Descending, fields);
+	}
+
+	// endregion
 
 }
