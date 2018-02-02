@@ -19,7 +19,7 @@ public abstract class OGNL {
      */
     public static boolean isSingleClause(Object parameter) {
         if (parameter != null && parameter instanceof SingleClause) {
-            return  true;
+            return true;
         }
         return false;
     }
@@ -50,41 +50,40 @@ public abstract class OGNL {
         }
         return false;
     }
-    public static boolean isNullValue(Object parameter){
+
+    public static boolean isNullValue(Object parameter) {
         if (parameter != null && parameter instanceof SingleClause) {
-            SingleClause clause=(SingleClause)parameter;
+            SingleClause clause = (SingleClause) parameter;
             switch (clause.getOperator()) {
-                case Null:
-                case NotNull:
-                    return true;
-                default:
-                    return false;
+            case Null:
+            case NotNull:
+                return true;
+            default:
+                return false;
             }
         }
         return false;
     }
 
-
-
-    public static boolean isSingleValue(Object parameter){
+    public static boolean isSingleValue(Object parameter) {
         if (parameter != null && parameter instanceof SingleClause) {
-            SingleClause clause=(SingleClause)parameter;
+            SingleClause clause = (SingleClause) parameter;
             switch (clause.getOperator()) {
-                case In:
-                case NotIn:
-                case Null:
-                case NotNull:
-                case Between:
-                case Child:
-                    return false;
-                default:
-                    return true;
+            case In:
+            case NotIn:
+            case Null:
+            case NotNull:
+            case Between:
+            case Child:
+                return false;
+            default:
+                return true;
             }
         }
         return false;
     }
 
-    public static boolean isListValue(Object parameter){
+    public static boolean isListValue(Object parameter) {
         if (parameter != null && parameter instanceof SingleClause) {
             SingleClause clause = (SingleClause) parameter;
             return (clause.getOperator() == ClauseOperator.In || clause.getOperator() == ClauseOperator.NotIn);
@@ -92,15 +91,55 @@ public abstract class OGNL {
         return false;
     }
 
-    public static boolean isBetweenValue(Object parameter){
+    /**
+     * in or not in 操作中的values长度是否超过了数据库支持的最大升序
+     */
+    public static boolean isOverflow(Object parameter) {
+        boolean overflow = false;
+        SingleClause clause = (SingleClause) parameter;
+        if (clause.getValues() != null && clause.getValues().length > 1000) {
+            overflow = true;
+        }
+        System.out.println("isOverflow:" + overflow);
+        return overflow;
+
+    }
+
+    /**
+     * in or not in 操作中的values长度是否没超过了数据库支持的最大升序
+     */
+    public static boolean isNotOverflow(Object parameter) {
+        return !isOverflow(parameter);
+    }
+
+    /**
+     * 超过最大长度，且为In操作
+     */
+    public static boolean isOverflowWithIn(Object parameter) {
+        SingleClause clause = (SingleClause) parameter;
+        if (!isOverflow(parameter)) {
+            return false;
+        }
+        return (clause.getOperator() == ClauseOperator.In);
+    }
+
+    /**
+     * 超过最大长度，且为NotIn操作
+     */
+    public static boolean isOverflowWithNotIn(Object parameter) {
+        SingleClause clause = (SingleClause) parameter;
+        if (!isOverflow(parameter)) {
+            return false;
+        }
+        return (clause.getOperator() == ClauseOperator.NotIn);
+    }
+
+    public static boolean isBetweenValue(Object parameter) {
         if (parameter != null && parameter instanceof SingleClause) {
             SingleClause clause = (SingleClause) parameter;
             return (clause.getOperator() == ClauseOperator.Between);
         }
         return false;
     }
-
-
-
 
 }

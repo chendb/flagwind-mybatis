@@ -71,6 +71,7 @@ public class ClauseUtils {
         sql.append("</choose>");
         sql.append("</where>");
         sql.append("</if>");
+        System.out.print(sql.toString());
         return sql.toString();
     }
 
@@ -79,12 +80,32 @@ public class ClauseUtils {
                     "<if test=\"@com.flagwind.mybatis.utils.OGNL@isSingleValue("+clauseName+")\">  " +
                     "${"+clauseName+".name} ${"+clauseName+".operator.alias} #{"+clauseName+".value}" +
                     "</if>" +
+                     // region in or not in 条件处理
                     "<if test=\"@com.flagwind.mybatis.utils.OGNL@isListValue("+clauseName+")\">" +
+                    // region 若 list.length<1000 && operate=in 则  ${name} in ( #{value1},#{value2}.....)
+                    " <if test=\"@com.flagwind.mybatis.utils.OGNL@isNotOverflow(" + clauseName + ")\"> "+
                     "${"+clauseName+".name} ${"+clauseName+".operator.alias}" +
                     " <foreach collection=\""+clauseName+".values\" item=\"listItem\" open=\"(\"  close=\")\" separator=\",\">" +
                     "#{listItem}" +
                     " </foreach>" +
                     "</if>" +
+                    // endregion
+                    // region 若 list.length>=1000 && operate=in 则  ${name} =  #{value}
+                    " <if test=\"@com.flagwind.mybatis.utils.OGNL@isOverflowWithIn(" + clauseName + ")\"> "+
+                    " <foreach collection=\"" + clauseName + ".values\" item=\"listItem\" open=\"(\"  close=\")\" separator=\"or\">" +
+                    "  ${" + clauseName + ".name} = #{listItem} " +
+                    " </foreach>" +
+                    " </if>" +
+                    // endregion
+                    // region 若 list.length>=1000 && operate=not in 则  ${name} <>  #{value}
+                    " <if test=\"@com.flagwind.mybatis.utils.OGNL@isOverflowWithNotIn(" + clauseName + ")\"> "+
+                    " <foreach collection=\"" + clauseName + ".values\" item=\"listItem\" open=\"(\"  close=\")\" separator=\"or\">" +
+                    "  ${" + clauseName + ".name} != #{listItem} " +
+                    " </foreach>" +
+                    " </if>" +
+                    // endregion
+                    "</if>" +
+                    // endregion
                     "<if test=\"@com.flagwind.mybatis.utils.OGNL@isBetweenValue("+clauseName+")\">  " +
                     " ${"+clauseName+".name} ${"+clauseName+".operator.alias} #{"+clauseName+".startValue} and #{"+clauseName+".endValue}" +
                     "</if>" +
@@ -113,21 +134,48 @@ public class ClauseUtils {
                 (isWrapByWhen ? " <when test=\"@com.flagwind.mybatis.utils.OGNL@isCombineClause(" + clauseName + ")\">" : "") +
                 " <foreach collection=\"" + clauseName + "\" item=\"" + childClauseName + "\"  open=\"(\"  close=\")\" index=\"idx\"  separator=\"\">" +
                 " <when test=\"@com.flagwind.mybatis.utils.OGNL@isSingleClause(" + childClauseName + ")\">" +
+                // region =, <> ,like, not like,>,>=,<,<= 条件处理
                 " <if test=\"@com.flagwind.mybatis.utils.OGNL@isSingleValue(" + childClauseName + ")\">  " +
                 "  <if test=\"idx!=0\">${" + clauseName + ".combine.name()}</if>   ${" + childClauseName + ".name} ${" + childClauseName + ".operator.alias} #{" + childClauseName + ".value}" +
                 " </if>" +
+                // endregion
+                // region in or not in 条件处理
                 " <if test=\"@com.flagwind.mybatis.utils.OGNL@isListValue(" + childClauseName + ")\">  " +
-                "  <if test=\"idx!=0\">${" + clauseName + ".combine.name()}</if>   ${" + childClauseName + ".name} ${" + childClauseName + ".operator.alias}" +
+                " <if test=\"idx!=0\">${" + clauseName + ".combine.name()}</if> "+
+                // region 若 list.length<1000 && operate=(in or not in) 则  ${name} in ( #{value1},#{value2}.....)
+                " <if test=\"@com.flagwind.mybatis.utils.OGNL@isNotOverflow(" + childClauseName + ")\"> "+
+                "  ${" + childClauseName + ".name} ${" + childClauseName + ".operator.alias}" +
                 " <foreach collection=\"" + childClauseName + ".values\" item=\"listItem1\" open=\"(\"  close=\")\" separator=\",\">" +
                 " #{listItem1} " +
                 " </foreach>" +
                 "</if>" +
+                // endregion
+                // region 若 list.length>=1000 && operate=in 则  ${name} =  #{value}
+                " <if test=\"@com.flagwind.mybatis.utils.OGNL@isOverflowWithIn(" + childClauseName + ")\"> "+
+                " <foreach collection=\"" + childClauseName + ".values\" item=\"listItem1\" open=\"(\"  close=\")\" separator=\"or\">" +
+                "  ${" + childClauseName + ".name} = #{listItem1} " +
+                " </foreach>" +
+                " </if>" +
+                // endregion
+                // region 若 list.length>=1000 && operate=not in 则  ${name} <>  #{value}
+                " <if test=\"@com.flagwind.mybatis.utils.OGNL@isOverflowWithNotIn(" + childClauseName + ")\"> "+
+                " <foreach collection=\"" + childClauseName + ".values\" item=\"listItem1\" open=\"(\"  close=\")\" separator=\"or\">" +
+                "  ${" + childClauseName + ".name} != #{listItem1} " +
+                " </foreach>" +
+                " </if>" +
+                // endregion
+                "</if>" +
+                // endregion
+                // region bewtween 条件处理
                 "<if test=\"@com.flagwind.mybatis.utils.OGNL@isBetweenValue(" + childClauseName + ")\">  " +
                 "  <if test=\"idx!=0\">${" + clauseName + ".combine.name()}</if>   ${" + childClauseName + ".name} ${" + childClauseName + ".operator.alias} #{" + childClauseName + ".startValue} and #{" + childClauseName + ".endValue}" +
                 "</if>" +
+                // endregion
+                // region Null 条件处理
                 "<if test=\"@com.flagwind.mybatis.utils.OGNL@isNullValue(" + childClauseName + ")\">  " +
                 "  <if test=\"idx!=0\">${" + clauseName + ".combine.name()}</if>   ${" + childClauseName + ".name} ${" + childClauseName + ".operator.alias}" +
                 "</if>" +
+                // endregion
                 "</when>" +
                 childSql +
                 "</foreach>" +
