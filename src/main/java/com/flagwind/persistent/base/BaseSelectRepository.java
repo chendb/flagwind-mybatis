@@ -52,6 +52,7 @@ public interface BaseSelectRepository<E, ID extends Serializable> {
      * @return
      */
     @SelectProvider(type = BaseSelectProvider.class, method = "dynamicSQL")
-    List<Map<String,Object>> querySelective(@Param("_table") String table, @Param("_fields") List<QueryField> fields, @Param("_clause") Clause clause, @Param("_sortings") Sorting[] sortings);
+    List<Map<String,Object>> querySelective(@Param("_table") String table, @Param("_fields") List<QueryField> fields, @Param("_clause") Clause clause, @Param("_startIndex") Integer startIndex,
+    @Param("_endIndex") Integer endIndex, @Param("_sortings") Sorting[] sortings);
 
 }
