@@ -1,9 +1,14 @@
 package com.flagwind.mybatis.utils;
 
+import java.util.List;
+
+import com.flagwind.persistent.QueryField;
 import com.flagwind.persistent.model.ChildClause;
 import com.flagwind.persistent.model.ClauseOperator;
 import com.flagwind.persistent.model.CombineClause;
 import com.flagwind.persistent.model.SingleClause;
+import com.flagwind.persistent.model.Sorting;
+import com.flagwind.persistent.model.Sorting.SortingMode;
 
 /**
  * OGNL静态方法
@@ -11,6 +16,41 @@ import com.flagwind.persistent.model.SingleClause;
  * @author chendb
  */
 public abstract class OGNL {
+
+    /**
+     * 判断是否有聚合字段
+     */
+    public static boolean hasAggregateFields(Object fields) {
+        if (fields != null && fields instanceof List) {
+            List<QueryField> queryFields = (List<QueryField>) fields;
+            return queryFields.stream().anyMatch(g -> g.getType() != null);
+        }
+        return false;
+    }
+
+    /**
+     * 是否为升序
+     * @param parameter
+     * @return
+     */
+    public static boolean isAscending(Object parameter) {
+        if (parameter != null && parameter instanceof Sorting) {
+            Sorting sorting = (Sorting) parameter;
+            return sorting.getMode() == SortingMode.Ascending;
+        }
+        return true;
+    }
+
+    /**
+     * 是否为将序
+     */
+    public static boolean isDescending(Object parameter) {
+        if (parameter != null && parameter instanceof Sorting) {
+            Sorting sorting = (Sorting) parameter;
+            return sorting.getMode() == SortingMode.Descending;
+        }
+        return false;
+    }
 
     /**
      * 是否为单条件

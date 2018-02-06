@@ -11,7 +11,12 @@ public class ClauseUtils {
                             "<foreach collection=\"sorting.fields\" index=\"key\" item=\"field\"  open=\"\"  close=\"\"  separator=\",\">" +
                                 "${field}" +
                             "</foreach>" +
-                            "${sorting.mode.name}" +
+                            "<if  test=\"@com.flagwind.mybatis.utils.OGNL@isAscending(sorting)\">" +
+                                " ASC " +
+                            "</if>"+
+                            "<if  test=\"@com.flagwind.mybatis.utils.OGNL@isDescending(sorting)\">" +
+                                " DESC " +
+                            "</if>"+
                         "</foreach>" +
                   "</if>";
         return sql;
@@ -32,12 +37,14 @@ public class ClauseUtils {
 
     public static String getQueryFieldGroupBySql(){
         String sql =
+            "<if test=\"@com.flagwind.mybatis.utils.OGNL@hasAggregateFields(_fields)\">" +
                 " group by "+
                 "<foreach collection=\"_fields\" index=\"key\" item=\"field\"  open=\"\"  close=\"\"  separator=\",\">" +
                         "<if test=\"field.type==null\">" +
                             "${field.column}" +
                         "</if>"+
-                "</foreach>";
+                "</foreach>"+
+            "</if>";
         return sql;
     }
 
