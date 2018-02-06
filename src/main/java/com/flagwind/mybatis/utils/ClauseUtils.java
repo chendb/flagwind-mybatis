@@ -78,7 +78,7 @@ public class ClauseUtils {
         sql.append("</choose>");
         sql.append("</where>");
         sql.append("</if>");
-        System.out.print(sql.toString());
+        //System.out.print(sql.toString());
         return sql.toString();
     }
 
