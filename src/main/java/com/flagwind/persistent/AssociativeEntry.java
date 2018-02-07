@@ -1,32 +1,32 @@
 package com.flagwind.persistent;
 
-
 import com.flagwind.persistent.annotation.Associative;
 import java.util.Arrays;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class AssociativeEntry {
 
-
     private String name;
     private String source;
     private String extras;
-    private Object value;
 
 
-
-    public AssociativeEntry(String name, String source, Object value, String extras) {
+    public AssociativeEntry(String name, String source, String extras) {
         this.name = name;
         this.source = source;
         this.extras = extras;
-        this.value = value;
     }
 
-    public AssociativeEntry(Associative associative, Object value) {
+    public AssociativeEntry(String name, String source) {
+        this.name = name;
+        this.source = source;
+    }
+
+    public AssociativeEntry(Associative associative) {
         this.name = associative.name();
         this.source = associative.source();
         this.extras = associative.extras();
-        this.value = value;
     }
 
     public String getName() {
@@ -53,24 +53,17 @@ public class AssociativeEntry {
         this.extras = extras;
     }
 
-    public Object getValue() {
-        return value;
-    }
-
-    public void setValue(Object value) {
-        this.value = value;
-    }
-
-    public Object getAssociateValue() {
+    public Object getAssociateValue(Object value) {
         AssociativeProvider provider = DiscoveryFactory.instance().resolve(this.source);
         if (StringUtils.isEmpty(extras)) {
-            return provider.associate(this.value);
+            return provider.associate(value);
         } else {
-            return provider.associate(Arrays.asList(this.value, this.extras).toArray());
+            return provider.associate(Arrays.asList(value, this.extras).toArray());
         }
     }
 
-    public void excute(ExtensibleObject extensibleObject) {
-        extensibleObject.set(this.name, this.getAssociateValue());
+
+    public void excute(ExtensibleObject extensibleObject,Object value) {
+        extensibleObject.set(this.name, this.getAssociateValue(value));
     }
 }

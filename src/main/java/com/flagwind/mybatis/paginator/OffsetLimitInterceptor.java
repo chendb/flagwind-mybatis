@@ -90,13 +90,12 @@ public class OffsetLimitInterceptor implements Interceptor {
         Paging paging = (Paging) parameter.getOrDefault("_paging", null);
 
         if (paging != null) {
-
             pageBounds = new PageBounds(paging.getPageIndex().intValue(), paging.getPageSize().intValue());
             queryArgs[ROWBOUNDS_INDEX] = pageBounds;
         } else {
 
-            int startIndex = (int) parameter.getOrDefault("_startIndex", -1);
-            int endIndex = (int) parameter.getOrDefault("_endIndex", -1);
+            Integer startIndex = (Integer) parameter.getOrDefault("_startIndex", -1);
+            Integer endIndex = (Integer) parameter.getOrDefault("_endIndex", -1);
             if (startIndex >= 0 && endIndex >= 0) {
 
                 pageBounds = new PageBounds(startIndex, endIndex);

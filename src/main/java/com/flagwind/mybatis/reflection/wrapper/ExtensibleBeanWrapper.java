@@ -37,9 +37,8 @@ public class ExtensibleBeanWrapper extends BeanWrapper {
             AssociativeProvider provider = DiscoveryFactory.instance().resolve(associative.source());
             if (provider != null) {
                 if (!this.extensibleObject.contains(associative.name())) {
-                    AssociativeEntry entry = new AssociativeEntry(associative,value);
-                    entry.excute(extensibleObject);
-                    //this.extensibleObject.set(associative.name(), entry.getAssociateValue(provider));
+                    AssociativeEntry entry = new AssociativeEntry(associative);
+                    entry.excute(extensibleObject,value);
                 }
             } else {
                 LOG.warn(String.format("没有发现属性%s的Associative定义%s %s", prop.getName(), associative.source(),
