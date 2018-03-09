@@ -21,6 +21,7 @@ public class Config {
     private String  seqFormat;
     private String  catalog;
     private String  schema;
+
     //校验调用Example方法时，Example(entityClass)和Mapper<EntityClass>是否一致
     private boolean checkExampleEntityClass;
     //使用简单类型
@@ -34,10 +35,21 @@ public class Config {
      */
     private boolean notEmpty = false;
 
+
     /**
      * 字段转换风格，默认驼峰转下划线
      */
     private Style style;
+
+    private String dialect;
+
+    public String getDialect(){
+        return dialect;
+    }
+
+    public void setDialect(String value){
+        dialect=value;
+    }
 
     public int getDepth() {
         return depth;
@@ -246,6 +258,11 @@ public class Config {
         String IDENTITY = properties.getProperty("IDENTITY");
         if (StringUtils.isNotEmpty(IDENTITY)) {
             setIDENTITY(IDENTITY);
+        }
+
+        String dialect = properties.getProperty("dialect");
+        if (StringUtils.isNotEmpty(dialect)) {
+            setDialect(dialect);
         }
 
         String depth = properties.getProperty("depth");

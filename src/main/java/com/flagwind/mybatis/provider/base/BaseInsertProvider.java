@@ -8,6 +8,8 @@ import com.flagwind.mybatis.provider.MapperTemplate;
 import com.flagwind.mybatis.helpers.SelectKeyHelper;
 import com.flagwind.mybatis.helpers.SqlHelper;
 import com.flagwind.mybatis.utils.StringUtil;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.ibatis.mapping.MappedStatement;
 
@@ -19,36 +21,38 @@ public class BaseInsertProvider extends MapperTemplate {
         super(mapperClass, mapperResolver);
     }
 
-   private MutablePair<String,Boolean> getSequenceKeyMapping(Set<EntityColumn> columnList , Class<?> entityClass,MappedStatement ms){
-       Boolean hasIdentityKey=false;
+    private MutablePair<String, Boolean> getSequenceKeyMapping(Set<EntityColumn> columnList, Class<?> entityClass,
+            MappedStatement ms) {
+        Boolean hasIdentityKey = false;
         StringBuilder sql = new StringBuilder();
-       for (EntityColumn column : columnList) {
-           if (!column.isInsertable()) {
-               continue;
-           }
-           if (StringUtil.isNotEmpty(column.getSequenceName())) {
-           } else if (column.isIdentity()) {
-               //这种情况下,如果原先的字段有值,需要先缓存起来,否则就一定会使用自动增长
-               //这是一个bind节点
-               sql.append(SqlHelper.getBindCache(column));
-               //如果是Identity列，就需要插入selectKey
-               //如果已经存在Identity列，抛出异常
-               if (hasIdentityKey) {
-                   //jdbc类型只需要添加一次
-                   if (column.getGenerator() != null && column.getGenerator().equals("JDBC")) {
-                       continue;
-                   }
-                   throw new MapperException(ms.getId() + "对应的实体类" + entityClass.getCanonicalName() + "中包含多个MySql的自动增长列,最多只能有一个!");
-               }
-               //插入selectKey
-               SelectKeyHelper.newSelectKeyMappedStatement(ms, column, entityClass, isBEFORE(), getIDENTITY(column));
-               hasIdentityKey = true;
-           } else if (column.isUuid()) {
-               //uuid的情况，直接插入bind节点
-               sql.append(SqlHelper.getBindValue(column, getUUID()));
-           }
-       }
-      return MutablePair.of(sql.toString(),hasIdentityKey);
+        for (EntityColumn column : columnList) {
+            if (!column.isInsertable()) {
+                continue;
+            }
+            if (StringUtil.isNotEmpty(column.getSequenceName())) {
+            } else if (column.isIdentity()) {
+                //这种情况下,如果原先的字段有值,需要先缓存起来,否则就一定会使用自动增长
+                //这是一个bind节点
+                sql.append(SqlHelper.getBindCache(column));
+                //如果是Identity列，就需要插入selectKey
+                //如果已经存在Identity列，抛出异常
+                if (hasIdentityKey) {
+                    //jdbc类型只需要添加一次
+                    if (column.getGenerator() != null && column.getGenerator().equals("JDBC")) {
+                        continue;
+                    }
+                    throw new MapperException(
+                            ms.getId() + "对应的实体类" + entityClass.getCanonicalName() + "中包含多个MySql的自动增长列,最多只能有一个!");
+                }
+                //插入selectKey
+                SelectKeyHelper.newSelectKeyMappedStatement(ms, column, entityClass, isBEFORE(), getIDENTITY(column));
+                hasIdentityKey = true;
+            } else if (column.isUuid()) {
+                //uuid的情况，直接插入bind节点
+                sql.append(SqlHelper.getBindValue(column, getUUID()));
+            }
+        }
+        return MutablePair.of(sql.toString(), hasIdentityKey);
     }
 
     /**
@@ -77,11 +81,11 @@ public class BaseInsertProvider extends MapperTemplate {
         Set<EntityColumn> columnList = EntityHelper.getColumns(entityClass);
 
         //先处理cache或bind节点
-        MutablePair<String,Boolean> pair = getSequenceKeyMapping(columnList,entityClass,ms);
+        MutablePair<String, Boolean> pair = getSequenceKeyMapping(columnList, entityClass, ms);
 
         //Identity列只能有一个
         Boolean hasIdentityKey = pair.right;
-        if(StringUtil.isNotEmpty(pair.left)){
+        if (StringUtil.isNotEmpty(pair.left)) {
             sql.append(pair.left);
         }
 
@@ -147,11 +151,11 @@ public class BaseInsertProvider extends MapperTemplate {
         //获取全部列
         Set<EntityColumn> columnList = EntityHelper.getColumns(entityClass);
         //先处理cache或bind节点
-        MutablePair<String,Boolean> pair = getSequenceKeyMapping(columnList,entityClass,ms);
+        MutablePair<String, Boolean> pair = getSequenceKeyMapping(columnList, entityClass, ms);
 
         //Identity列只能有一个
         Boolean hasIdentityKey = pair.right;
-        if(StringUtil.isNotEmpty(pair.left)){
+        if (StringUtil.isNotEmpty(pair.left)) {
             sql.append(pair.left);
         }
 
@@ -195,13 +199,20 @@ public class BaseInsertProvider extends MapperTemplate {
         return sql.toString();
     }
 
-    
     /**
      * 批量插入
      *
      * @param ms
      */
     public String insertList(MappedStatement ms) {
+        if (StringUtils.equalsIgnoreCase(this.getDialect(), "mysql")) {
+            return insertListFromMySql(ms);
+        } else {
+            return insertListFromOracle(ms);
+        }
+    }
+
+    public String insertListFromOracle(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
         //开始拼sql
         StringBuilder sql = new StringBuilder();
@@ -218,6 +229,28 @@ public class BaseInsertProvider extends MapperTemplate {
             }
         }
         sql.append(" from dual ");
+        sql.append("</foreach>");
+        return sql.toString();
+    }
+
+    public String insertListFromMySql(MappedStatement ms) {
+        final Class<?> entityClass = getEntityClass(ms);
+        //开始拼sql
+        StringBuilder sql = new StringBuilder();
+        sql.append(SqlHelper.insertIntoTable(entityClass, tableName(entityClass)));
+        sql.append(SqlHelper.insertColumns(entityClass, false, false, false));
+        sql.append(" VALUES ");
+        sql.append("<foreach collection=\"_list\" item=\"record\" separator=\",\" >");
+        sql.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
+        //获取全部列
+        Set<EntityColumn> columnList = EntityHelper.getColumns(entityClass);
+        //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
+        for (EntityColumn column : columnList) {
+            if (column.isInsertable()) {
+                sql.append(column.getColumnHolder("record") + ",");
+            }
+        }
+        sql.append("</trim>");
         sql.append("</foreach>");
         return sql.toString();
     }

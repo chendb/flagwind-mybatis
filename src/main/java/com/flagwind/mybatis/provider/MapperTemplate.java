@@ -58,6 +58,11 @@ public abstract class MapperTemplate {
         return "dynamicSQL";
     }
 
+ 
+    public String getDialect(){
+		return mapperResolver.getConfig().getDialect();
+	}
+
     /**
      * 添加映射方法
      *
