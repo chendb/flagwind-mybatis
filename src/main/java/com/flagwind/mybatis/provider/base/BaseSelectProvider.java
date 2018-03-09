@@ -1,23 +1,12 @@
 package com.flagwind.mybatis.provider.base;
 
 import com.flagwind.mybatis.common.MapperResolver;
-import com.flagwind.mybatis.helpers.AggregateSqlHelper;
 import com.flagwind.mybatis.helpers.AssociationSqlHelper;
+import com.flagwind.mybatis.helpers.SqlHelper;
 import com.flagwind.mybatis.provider.MapperTemplate;
 import com.flagwind.mybatis.utils.ClauseUtils;
-import com.flagwind.mybatis.helpers.SqlHelper;
-import com.flagwind.persistent.model.Sorting;
-import org.apache.ibatis.builder.MapperBuilderAssistant;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ResultMap;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.SystemMetaObject;
-import org.apache.ibatis.reflection.factory.ObjectFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import org.apache.ibatis.mapping.MappedStatement;
 
 /**
  * BaseSelectProvider实现类，基础方法实现类

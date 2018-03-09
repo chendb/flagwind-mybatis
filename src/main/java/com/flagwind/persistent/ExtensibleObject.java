@@ -1,7 +1,5 @@
 package com.flagwind.persistent;
 
-import java.util.Map;
-
 /**
  * 可伸缩对象
  */
