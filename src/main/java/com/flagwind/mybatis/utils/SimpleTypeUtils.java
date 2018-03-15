@@ -37,7 +37,7 @@ public class SimpleTypeUtils {
      *
      * @param clazz
      */
-    public static void registerSimpleType(Class<?> clazz){
+    public static void registerSimpleType(Class<?> clazz) {
         SIMPLE_TYPE_SET.add(clazz);
     }
 
@@ -46,8 +46,8 @@ public class SimpleTypeUtils {
      *
      * @param classes
      */
-    public static void registerSimpleType(String classes){
-        if(StringUtils.isNotEmpty(classes)){
+    public static void registerSimpleType(String classes) {
+        if (StringUtils.isNotEmpty(classes)) {
             String[] cls = classes.split(",");
             for (String c : cls) {
                 try {
@@ -66,6 +66,9 @@ public class SimpleTypeUtils {
      * @return True if the class is known
      */
     public static boolean isSimpleType(Class<?> clazz) {
+        if (clazz.isEnum()) {
+            return true;
+        }
         return SIMPLE_TYPE_SET.contains(clazz);
     }
 
