@@ -70,6 +70,10 @@ public abstract class OGNL {
      * @return
      */
     public static boolean isCombineClause(Object parameter) {
+        if (parameter != null && parameter instanceof ChildClause) {
+            return false;
+        }
+        
         if (parameter != null && parameter instanceof CombineClause) {
             if (parameter instanceof ChildClause) {
                 return false;
