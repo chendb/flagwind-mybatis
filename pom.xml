@@ -6,7 +6,7 @@
 		<version>7</version>
 	</parent>
 	<groupId>com.github.chendb</groupId>
-	<version>0.0.25</version>
+	<version>0.0.26-SNAPSHOT</version>
 	<artifactId>flagwind-mybatis</artifactId>
 	<name>flagwind-mybatis</name>
 	<properties>
