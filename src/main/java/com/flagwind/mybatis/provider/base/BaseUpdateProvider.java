@@ -2,7 +2,7 @@ package com.flagwind.mybatis.provider.base;
 
 import com.flagwind.mybatis.common.MapperResolver;
 import com.flagwind.mybatis.provider.MapperTemplate;
-import com.flagwind.mybatis.utils.ClauseUtils;
+import com.flagwind.mybatis.utils.TemplateSqlUtils;
 import com.flagwind.mybatis.helpers.SqlHelper;
 import org.apache.ibatis.mapping.MappedStatement;
 
@@ -36,8 +36,8 @@ public class BaseUpdateProvider extends MapperTemplate {
         Class<?> entityClass = getEntityClass(ms);
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.updateTable(entityClass, tableName(entityClass)));
-        sql.append(ClauseUtils.getUpdatePartSetSql("_map"));
-        sql.append(ClauseUtils.getWhereSql("_clause", 5));
+        sql.append(TemplateSqlUtils.getUpdatePartSetSql("_map"));
+        sql.append(TemplateSqlUtils.getWhereSql("_clause", 5));
         return sql.toString();
     }
 

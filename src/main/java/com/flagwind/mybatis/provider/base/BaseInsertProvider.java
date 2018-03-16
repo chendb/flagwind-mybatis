@@ -223,10 +223,10 @@ public class BaseInsertProvider extends MapperTemplate {
         sql.append(" select ");
         //获取全部列
         Set<EntityColumn> columnList = EntityHelper.getColumns(entityClass);
-        int i=0;
+        int i = 0;
         for (EntityColumn column : columnList) {
             if (column.isInsertable()) {
-                sql.append((i!=0?",":"")+column.getColumnHolder("record") );
+                sql.append((i != 0 ? "," : "") + column.getColumnHolder("record"));
                 i++;
             }
         }
@@ -249,14 +249,13 @@ public class BaseInsertProvider extends MapperTemplate {
         //获取全部列
         Set<EntityColumn> columnList = EntityHelper.getColumns(entityClass);
         //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
-        int i=0;
+        int i = 0;
         for (EntityColumn column : columnList) {
-            
+
             if (column.isInsertable()) {
-                sql.append((i!=0?",":"") +column.getColumnHolder("record") );
+                sql.append((i != 0 ? "," : "") + column.getColumnHolder("record"));
                 i++;
             }
-           
         }
         sql.append("</trim>");
         sql.append("</foreach>");

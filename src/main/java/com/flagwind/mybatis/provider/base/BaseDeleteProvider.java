@@ -3,7 +3,8 @@ package com.flagwind.mybatis.provider.base;
 
 import com.flagwind.mybatis.common.MapperResolver;
 import com.flagwind.mybatis.provider.MapperTemplate;
-import com.flagwind.mybatis.utils.ClauseUtils;
+import com.flagwind.mybatis.utils.TemplateSqlUtils;
+import com.flagwind.mybatis.utils.TemplateSqlUtils;
 import com.flagwind.mybatis.helpers.SqlHelper;
 import org.apache.ibatis.mapping.MappedStatement;
 
@@ -24,7 +25,7 @@ public class BaseDeleteProvider extends MapperTemplate {
         Class<?> entityClass = getEntityClass(ms);
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.deleteFromTable(entityClass, tableName(entityClass)));
-        sql.append(ClauseUtils.getWhereSql("_clause", 5));
+        sql.append(TemplateSqlUtils.getWhereSql("_clause", 5));
         return sql.toString();
     }
 

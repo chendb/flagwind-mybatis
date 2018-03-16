@@ -4,7 +4,7 @@ import com.flagwind.mybatis.common.MapperResolver;
 import com.flagwind.mybatis.helpers.AssociationSqlHelper;
 import com.flagwind.mybatis.helpers.SqlHelper;
 import com.flagwind.mybatis.provider.MapperTemplate;
-import com.flagwind.mybatis.utils.ClauseUtils;
+import com.flagwind.mybatis.utils.TemplateSqlUtils;
 
 import org.apache.ibatis.mapping.MappedStatement;
 
@@ -66,7 +66,7 @@ public class BaseSelectProvider extends MapperTemplate {
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
         sql.append(selectAllColumnsFromTable(entityClass));
-        sql.append(ClauseUtils.getWhereSql("_clause", 5));
+        sql.append(TemplateSqlUtils.getWhereSql("_clause", 5));
         return sql.toString();
     }
 
@@ -84,7 +84,7 @@ public class BaseSelectProvider extends MapperTemplate {
         sql.append(SqlHelper.selectAllColumns(entityClass));
         boolean hasTableAlias = sql.toString().contains(".");
         sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass, hasTableAlias)));
-        sql.append(ClauseUtils.getWhereSql("_clause", 5));
+        sql.append(TemplateSqlUtils.getWhereSql("_clause", 5));
         sql.append(SqlHelper.orderByDefault(entityClass));
         return sql.toString();
     }
@@ -132,7 +132,7 @@ public class BaseSelectProvider extends MapperTemplate {
         sql.append(SqlHelper.selectCount(entityClass));
         boolean hasTableAlias = sql.toString().contains(".");
         sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass,hasTableAlias)));
-        sql.append(ClauseUtils.getWhereSql("_clause",5));
+        sql.append(TemplateSqlUtils.getWhereSql("_clause",5));
         return sql.toString();
     }
 
@@ -156,7 +156,7 @@ public class BaseSelectProvider extends MapperTemplate {
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.selectCountExists(entityClass));
         sql.append(SqlHelper.fromTable(entityClass, tableName(entityClass)));
-        sql.append(ClauseUtils.getWhereSql("_clause",5));
+        sql.append(TemplateSqlUtils.getWhereSql("_clause",5));
         return sql.toString();
     }
 
@@ -188,13 +188,13 @@ public class BaseSelectProvider extends MapperTemplate {
 
         StringBuilder sql = new StringBuilder();
         sql.append("select ");
-        sql.append(ClauseUtils.getQueryFieldColumnSql());
+        sql.append(TemplateSqlUtils.getQueryFieldColumnSql());
         sql.append(" from ${_table} ");
-        sql.append(ClauseUtils.getWhereSql("_clause", 5));
+        sql.append(TemplateSqlUtils.getWhereSql("_clause", 5));
         sql.append(" ");
-        sql.append(ClauseUtils.getQueryFieldGroupBySql());
+        sql.append(TemplateSqlUtils.getQueryFieldGroupBySql());
         sql.append(" ");
-        sql.append(ClauseUtils.getSortingSql());
+        sql.append(TemplateSqlUtils.getSortingSql());
         return sql.toString();
     }
 }
