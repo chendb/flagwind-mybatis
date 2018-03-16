@@ -218,14 +218,16 @@ public class BaseInsertProvider extends MapperTemplate {
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.insertIntoTable(entityClass, tableName(entityClass)));
         sql.append(SqlHelper.insertColumns(entityClass, false, false, false));
-        sql.append(" VALUES ");
+        sql.append("  ");
         sql.append("<foreach collection=\"_list\" item=\"record\" separator=\"UNION ALL\" >");
         sql.append(" select ");
         //获取全部列
         Set<EntityColumn> columnList = EntityHelper.getColumns(entityClass);
+        int i=0;
         for (EntityColumn column : columnList) {
             if (column.isInsertable()) {
-                sql.append(column.getColumnHolder("record") + ",");
+                sql.append((i!=0?",":"")+column.getColumnHolder("record") );
+                i++;
             }
         }
         sql.append(" from dual ");
@@ -239,16 +241,22 @@ public class BaseInsertProvider extends MapperTemplate {
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.insertIntoTable(entityClass, tableName(entityClass)));
         sql.append(SqlHelper.insertColumns(entityClass, false, false, false));
-        sql.append(" VALUES ");
+        sql.append("  ");
         sql.append("<foreach collection=\"_list\" item=\"record\" separator=\",\" >");
         sql.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
+
+        sql.append(" values ");
         //获取全部列
         Set<EntityColumn> columnList = EntityHelper.getColumns(entityClass);
         //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
+        int i=0;
         for (EntityColumn column : columnList) {
+            
             if (column.isInsertable()) {
-                sql.append(column.getColumnHolder("record") + ",");
+                sql.append((i!=0?",":"") +column.getColumnHolder("record") );
+                i++;
             }
+           
         }
         sql.append("</trim>");
         sql.append("</foreach>");

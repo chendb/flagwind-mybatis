@@ -224,9 +224,17 @@ public class ClauseUtils {
                 "</when>" +
 
                 // region field in (select xx from child_table where ( x=** and y=**))
-                (isHasChildQuery ? getChildClauseSql(childClauseName,getNextChildName(childClauseName),""):"")+
+                (isHasChildQuery ? 
+                " <if test=\"@com.flagwind.mybatis.utils.OGNL@isChildClause(" + childClauseName + ")\">"
+                +"  <if test=\"idx!=0\">${" + clauseName + ".combine.name()}</if>   "
+                +"</if>"
+                + getChildClauseSql(childClauseName,getNextChildName(childClauseName),""):"")+
                 // endregion
-                childSql +
+                (StringUtil.isNotEmpty(childSql)?
+                    (" <if test=\"@com.flagwind.mybatis.utils.OGNL@isCombineClause(" + childClauseName + ")\">"
+                    +"  <if test=\"idx!=0\">${" + clauseName + ".combine.name()}</if>   "
+                    +"</if>"
+                    + childSql):"") +
                 "</foreach>" +
                 (isWrapByWhen ? "</when>" : "");
         return sql;
