@@ -17,6 +17,7 @@ import com.flagwind.persistent.model.Sorting.SortingMode;
  */
 public abstract class OGNL {
 
+
     /**
      * 判断是否有聚合字段
      */

@@ -51,13 +51,20 @@ public class ColumnHelper {
                 ||javaType.isAssignableFrom(float.class)){
             return JdbcType.FLOAT;
         }
+
+        if(javaType.isAssignableFrom(Timestamp.class) ){
+            return JdbcType.TIMESTAMP;
+        }
+
+        if(javaType.isAssignableFrom(java.sql.Time.class) ){
+            return JdbcType.TIME;
+        }
+
         if(javaType.isAssignableFrom(java.sql.Date.class)
                 ||javaType.isAssignableFrom(java.util.Date.class)){
             return JdbcType.DATE;
         }
-        if(javaType.isAssignableFrom(Timestamp.class) ){
-            return JdbcType.TIMESTAMP;
-        }
+
         if(javaType.isAssignableFrom(byte[].class) ){
             return JdbcType.BINARY;
         }
