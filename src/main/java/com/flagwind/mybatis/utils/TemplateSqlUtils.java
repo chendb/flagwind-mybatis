@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class TemplateSqlUtils {
 
+    private static final  int MAX_LEVEL=5;
 
     private static HashMap<String,String> TEMPLATE_SQL=new HashMap<>();
     
@@ -102,7 +103,7 @@ public class TemplateSqlUtils {
         sql.append("<where>");
         sql.append("<choose>");
         sql.append(getSingleClauseSql(clauseName,true));
-        sql.append(getCombineClauseSql(clauseName, true,true,true));
+        sql.append(getCombineClauseSql(clauseName, true,true));
         sql.append(getChildClauseSql(clauseName,true));
         sql.append("</choose>");
         sql.append("</where>");
@@ -181,59 +182,103 @@ public class TemplateSqlUtils {
 
     // endregion
 
+    // region ChildClause
     private static String getChildClauseSql(String clauseName,boolean isWrapByWhen) {
         String sql =
                 (isWrapByWhen?" <when test=\"@com.flagwind.mybatis.utils.OGNL@isChildClause(" + clauseName + ")\">":"") +
                 " ${" + clauseName + ".name} <if test=\"" + clauseName + ".included==false\"> not </if>  in  (" +
                 " select ${" + clauseName + ".childField} from ${" + clauseName + ".childTable} " +
                 " <where>" +
-                        getCombineClauseSql(clauseName, false,false,false) +
+                        getCombineClauseSql(clauseName, false,false,2) +
                 " </where>" +
                 ")"+
                 (isWrapByWhen?" </when>":"");
         return sql;
     }
+    // endregion
 
-    private static String getCombineClauseSql(String clauseName,boolean isWrapByWhen,boolean isHasChildQuery,boolean isHasCombineClause) {
-        if(!isNext(clauseName)){
+    // region CombineClauseSql
+
+
+    /**
+     * 组合条件模版（使用默认递归层级）
+     */
+    private static String getCombineClauseSql(String clauseName,boolean isWrapByWhen,boolean isHasChildQuery) {
+        int maxLevel=MAX_LEVEL;
+        return getCombineClauseSql(clauseName, isWrapByWhen, isHasChildQuery, maxLevel);
+    }
+
+    /**
+     * 组合条件模版（使用指定递归层级）
+     */
+    private static String getCombineClauseSql(String clauseName, boolean isWrapByWhen, boolean isHasChildQuery,
+            int level) {
+        if (isNext(clauseName)==false||level <= 0) {
             return "";
         }
-        
-        String childClauseName= getChildClauseName(clauseName);
-        String sql =
-                (isWrapByWhen ? " <when test=\"@com.flagwind.mybatis.utils.OGNL@isCombineClause(" + clauseName + ")\">" : "") +
-                " <foreach collection=\"" + clauseName + "\" item=\"" + childClauseName + "\"  open=\"(\"  close=\")\" index=\"idx\"  separator=\"\">" +
+        level--;
+        boolean isHasCombineClause = level > 0;
+        String childClauseName = getChildClauseName(clauseName);
+        String sql = (isWrapByWhen
+                ? " <when test=\"@com.flagwind.mybatis.utils.OGNL@isCombineClause(" + clauseName + ")\">"
+                : "") + " <foreach collection=\"" + clauseName + "\" item=\"" + childClauseName
+                + "\"  open=\"(\"  close=\")\" index=\"idx\"  separator=\"\">" +
                 // region SingleClause
-                " <when test=\"@com.flagwind.mybatis.utils.OGNL@isSingleClause(" + childClauseName + ")\">" +
+                getSingleClauseSqlWithCombine(clauseName, childClauseName) +
+                // endregion
+
+                // region ChildQuery查询
+
+                (isHasChildQuery ? getChildClauseSqlWithCombine(clauseName, childClauseName) : "") +
+                // endregion
+
+                // region CombineClause
+                (isHasCombineClause ? getCombineClauseSqlWithCombine(clauseName, childClauseName, isHasChildQuery, level): "")
+                +
+                // endregion
+                "</foreach>" + (isWrapByWhen ? "</when>" : "");
+        return sql;
+    }
+
+    /**
+     * 带 and 或 or 前缀的 简单查询短句条件
+     */
+    private static String getSingleClauseSqlWithCombine(String clauseName,String childClauseName){
+
+        return " <when test=\"@com.flagwind.mybatis.utils.OGNL@isSingleClause(" + childClauseName + ")\">" +
                
                 "  <if test=\"idx!=0\">${" + clauseName + ".combine.name()}</if> " +
             
                    getSingleClauseSql(childClauseName,false)+
                 
 
-                "</when>" +
-                // endregion
+              "</when>";
+    }
 
-                // region ChildQuery查询
-               
-                (isHasChildQuery ? 
-                " <if test=\"@com.flagwind.mybatis.utils.OGNL@isChildClause(" + childClauseName + ")\">"
+    /**
+     * 带 and 或 or 前缀的 子查询短句条件
+     */
+    private static String getChildClauseSqlWithCombine(String clauseName,String childClauseName) {
+        return " <if test=\"@com.flagwind.mybatis.utils.OGNL@isChildClause(" + childClauseName + ")\">"
                 +"  <if test=\"idx!=0\">${" + clauseName + ".combine.name()}</if>   "
                 +   getChildClauseSql(childClauseName,false)
-                +"</if>":"")+
-                // endregion
-
-                // region CombineClause
-                (isNext(childClauseName)&&isHasCombineClause?
-                "<if test=\"@com.flagwind.mybatis.utils.OGNL@isCombineClause(" + childClauseName + ")\">"
-                +"  <if test=\"idx!=0\">${" + clauseName + ".combine.name()}</if>   "
-                +   getCombineClauseSql(childClauseName, false, isHasChildQuery,isHasCombineClause)+
-                "</if>":"")+
-                // endregion
-                "</foreach>" +
-                (isWrapByWhen ? "</when>" : "");
-        return sql;
+                +"</if>";
     }
+
+    /**
+     * 带 and 或 or 前缀的 组合查询短句条件
+     */
+    private static String getCombineClauseSqlWithCombine(String clauseName, String childClauseName,
+            boolean isHasChildQuery, int level) {
+        if (isNext(childClauseName) && level > 0) {
+            return "<if test=\"@com.flagwind.mybatis.utils.OGNL@isCombineClause(" + childClauseName + ")\">"
+                    + "  <if test=\"idx!=0\">${" + clauseName + ".combine.name()}</if>   "
+                    + getCombineClauseSql(childClauseName, false, isHasChildQuery, level) + "</if>";
+        }
+        return "";
+    }
+
+    // endregion
 
     /**
      * 判断支持的最大嵌套层级
@@ -241,7 +286,7 @@ public class TemplateSqlUtils {
     private static boolean isNext(String clauseName){
         String suffix = clauseName.substring(clauseName.length()-1);
         if(StringUtils.isNumeric(suffix)){
-            return Integer.parseInt(suffix)<5;
+            return Integer.parseInt(suffix)<MAX_LEVEL;
         }else{
             return true;
         }
