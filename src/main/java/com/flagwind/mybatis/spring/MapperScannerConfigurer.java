@@ -12,15 +12,14 @@ import org.springframework.beans.factory.support.GenericBeanDefinition;
 import java.util.Properties;
 
 public class MapperScannerConfigurer extends org.mybatis.spring.mapper.MapperScannerConfigurer {
+
     private MapperResolver mapperResolver = new MapperResolver();
 
-
     public void setDiscovery(Discovery discovery) {
-        this.discovery = discovery;
         DiscoveryFactory.instance().initialize(discovery);
     }
 
-    private Discovery discovery;
+
 
     @Override
     public void setMarkerInterface(Class<?> superClass) {

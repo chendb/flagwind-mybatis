@@ -2,10 +2,10 @@ package com.flagwind.mybatis.provider.base;
 
 
 import com.flagwind.mybatis.common.MapperResolver;
+import com.flagwind.mybatis.helpers.SqlHelper;
 import com.flagwind.mybatis.provider.MapperTemplate;
 import com.flagwind.mybatis.utils.TemplateSqlUtils;
-import com.flagwind.mybatis.utils.TemplateSqlUtils;
-import com.flagwind.mybatis.helpers.SqlHelper;
+
 import org.apache.ibatis.mapping.MappedStatement;
 
 

@@ -26,7 +26,6 @@ public class EntityTable {
 	private String baseSelect;
 	private Set<EntityColumn> entityClassColumns;
 	private Set<EntityColumn> entityClassPKColumns;
-	private Map<String, String> aliasMap;
 	private List<String> keyProperties;
 	private List<String> keyColumns;
 	private List<EntityField> associationFields;

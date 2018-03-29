@@ -4,7 +4,10 @@ package com.flagwind.mybatis.exceptions;
  * @author chendb
  */
 public class MapperException extends RuntimeException {
-    public MapperException() {
+    
+    private static final long serialVersionUID = 9205621714275918529L;
+
+	public MapperException() {
         super();
     }
 

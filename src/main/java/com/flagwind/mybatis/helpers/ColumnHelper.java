@@ -1,5 +1,11 @@
 package com.flagwind.mybatis.helpers;
 
+import java.sql.Timestamp;
+
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.meta.EntityField;
 import com.flagwind.mybatis.utils.StringUtil;
@@ -7,14 +13,13 @@ import com.flagwind.persistent.AggregateEntry;
 import com.flagwind.persistent.ColumnTypeEntry;
 import com.flagwind.persistent.annotation.Aggregate;
 import com.flagwind.persistent.annotation.ColumnType;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.MutableTriple;
-import org.apache.ibatis.type.*;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import java.sql.Timestamp;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.ibatis.type.EnumOrdinalTypeHandler;
+import org.apache.ibatis.type.EnumTypeHandler;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.UnknownTypeHandler;
 
 /**
  * 数据列帮助类

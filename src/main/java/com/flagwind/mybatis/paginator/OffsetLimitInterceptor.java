@@ -83,9 +83,9 @@ public class OffsetLimitInterceptor implements Interceptor {
         final RowBounds rowBounds = (RowBounds) queryArgs[ROWBOUNDS_INDEX];
         PageBounds pageBounds = new PageBounds(rowBounds);
 
-        if (parameter == null){
-            return invocation.proceed();
-        }
+        // if (parameter == null) {
+        //     return invocation.proceed();
+        // }
 
         Paging paging = (Paging) parameter.getOrDefault("_paging", null);
 

@@ -32,9 +32,6 @@ import com.flagwind.persistent.annotation.ColumnType;
 import com.flagwind.persistent.annotation.NameStyle;
 
 import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.MutableTriple;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeHandler;
 
 /**
  * 实体类工具类 - 处理实体和数据库表以及字段关键的一个类

@@ -2,7 +2,6 @@ package com.flagwind.mybatis.reflection.wrapper;
 
 import com.flagwind.mybatis.helpers.FieldHelper;
 import com.flagwind.mybatis.meta.EntityField;
-import com.flagwind.mybatis.utils.StringUtil;
 import com.flagwind.persistent.AssociativeEntry;
 import com.flagwind.persistent.AssociativeProvider;
 import com.flagwind.persistent.DiscoveryFactory;
@@ -14,8 +13,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.reflection.wrapper.BeanWrapper;
-
-import java.util.Arrays;
 
 public class ExtensibleBeanWrapper extends BeanWrapper {
     private Log LOG = LogFactory.getLog(ExtensibleObject.class);

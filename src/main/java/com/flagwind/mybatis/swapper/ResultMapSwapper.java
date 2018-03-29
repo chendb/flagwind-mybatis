@@ -1,5 +1,14 @@
 package com.flagwind.mybatis.swapper;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
 import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.helpers.ColumnHelper;
 import com.flagwind.mybatis.helpers.FieldHelper;
@@ -8,24 +17,14 @@ import com.flagwind.mybatis.utils.AssociationUtils;
 import com.flagwind.mybatis.utils.SimpleTypeUtils;
 import com.flagwind.mybatis.utils.StringUtil;
 import com.flagwind.persistent.ColumnTypeEntry;
-import com.flagwind.persistent.annotation.ColumnType;
-import org.apache.commons.lang3.tuple.MutableTriple;
+
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.mapping.ResultFlag;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
-import org.apache.ibatis.reflection.wrapper.BeanWrapper;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
-
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author chendb
