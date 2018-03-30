@@ -9,10 +9,12 @@ import javax.persistence.Enumerated;
 import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.meta.EntityField;
 import com.flagwind.mybatis.utils.StringUtil;
+import com.flagwind.mybatis.utils.TypeUtils;
 import com.flagwind.persistent.AggregateEntry;
 import com.flagwind.persistent.ColumnTypeEntry;
 import com.flagwind.persistent.annotation.Aggregate;
 import com.flagwind.persistent.annotation.ColumnType;
+
 
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.ibatis.type.EnumOrdinalTypeHandler;
@@ -99,10 +101,10 @@ public class ColumnHelper {
                 // 设置了value属性
                 if (enumerated.value() == EnumType.ORDINAL) {
                     EnumOrdinalTypeHandler<? extends Enum<?>> typeHandler = new EnumOrdinalTypeHandler(field.getJavaType());
-                    return (Class<? extends TypeHandler<?>>) typeHandler.getClass();
+                    return TypeUtils.castTo( typeHandler.getClass());
                 }
                 EnumTypeHandler<? extends Enum<?>> typeHandler = new EnumTypeHandler(field.getJavaType());
-                return (Class<? extends TypeHandler<?>>) typeHandler.getClass();
+                return TypeUtils.castTo( typeHandler.getClass());
             }
 
         }

@@ -16,6 +16,7 @@ import com.flagwind.mybatis.meta.EntityField;
 import com.flagwind.mybatis.utils.AssociationUtils;
 import com.flagwind.mybatis.utils.SimpleTypeUtils;
 import com.flagwind.mybatis.utils.StringUtil;
+import com.flagwind.mybatis.utils.TypeUtils;
 import com.flagwind.persistent.ColumnTypeEntry;
 
 import org.apache.ibatis.builder.MapperBuilderAssistant;
@@ -111,7 +112,7 @@ public class ResultMapSwapper {
         if(typeHandlerClass==null) {
             TypeHandler<?> typeHandler = configuration.getTypeHandlerRegistry().getTypeHandler(javaType, jdbcType);
             if (typeHandler != null) {
-                typeHandlerClass = (Class<? extends TypeHandler<?>>) typeHandler.getClass();
+                typeHandlerClass = TypeUtils.castTo( typeHandler.getClass());
             }
         }
 
@@ -185,7 +186,7 @@ public class ResultMapSwapper {
         if(typeHandlerClass==null) {
             TypeHandler<?> typeHandler = configuration.getTypeHandlerRegistry().getTypeHandler(javaType, jdbcType);
             if (typeHandler != null) {
-                typeHandlerClass = (Class<? extends TypeHandler<?>>) typeHandler.getClass();
+                typeHandlerClass = TypeUtils.castTo( typeHandler.getClass());
             }
         }
 
@@ -292,7 +293,7 @@ public class ResultMapSwapper {
             if(typeHandlerClass==null) {
                 TypeHandler<?> typeHandler = configuration.getTypeHandlerRegistry().getTypeHandler(javaType, jdbcType);
                 if (typeHandler != null) {
-                    typeHandlerClass = (Class<? extends TypeHandler<?>>) typeHandler.getClass();
+                    typeHandlerClass = TypeUtils.castTo( typeHandler.getClass());
                 }
             }
 

@@ -44,9 +44,9 @@ public class SelectKeyHelper {
             statementBuilder.keyProperty(column.getProperty());
             statementBuilder.keyColumn(null);
             statementBuilder.databaseId(null);
-            statementBuilder.lang(configuration.getDefaultScriptingLanuageInstance());
+            statementBuilder.lang(configuration.getDefaultScriptingLanguageInstance());
             statementBuilder.resultOrdered(false);
-            statementBuilder.resulSets(null);
+            statementBuilder.resultSets(null);
             statementBuilder.timeout(configuration.getDefaultStatementTimeout());
 
             List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();

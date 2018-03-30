@@ -18,6 +18,7 @@ import org.apache.ibatis.type.SimpleTypeRegistry;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 import com.flagwind.mybatis.paginator.PageBounds;
+import com.flagwind.mybatis.utils.TypeUtils;
 import com.flagwind.persistent.model.Sorting;
 
 
@@ -47,11 +48,11 @@ public class Dialect {
 	protected void init(){
 
         boundSql = mappedStatement.getBoundSql(parameterObject);
-        parameterMappings = new ArrayList(boundSql.getParameterMappings());
+        parameterMappings = new ArrayList<>(boundSql.getParameterMappings());
         if(parameterObject instanceof Map){
-            pageParameters.putAll((Map)parameterObject);
+            pageParameters.putAll(TypeUtils.castTo(parameterObject));
         }else if( parameterObject != null){
-            Class cls = parameterObject.getClass();
+            Class<?> cls = parameterObject.getClass();
             if(cls.isPrimitive() || cls.isArray() ||
                     SimpleTypeRegistry.isSimpleType(cls) ||
                     Enum.class.isAssignableFrom(cls) ||
@@ -103,7 +104,7 @@ public class Dialect {
     }
 
 
-	protected void setPageParameter(String name, Object value, Class type){
+	protected void setPageParameter(String name, Object value, Class<?> type){
         ParameterMapping parameterMapping = new ParameterMapping.Builder(mappedStatement.getConfiguration(), name, type).build();
         parameterMappings.add(parameterMapping);
         pageParameters.put(name, value);

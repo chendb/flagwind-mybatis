@@ -7,8 +7,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
+
+import com.flagwind.mybatis.utils.TypeUtils;
 
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.ExecutorException;
@@ -51,7 +52,8 @@ public class MultipleJdbc3KeyGenerator extends Jdbc3KeyGenerator {
                 }
             }
         } catch (Exception e) {
-            throw new ExecutorException("Error getting generated key or setting result to parameter object. Cause: " + e, e);
+            throw new ExecutorException(
+                    "Error getting generated key or setting result to parameter object. Cause: " + e, e);
         } finally {
             if (rs != null) {
                 try {
@@ -63,17 +65,16 @@ public class MultipleJdbc3KeyGenerator extends Jdbc3KeyGenerator {
         }
     }
 
-
-	private Collection<Object> getParameters(Object parameter) {
+    private Collection<Object> getParameters(Object parameter) {
         Collection<Object> parameters = null;
         if (parameter instanceof Collection) {
-            parameters = (Collection) parameter;
+            parameters = TypeUtils.castTo(parameter);
         } else if (parameter instanceof Map) {
-            Map parameterMap = (Map) parameter;
+            Map parameterMap = TypeUtils.castTo( parameter);
             if (parameterMap.containsKey("collection")) {
-                parameters = (Collection) parameterMap.get("collection");
+                parameters =TypeUtils.castTo( parameterMap.get("collection"));
             } else if (parameterMap.containsKey("list")) {
-                parameters = (List) parameterMap.get("list");
+                parameters = TypeUtils.castTo( parameterMap.get("list"));
             } else if (parameterMap.containsKey("array")) {
                 parameters = Arrays.asList((Object[]) parameterMap.get("array"));
             }
@@ -85,7 +86,8 @@ public class MultipleJdbc3KeyGenerator extends Jdbc3KeyGenerator {
         return parameters;
     }
 
-    private TypeHandler<?>[] getTypeHandlers(TypeHandlerRegistry typeHandlerRegistry, MetaObject metaParam, String[] keyProperties) {
+    private TypeHandler<?>[] getTypeHandlers(TypeHandlerRegistry typeHandlerRegistry, MetaObject metaParam,
+            String[] keyProperties) {
         TypeHandler<?>[] typeHandlers = new TypeHandler<?>[keyProperties.length];
         for (int i = 0; i < keyProperties.length; i++) {
             if (metaParam.hasSetter(keyProperties[i])) {
@@ -97,7 +99,8 @@ public class MultipleJdbc3KeyGenerator extends Jdbc3KeyGenerator {
         return typeHandlers;
     }
 
-    private void populateKeys(ResultSet rs, MetaObject metaParam, String[] keyProperties, TypeHandler<?>[] typeHandlers) throws SQLException {
+    private void populateKeys(ResultSet rs, MetaObject metaParam, String[] keyProperties, TypeHandler<?>[] typeHandlers)
+            throws SQLException {
         for (int i = 0; i < keyProperties.length; i++) {
             TypeHandler<?> th = typeHandlers[i];
             if (th != null) {
@@ -107,4 +110,3 @@ public class MultipleJdbc3KeyGenerator extends Jdbc3KeyGenerator {
         }
     }
 }
-

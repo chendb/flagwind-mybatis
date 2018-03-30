@@ -1,5 +1,7 @@
 package com.flagwind.persistent;
 
+import com.flagwind.mybatis.utils.TypeUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -15,7 +17,7 @@ public class DiscoveryFactory {
     //#endregion
 
     //#region 构造函数
-    public DiscoveryFactory(){
+    public DiscoveryFactory() {
     }
     //#endregion
 
@@ -30,13 +32,11 @@ public class DiscoveryFactory {
         this.discovery = discovery;
     }
 
-
     //#region 公共方法
-
 
     public <R> R resolve(String source) {
 
-        R r = (R) this.discovery.discover(source);
+        R r = TypeUtils.castTo(this.discovery.discover(source));
         if (r == null) {
             LOG.warn(String.format("Discover %s 没有找到", source));
         }

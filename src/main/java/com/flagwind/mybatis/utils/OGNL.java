@@ -23,7 +23,7 @@ public abstract class OGNL {
      */
     public static boolean hasAggregateFields(Object fields) {
         if (fields != null && fields instanceof List) {
-            List<QueryField> queryFields = (List<QueryField>) fields;
+            List<QueryField> queryFields = TypeUtils.castTo( fields);
             return queryFields.stream().anyMatch(g -> g.getType() != null);
         }
         return false;

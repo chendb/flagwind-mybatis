@@ -17,11 +17,8 @@ import org.apache.ibatis.reflection.wrapper.BeanWrapper;
 public class ExtensibleBeanWrapper extends BeanWrapper {
     private Log LOG = LogFactory.getLog(ExtensibleObject.class);
     public ExtensibleObject extensibleObject;
-    private MetaObject metaObject;
-
     public ExtensibleBeanWrapper(MetaObject metaObject, Object object) {
         super(metaObject, object);
-        this.metaObject = metaObject;
         this.extensibleObject = (ExtensibleObject) object;
     }
 

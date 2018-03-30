@@ -84,7 +84,7 @@ public class BaseInsertProvider extends MapperTemplate {
         MutablePair<String, Boolean> pair = getSequenceKeyMapping(columnList, entityClass, ms);
 
         //Identity列只能有一个
-        Boolean hasIdentityKey = pair.right;
+        // Boolean hasIdentityKey = pair.right;
         if (StringUtil.isNotEmpty(pair.left)) {
             sql.append(pair.left);
         }
@@ -154,7 +154,7 @@ public class BaseInsertProvider extends MapperTemplate {
         MutablePair<String, Boolean> pair = getSequenceKeyMapping(columnList, entityClass, ms);
 
         //Identity列只能有一个
-        Boolean hasIdentityKey = pair.right;
+        // Boolean hasIdentityKey = pair.right;
         if (StringUtil.isNotEmpty(pair.left)) {
             sql.append(pair.left);
         }
