@@ -165,7 +165,7 @@ public class TemplateSqlUtils {
     private static String getIfNullValueSql(String clauseName){
         String sql=
         "<if test=\"@com.flagwind.mybatis.utils.OGNL@isNullValue("+clauseName+")\">  " +
-            " ${"+clauseName+".name} ${"+clauseName+".operator.alias}" +
+            " ${"+clauseName+".name} ${"+clauseName+".operator.alias} NULL " +
         "</if>" ;
         return sql;
     }
