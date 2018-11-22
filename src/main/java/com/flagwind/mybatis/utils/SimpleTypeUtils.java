@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class SimpleTypeUtils {
-    private static final Set<Class<?>> SIMPLE_TYPE_SET = new HashSet<Class<?>>();
+    public static final Set<Class<?>> SIMPLE_TYPE_SET = new HashSet<Class<?>>();
 
     /**
      * 特别注意：由于基本类型有默认值，因此在实体类中不建议使用基本类型作为数据库字段类型

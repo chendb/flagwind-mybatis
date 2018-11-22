@@ -17,7 +17,7 @@ import org.apache.ibatis.type.TypeException;
 import org.apache.ibatis.type.TypeHandler;
 
 public class EntityTable {
-	public static final Pattern DELIMITER = Pattern.compile("^[`\\[\"]?(.*?)[`\\]\"]?$");
+	private static final Pattern DELIMITER = Pattern.compile("^[`\\[\"]?(.*?)[`\\]\"]?$");
 
 	private String name;
 	private String catalog;
@@ -67,19 +67,6 @@ public class EntityTable {
 	 */
 	private Class<?> entityClass;
 
-//	private List<RelationshipTable> relationshipTables;
-//
-//	public List<RelationshipTable> getRelationshipTables() {
-//
-//		if (relationshipTables == null) {
-//			relationshipTables = new ArrayList<>();
-//		}
-//		return relationshipTables;
-//	}
-//
-//	public void setRelationshipTables(List<RelationshipTable> relationshipTables) {
-//		this.relationshipTables = relationshipTables;
-//	}
 
 
 	public EntityTable(Class<?> entityClass) {

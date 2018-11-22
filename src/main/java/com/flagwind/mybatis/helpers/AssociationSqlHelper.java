@@ -26,15 +26,11 @@ public class AssociationSqlHelper {
         for (EntityField field : fields) {
             if (field.isAnnotationPresent(OneToOne.class)) {
                 OneToOne oneToOne = field.getAnnotation(OneToOne.class);
-                if (oneToOne.targetEntity() != null) {
-                    EntityHelper.initEntityNameMap(oneToOne.targetEntity(), config);
-                }
+                EntityHelper.initEntityNameMap(oneToOne.targetEntity(), config);
             }
             if (field.isAnnotationPresent(OneToMany.class)) {
                 OneToMany oneToMany = field.getAnnotation(OneToMany.class);
-                if (oneToMany.targetEntity() != null) {
-                    EntityHelper.initEntityNameMap(oneToMany.targetEntity(), config);
-                }
+                EntityHelper.initEntityNameMap(oneToMany.targetEntity(), config);
             }
         }
         table.setAssociationRegisted(true);
@@ -53,7 +49,7 @@ public class AssociationSqlHelper {
         if (columnList.size() == 1) {
             EntityColumn column = columnList.iterator().next();
             sql.append(" where ");
-            if (StringUtil.isNotEmpty(columnPrefix) && column.getColumn().indexOf(".") < 0) {
+            if (StringUtil.isNotEmpty(columnPrefix) && !column.getColumn().contains(".")) {
                 sql.append(columnPrefix).append(".");
             }
             sql.append(column.getColumn());

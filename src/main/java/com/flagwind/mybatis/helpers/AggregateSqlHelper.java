@@ -12,9 +12,7 @@ import java.util.Set;
 public class AggregateSqlHelper {
 
     public static String selectAllColumns(Class<?> entityClass) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT ").append(getAllColumns(entityClass)).append(" ");
-        return sql.toString();
+        return "SELECT " + getAllColumns(entityClass) + " ";
     }
 
     public static String getAllColumns(Class<?> entityClass) {

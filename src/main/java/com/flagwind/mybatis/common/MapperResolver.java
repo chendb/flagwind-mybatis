@@ -4,6 +4,7 @@ import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.provider.EmptyProvider;
 import com.flagwind.mybatis.provider.MapperTemplate;
 import com.flagwind.mybatis.utils.StringUtil;
+import com.flagwind.persistent.AbstractRepository;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.SelectProvider;
@@ -55,7 +56,7 @@ public class MapperResolver {
      */
     public MapperResolver(Properties properties) {
         this();
-        setProperties(properties);
+        setProperties(null,properties);
     }
 
     /**
@@ -74,6 +75,13 @@ public class MapperResolver {
      */
     public void setConfig(Config config) {
         this.config = config;
+
+        if(config.getMappers() != null && config.getMappers().length > 0){
+            for (String mapperClass : config.getMappers()) {
+                registerMapper(mapperClass);
+            }
+        }
+        ifEmptyRegisterDefaultInterface();
     }
 
     /**
@@ -223,21 +231,27 @@ public class MapperResolver {
      *
      * @param properties
      */
-    public void setProperties(Properties properties) {
-        config.setProperties(properties);
+    public void setProperties(String prefix,Properties properties)
+    {
+        config.setProperties(prefix,properties);
         //注册通用接口
-        String mapper = null;
-        if (properties != null) {
-            mapper = properties.getProperty("mappers");
-        }
-        if (StringUtil.isNotEmpty(mapper)) {
-            String[] mappers = mapper.split(",");
-            for (String mapperClass : mappers) {
-                if (mapperClass.length() > 0) {
-                    registerMapper(mapperClass);
-                }
-            }
-        }
+//        String mapper = null;
+//        if(properties != null)
+//        {
+//            mapper = properties.getProperty("mappers");
+//        }
+//        if(StringUtil.isNotEmpty(mapper))
+//        {
+//            String[] mappers = mapper.split(",");
+//            for(String mapperClass : mappers)
+//            {
+//                if(mapperClass.length() > 0)
+//                {
+//                    registerMapper(mapperClass);
+//                }
+//            }
+//        }
+        ifEmptyRegisterDefaultInterface();
     }
 
     /**
@@ -245,7 +259,7 @@ public class MapperResolver {
      */
     public void ifEmptyRegisterDefaultInterface() {
         if (registerClass.size() == 0) {
-            registerMapper("com.flagwind.persistent.AbstractRepository");
+            registerMapper(AbstractRepository.class);
         }
     }
 

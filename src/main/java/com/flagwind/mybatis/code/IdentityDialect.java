@@ -17,27 +17,43 @@ public enum IdentityDialect {
         this.identityRetrievalStatement = identityRetrievalStatement;
     }
 
-    public static IdentityDialect getDatabaseDialect(String database) {
-        IdentityDialect returnValue = null;
-        if ("DB2".equalsIgnoreCase(database)) {
-            returnValue = DB2;
-        } else if ("MySQL".equalsIgnoreCase(database)) {
-            returnValue = MYSQL;
-        } else if ("SqlServer".equalsIgnoreCase(database)) {
-            returnValue = SQLSERVER;
-        } else if ("Cloudscape".equalsIgnoreCase(database)) {
-            returnValue = CLOUDSCAPE;
-        } else if ("Derby".equalsIgnoreCase(database)) {
-            returnValue = DERBY;
-        } else if ("HSQLDB".equalsIgnoreCase(database)) {
-            returnValue = HSQLDB;
-        } else if ("SYBASE".equalsIgnoreCase(database)) {
-            returnValue = SYBASE;
-        } else if ("DB2_MF".equalsIgnoreCase(database)) {
-            returnValue = DB2_MF;
-        } else if ("Informix".equalsIgnoreCase(database)) {
-            returnValue = INFORMIX;
+    public static IdentityDialect parse(String database)
+    {
+        IdentityDialect returnValue ;
+        DialectType dialectType = DialectType.parse(database);
+        switch(dialectType)
+        {
+            case DB2:
+                returnValue = DB2;
+                break;
+            case MySQL:
+                returnValue = MYSQL;
+                break;
+            case SQLServer:
+                returnValue = SQLSERVER;
+                break;
+            case Cloudscape:
+                returnValue = CLOUDSCAPE;
+                break;
+            case Derby:
+                returnValue = DERBY;
+                break;
+            case HSQL:
+                returnValue = HSQLDB;
+                break;
+            case Sybase:
+                returnValue = SYBASE;
+                break;
+            case DB2_MF:
+                returnValue = DB2_MF;
+                break;
+            case Informix:
+                returnValue = INFORMIX;
+                break;
+            default:
+                returnValue = MYSQL;
         }
+
         return returnValue;
     }
 

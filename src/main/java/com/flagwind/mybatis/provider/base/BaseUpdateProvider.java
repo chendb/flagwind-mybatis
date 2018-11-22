@@ -51,7 +51,7 @@ public class BaseUpdateProvider extends MapperTemplate {
         Class<?> entityClass = getEntityClass(ms);
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.updateTable(entityClass, tableName(entityClass)));
-        sql.append(SqlHelper.updateSetColumns(entityClass, null, true, isNotEmpty()));
+        sql.append(SqlHelper.updateSetColumns(entityClass, null, true, getConfig().isNotEmpty()));
         sql.append(SqlHelper.wherePKColumns(entityClass));
         return sql.toString();
     }

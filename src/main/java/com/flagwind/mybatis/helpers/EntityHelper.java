@@ -231,11 +231,11 @@ public class EntityHelper {
         entityTable.setEntityClassPKColumns(new LinkedHashSet<>());
         //处理所有列
         List<EntityField> fields = null;
-        if (config.isEnableMethodAnnotation()) {
-            fields = FieldHelper.getAll(entityClass);
-        } else {
+//        if (config.isEnableMethodAnnotation()) {
+//            fields = FieldHelper.getAll(entityClass);
+//        } else {
             fields = FieldHelper.getFields(entityClass);
-        }
+//        }
         for (EntityField field : fields) {
             //如果启用了简单类型，就做简单类型校验，如果不是简单类型，直接跳过
             if (config.isUseSimpleType() && !SimpleTypeUtils.isSimpleType(field.getJavaType())) {
@@ -353,7 +353,7 @@ public class EntityHelper {
                     entityColumn.setIdentity(true);
                     if (!generatedValue.generator().equals("")) {
                         String generator = null;
-                        IdentityDialect identityDialect = IdentityDialect.getDatabaseDialect(generatedValue.generator());
+                        IdentityDialect identityDialect = IdentityDialect.parse(generatedValue.generator());
                         if (identityDialect != null) {
                             generator = identityDialect.getIdentityRetrievalStatement();
                         } else {

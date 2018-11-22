@@ -34,8 +34,8 @@ public class SqlServerProvider extends MapperTemplate {
         Class<?> entityClass = getEntityClass(ms);
         StringBuilder sql = new StringBuilder();
         sql.append(SqlHelper.insertIntoTable(entityClass, tableName(entityClass)));
-        sql.append(SqlHelper.insertColumns(entityClass, true, true, isNotEmpty()));
-        sql.append(SqlHelper.insertValuesColumns(entityClass, true, true, isNotEmpty()));
+        sql.append(SqlHelper.insertColumns(entityClass, true, true, getConfig().isNotEmpty()));
+        sql.append(SqlHelper.insertValuesColumns(entityClass, true, true, getConfig().isNotEmpty()));
         return sql.toString();
     }
 }

@@ -15,21 +15,32 @@ import java.util.Properties;
  * @author chendb
  */
 public class Config {
+
     private String  UUID;
-    private String  IDENTITY;
-    private boolean BEFORE;
-    private String  seqFormat;
-    private String  catalog;
+    private String identity;
+    private boolean before;
+    private String  sequenceFormat;
     private String  schema;
 
-    //校验调用Example方法时，Example(entityClass)和Mapper<EntityClass>是否一致
-    private boolean checkExampleEntityClass;
+
+
+
+    public String[] getMappers()
+    {
+        return mappers;
+    }
+
+    public void setMappers(String[] mappers)
+    {
+        this.mappers = mappers;
+    }
+
+    private String[] mappers;
+
+
     //使用简单类型
     private boolean useSimpleType;
-    /**
-     * 是否支持方法上的注解，默认false
-     */
-    private boolean enableMethodAnnotation;
+
     /**
      * 对于一般的getAllIfColumnNode，是否判断!=''，默认不判断
      */
@@ -69,44 +80,24 @@ public class Config {
      *
      *
      */
-    public boolean isBEFORE() {
-        return BEFORE;
+    public boolean isBefore() {
+        return before;
     }
 
-    public void setBEFORE(boolean BEFORE) {
-        this.BEFORE = BEFORE;
+    public void setBefore(boolean before) {
+        this.before = before;
     }
 
-    /**
-     * 主键自增回写方法执行顺序,默认AFTER,可选值为(BEFORE|AFTER)
-     *
-     * @param order
-     */
-    public void setOrder(String order) {
-        this.BEFORE = "BEFORE".equalsIgnoreCase(order);
-    }
 
-    public String getCatalog() {
-        return catalog;
-    }
-
-    /**
-     * 设置全局的catalog,默认为空，如果设置了值，操作表时的sql会是catalog.tablename
-     *
-     * @param catalog
-     */
-    public void setCatalog(String catalog) {
-        this.catalog = catalog;
-    }
 
     /**
      * 获取主键自增回写SQL
      *
      * @return
      */
-    public String getIDENTITY() {
-        if (StringUtils.isNotEmpty(this.IDENTITY)) {
-            return this.IDENTITY;
+    public String getIdentity() {
+        if (StringUtils.isNotEmpty(this.identity)) {
+            return this.identity;
         }
         //针对mysql的默认值
         return IdentityDialect.MYSQL.getIdentityRetrievalStatement();
@@ -115,14 +106,14 @@ public class Config {
     /**
      * 主键自增回写方法,默认值MYSQL,详细说明请看文档
      *
-     * @param IDENTITY
+     * @param identity
      */
-    public void setIDENTITY(String IDENTITY) {
-        IdentityDialect identityDialect = IdentityDialect.getDatabaseDialect(IDENTITY);
+    public void setIdentity(String identity) {
+        IdentityDialect identityDialect = IdentityDialect.parse(identity);
         if (identityDialect != null) {
-            this.IDENTITY = identityDialect.getIdentityRetrievalStatement();
+            this.identity = identityDialect.getIdentityRetrievalStatement();
         } else {
-            this.IDENTITY = IDENTITY;
+            this.identity = identity;
         }
     }
 
@@ -145,9 +136,9 @@ public class Config {
      *
      * @return
      */
-    public String getSeqFormat() {
-        if (StringUtils.isNotEmpty(this.seqFormat)) {
-            return this.seqFormat;
+    public String getSequenceFormat() {
+        if (StringUtils.isNotEmpty(this.sequenceFormat)) {
+            return this.sequenceFormat;
         }
         return "{0}.nextval";
     }
@@ -156,10 +147,10 @@ public class Config {
      * 序列的获取规则,使用{num}格式化参数，默认值为{0}.nextval，针对Oracle
      * <br>可选参数一共3个，对应0,1,2,3分别为SequenceName，ColumnName, PropertyName，TableName
      *
-     * @param seqFormat
+     * @param sequenceFormat
      */
-    public void setSeqFormat(String seqFormat) {
-        this.seqFormat = seqFormat;
+    public void setSequenceFormat(String sequenceFormat) {
+        this.sequenceFormat = sequenceFormat;
     }
 
     /**
@@ -201,21 +192,6 @@ public class Config {
         this.style = style;
     }
 
-    public boolean isEnableMethodAnnotation() {
-        return enableMethodAnnotation;
-    }
-
-    public void setEnableMethodAnnotation(boolean enableMethodAnnotation) {
-        this.enableMethodAnnotation = enableMethodAnnotation;
-    }
-
-    public boolean isCheckExampleEntityClass() {
-        return checkExampleEntityClass;
-    }
-
-    public void setCheckExampleEntityClass(boolean checkExampleEntityClass) {
-        this.checkExampleEntityClass = checkExampleEntityClass;
-    }
 
     public boolean isUseSimpleType() {
         return useSimpleType;
@@ -231,9 +207,6 @@ public class Config {
      * @return
      */
     public String getPrefix() {
-        if (StringUtils.isNotEmpty(this.catalog)) {
-            return this.catalog;
-        }
         if (StringUtils.isNotEmpty(this.schema)) {
             return this.schema;
         }
@@ -245,76 +218,104 @@ public class Config {
      *
      * @param properties
      */
-    public void setProperties(Properties properties) {
-        if (properties == null) {
+    public void setProperties(String prefix,Properties properties)
+    {
+        if(properties == null)
+        {
             //默认驼峰
             this.style = Style.camelhump;
             return;
         }
-        String UUID = properties.getProperty("UUID");
-        if (StringUtils.isNotEmpty(UUID)) {
-            setUUID(UUID);
+        if(StringUtils.isNotBlank(prefix))
+        {
+            if(!prefix.endsWith("."))
+            {
+                prefix += ".";
+            }
         }
-        String IDENTITY = properties.getProperty("IDENTITY");
-        if (StringUtils.isNotEmpty(IDENTITY)) {
-            setIDENTITY(IDENTITY);
+        else
+        {
+            prefix = "";
         }
 
-        String dialect = properties.getProperty("dialect");
-        if (StringUtils.isNotEmpty(dialect)) {
+        String UUID = properties.getProperty(prefix + "uuid");
+        if(StringUtils.isNotEmpty(UUID))
+        {
+            setUUID(UUID);
+        }
+        String IDENTITY = properties.getProperty(prefix + "identity");
+        if(StringUtils.isNotEmpty(IDENTITY))
+        {
+            setIdentity(IDENTITY);
+        }
+
+        String dialect = properties.getProperty(prefix + "dialect");
+        if(StringUtils.isNotEmpty(dialect))
+        {
             setDialect(dialect);
         }
 
-        String depth = properties.getProperty("depth");
-        if (StringUtils.isNotEmpty(depth)) {
+        String depth = properties.getProperty(prefix + "depth");
+        if(StringUtils.isNotEmpty(depth))
+        {
             setDepth(Integer.parseInt(depth));
         }
 
-        String seqFormat = properties.getProperty("seqFormat");
-        if (StringUtils.isNotEmpty(seqFormat)) {
-            setSeqFormat(seqFormat);
+        String seqFormat = properties.getProperty(prefix + "sequence-format");
+        if(StringUtils.isNotEmpty(seqFormat))
+        {
+            setSequenceFormat(seqFormat);
         }
-        String catalog = properties.getProperty("catalog");
-        if (StringUtils.isNotEmpty(catalog)) {
-            setCatalog(catalog);
+
+        String mapper = properties.getProperty(prefix + "mappers");
+        if(StringUtils.isNotEmpty(mapper))
+        {
+                String[] mappers = mapper.split(",");
+                setMappers(mappers);
         }
-        String schema = properties.getProperty("schema");
-        if (StringUtils.isNotEmpty(schema)) {
+//        else
+//        {
+//            setMappers(new String[]{AbstractRepository.class.getName()});
+//        }
+
+        String schema = properties.getProperty(prefix + "schema");
+        if(StringUtils.isNotEmpty(schema))
+        {
             setSchema(schema);
         }
-        String ORDER = properties.getProperty("ORDER");
-        if (StringUtils.isNotEmpty(ORDER)) {
-            setOrder(ORDER);
-        }
-        String notEmpty = properties.getProperty("notEmpty");
-        if (StringUtils.isNotEmpty(notEmpty)) {
+
+        String notEmpty = properties.getProperty(prefix + "not-empty");
+        if(StringUtils.isNotEmpty(notEmpty))
+        {
             this.notEmpty = notEmpty.equalsIgnoreCase("TRUE");
         }
-        String enableMethodAnnotation = properties.getProperty("enableMethodAnnotation");
-        if (StringUtils.isNotEmpty(enableMethodAnnotation)) {
-            this.enableMethodAnnotation = enableMethodAnnotation.equalsIgnoreCase("TRUE");
-        }
-        String checkExampleStr = properties.getProperty("checkExampleEntityClass");
-        if (StringUtils.isNotEmpty(checkExampleStr)) {
-            this.checkExampleEntityClass = checkExampleStr.equalsIgnoreCase("TRUE");
-        }
-        String useSimpleTypeStr = properties.getProperty("useSimpleType");
-        if (StringUtils.isNotEmpty(useSimpleTypeStr)) {
+
+
+        String useSimpleTypeStr = properties.getProperty(prefix + "use-simple-type");
+        if(StringUtils.isNotEmpty(useSimpleTypeStr))
+        {
             this.useSimpleType = useSimpleTypeStr.equalsIgnoreCase("TRUE");
         }
         //注册新的基本类型，以逗号隔开，使用全限定类名
-        String simpleTypes = properties.getProperty("simpleTypes");
-        if (StringUtils.isNotEmpty(simpleTypes)) {
+        String simpleTypes = properties.getProperty(prefix + "simple-types");
+        if(StringUtils.isNotEmpty(simpleTypes))
+        {
             SimpleTypeUtils.registerSimpleType(simpleTypes);
         }
-        String styleStr = properties.getProperty("style");
-        if (StringUtils.isNotEmpty(styleStr)) {
-            try {
+        String styleStr = properties.getProperty(prefix + "style");
+        if(StringUtils.isNotEmpty(styleStr))
+        {
+            try
+            {
                 this.style = Style.valueOf(styleStr);
-            } catch (IllegalArgumentException e) {
+            }
+            catch(IllegalArgumentException e)
+            {
                 throw new MapperException(styleStr + "不是合法的Style值!");
             }
-        } else {
+        }
+        else
+        {
             //默认驼峰
             this.style = Style.camelhump;
         }

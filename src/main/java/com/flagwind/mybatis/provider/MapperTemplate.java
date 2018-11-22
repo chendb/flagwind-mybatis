@@ -15,14 +15,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.flagwind.mybatis.common.Config;
 import com.flagwind.mybatis.common.MapperResolver;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.helpers.AssociationSqlHelper;
 import com.flagwind.mybatis.helpers.EntityHelper;
 import com.flagwind.mybatis.meta.EntityColumn;
 import com.flagwind.mybatis.meta.EntityTable;
-import com.flagwind.mybatis.swapper.ResultMapSwapper;
-import com.flagwind.mybatis.swapper.ResultMapSwapperHolder;
+import com.flagwind.mybatis.reflection.swapper.ResultMapSwapper;
+import com.flagwind.mybatis.reflection.swapper.ResultMapSwapperHolder;
 import com.flagwind.mybatis.utils.StringUtil;
 
 import org.apache.ibatis.mapping.MappedStatement;
@@ -38,8 +39,8 @@ import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 
 public abstract class MapperTemplate {
     private static final XMLLanguageDriver languageDriver = new XMLLanguageDriver();
-    protected Map<String, Method> methodMap = new ConcurrentHashMap<String, Method>();
-    protected Map<String, Class<?>> entityClassMap = new ConcurrentHashMap<String, Class<?>>();
+    private Map<String, Method> methodMap = new ConcurrentHashMap<String, Method>();
+    private Map<String, Class<?>> entityClassMap = new ConcurrentHashMap<String, Class<?>>();
     protected Class<?> mapperClass;
     protected MapperResolver mapperResolver;
 
@@ -73,30 +74,20 @@ public abstract class MapperTemplate {
         methodMap.put(methodName, method);
     }
 
-    public String getUUID() {
-        return mapperResolver.getConfig().getUUID();
+    public Config getConfig(){
+        return mapperResolver.getConfig();
     }
 
-    public String getIDENTITY() {
-        return mapperResolver.getConfig().getIDENTITY();
-    }
     /**
      * 获取IDENTITY值的表达式
      *
      * @param column
      * @return
      */
-    public String getIDENTITY(EntityColumn column) {
-        return MessageFormat.format(mapperResolver.getConfig().getIDENTITY(), column.getSequenceName(), column.getColumn(), column.getProperty(), column.getTable().getName());
+    public String getIdentity(EntityColumn column) {
+        return MessageFormat.format(getConfig().getIdentity(), column.getSequenceName(), column.getColumn(), column.getProperty(), column.getTable().getName());
     }
-    public boolean isBEFORE() {
-        return mapperResolver.getConfig().isBEFORE();
-    }
-
-    public boolean isNotEmpty() {
-        return mapperResolver.getConfig().isNotEmpty();
-    }
-
+ 
 
     /**
      * 是否支持该通用方法
@@ -130,7 +121,7 @@ public abstract class MapperTemplate {
             MetaObject metaObject = SystemMetaObject.forObject(ms);
             metaObject.setValue("resultMaps", Collections.unmodifiableList(newResultMaps));
         } else {
-            List<ResultMap> resultMaps = new ArrayList<ResultMap>();
+            List<ResultMap> resultMaps = new ArrayList<>();
             resultMaps.add(entityTable.getResultMap(ms.getConfiguration()));
             MetaObject metaObject = SystemMetaObject.forObject(ms);
             metaObject.setValue("resultMaps", Collections.unmodifiableList(resultMaps));
@@ -155,7 +146,8 @@ public abstract class MapperTemplate {
      * @throws java.lang.reflect.InvocationTargetException
      * @throws IllegalAccessException
      */
-    public void setSqlSource(MappedStatement ms) throws Exception {
+    public void setSqlSource(MappedStatement ms)
+    {
         if (this.mapperClass == getMapperClass(ms.getId())) {
             throw new MapperException("请不要配置或扫描通用Mapper接口类：" + this.mapperClass);
         }
@@ -254,7 +246,7 @@ public abstract class MapperTemplate {
      * @return
      */
     protected String getSeqNextVal(EntityColumn column) {
-        return MessageFormat.format(mapperResolver.getConfig().getSeqFormat(), column.getSequenceName(), column.getColumn(), column.getProperty(), column.getTable().getName());
+        return MessageFormat.format(mapperResolver.getConfig().getSequenceFormat(), column.getSequenceName(), column.getColumn(), column.getProperty(), column.getTable().getName());
     }
 
     /**
