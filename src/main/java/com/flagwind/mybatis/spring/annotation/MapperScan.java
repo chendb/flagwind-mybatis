@@ -91,10 +91,10 @@ public @interface MapperScan {
 	String prefix() default "flagwind.mybatis";
 
 	/**
-	 * 还可以直接配置一个 MapperHelper bean
+	 * 还可以直接配置一个 模版上下文 bean
 	 *
 	 * @return
 	 */
-	String mapperResolverRef() default "";
+	String templateContextRef() default "";
 
 }

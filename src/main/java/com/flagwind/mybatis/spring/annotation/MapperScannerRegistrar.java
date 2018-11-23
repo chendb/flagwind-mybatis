@@ -79,11 +79,11 @@ public class MapperScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
 		String prefix = annoAttrs.getString("prefix");
 
 
-		//优先级 mapperResolverRef > properties > springboot
-		String mapperResolverRef = annoAttrs.getString("mapperResolverRef");
+		//优先级 templateContextRef > properties > springboot
+		String templateContextRef = annoAttrs.getString("templateContextRef");
 		String[] properties = annoAttrs.getStringArray("properties");
-		if (StringUtils.hasText(mapperResolverRef)) {
-			scanner.setMapperResolverBeanName(mapperResolverRef);
+		if (StringUtils.hasText(templateContextRef)) {
+			scanner.setTemplateContextBeanName(templateContextRef);
 		} else if (properties != null && properties.length > 0) {
 			scanner.setMapperProperties(prefix,properties);
 		} else {
@@ -91,8 +91,7 @@ public class MapperScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
 				scanner.setMapperProperties(prefix,this.environment);
 			} catch (Exception e) {
 				LOGGER.warn("只有 Spring Boot 环境中可以通过 Environment(配置文件,环境变量,运行参数等方式) 配置通用 Mapper，" +
-						"其他环境请通过 @MapperScan 注解中的 mapperResolverRef 或 properties 参数进行配置!" +
-						"如果你使用 tk.mybatis.mapper.session.Configuration 配置的通用 Mapper，你可以忽略该错误!", e);
+						"其他环境请通过 @MapperScan 注解中的 templateContextRef 或 properties 参数进行配置!" , e);
 			}
 		}
 		scanner.registerFilters();

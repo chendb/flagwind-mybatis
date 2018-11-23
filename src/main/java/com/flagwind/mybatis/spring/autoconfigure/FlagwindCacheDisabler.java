@@ -30,11 +30,11 @@
 //		try {
 //			// 因为jar包的类都是 AppClassLoader 加载的，所以此处获取的就是 AppClassLoader
 //			ClassLoader appClassLoader = getClass().getClassLoader();
-//			removeStaticCache(ClassUtils.forName("com.flagwind.mybatis.utils.MsUtil", appClassLoader), "CLASS_CACHE");
-//			removeStaticCache(ClassUtils.forName("com.flagwind.mybatis.reflection.swapper.ResultMapSwapperHolder", appClassLoader),"swapperMap");
+//			removeStaticCache(ClassUtils.forName("com.flagwind.mybatis.utils.MapperClassUtils", appClassLoader), "CLASS_CACHE");
+//			removeStaticCache(ClassUtils.forName("com.flagwind.mybatis.definition.result.swapper.ResultMapSwapperHolder", appClassLoader),"swapperMap");
 //			// removeStaticCache(ClassUtils.forName("tk.mybatis.mapper.version.VersionUtil", appClassLoader));
 //
-//			removeEntityHelperCache(ClassUtils.forName("com.flagwind.mybatis.helpers.EntityHelper", appClassLoader));
+//			removeEntityHelperCache(ClassUtils.forName("com.flagwind.mybatis.metadata.EntityTableFactory", appClassLoader));
 //		} catch (Exception ex) {
 //		}
 //	}
@@ -81,10 +81,10 @@
 //						cache.remove(entityClass);
 //					}
 //				}
-//				logger.info("Clear EntityHelper entityTableMap cache.");
+//				logger.info("Clear EntityTableFactory entityTableMap cache.");
 //			}
 //		} catch (Exception ex) {
-//			logger.warn("Failed to disable Mapper MsUtil cache. ClassCastExceptions may occur", ex);
+//			logger.warn("Failed to disable Mapper MapperClassUtils cache. ClassCastExceptions may occur", ex);
 //		}
 //	}
 //

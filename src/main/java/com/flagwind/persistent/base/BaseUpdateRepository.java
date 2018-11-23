@@ -1,6 +1,6 @@
 package com.flagwind.persistent.base;
 
-import com.flagwind.mybatis.provider.base.BaseUpdateProvider;
+import com.flagwind.mybatis.definition.template.BaseUpdateTemplate;
 import com.flagwind.persistent.model.Clause;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.UpdateProvider;
@@ -17,7 +17,7 @@ public interface BaseUpdateRepository<E> {
      * @param <S> 实体类型
      */
     @Transactional
-    @UpdateProvider(type = BaseUpdateProvider.class, method = "dynamicSQL")
+    @UpdateProvider(type = BaseUpdateTemplate.class, method = "dynamicSQL")
     <S extends E> void update(S entity);
 
 
@@ -31,7 +31,7 @@ public interface BaseUpdateRepository<E> {
 
 
     @Transactional
-    @UpdateProvider(type = BaseUpdateProvider.class, method = "dynamicSQL")
+    @UpdateProvider(type = BaseUpdateTemplate.class, method = "dynamicSQL")
     void modify(@Param("_map") HashMap<String, Object> map, @Param("_clause")Clause clause);
 
 }

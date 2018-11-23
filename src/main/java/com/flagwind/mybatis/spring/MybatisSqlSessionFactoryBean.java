@@ -1,6 +1,6 @@
 package com.flagwind.mybatis.spring;
 
-import com.flagwind.mybatis.helpers.PackageHelper;
+import com.flagwind.mybatis.utils.PackageUtils;
 import org.springframework.util.StringUtils;
 
 public class MybatisSqlSessionFactoryBean extends org.mybatis.spring.SqlSessionFactoryBean {
@@ -29,7 +29,7 @@ public class MybatisSqlSessionFactoryBean extends org.mybatis.spring.SqlSessionF
 			{
 				if(one.contains("*"))
 				{
-					this.appendArrayToBuilder(builder, PackageHelper.convertTypeAliasesPackage(one));
+					this.appendArrayToBuilder(builder, PackageUtils.convertTypeAliasesPackage(one));
 				}
 				else
 				{

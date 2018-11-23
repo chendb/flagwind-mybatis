@@ -7,7 +7,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.flagwind.mybatis.meta.EntityField;
+import com.flagwind.mybatis.reflection.entities.EntityField;
 
 /***
  * 关联性字段工具类

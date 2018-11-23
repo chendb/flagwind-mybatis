@@ -10,11 +10,13 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Properties;
 
 /**
- * 通用Mapper属性配置
+ * 通用MapperTemplate属性配置
  *
  * @author chendb
  */
 public class Config {
+
+    public static final String PREFIX  = "flagwind.mybatis";
 
     private String  UUID;
     private String identity;

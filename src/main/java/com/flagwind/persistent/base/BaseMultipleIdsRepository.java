@@ -1,6 +1,6 @@
 package com.flagwind.persistent.base;
 
-import com.flagwind.mybatis.provider.MultipleIdsProvider;
+import com.flagwind.mybatis.definition.template.MultipleIdsTemplate;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
@@ -12,9 +12,9 @@ import java.util.List;
 public interface BaseMultipleIdsRepository<E, ID extends Serializable> {
     
     @Transactional
-    @DeleteProvider(type = MultipleIdsProvider.class, method = "dynamicSQL")
+    @DeleteProvider(type = MultipleIdsTemplate.class, method = "dynamicSQL")
     int deleteByIds(@Param("_keys") String keys);
 
-    @SelectProvider(type = MultipleIdsProvider.class, method = "dynamicSQL")
+    @SelectProvider(type = MultipleIdsTemplate.class, method = "dynamicSQL")
     List<E> fetchByIds(@Param("_keys") String keys);
 }

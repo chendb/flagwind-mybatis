@@ -1,6 +1,6 @@
 package com.flagwind.mybatis.spring.boot;
 
-import com.flagwind.mybatis.common.MapperResolver;
+import com.flagwind.mybatis.common.TemplateContext;
 import com.flagwind.persistent.AbstractRepository;
 import com.flagwind.persistent.Discovery;
 import com.flagwind.persistent.DiscoveryFactory;
@@ -55,7 +55,7 @@ public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProces
 
 	private BeanNameGenerator nameGenerator;
 
-	private MapperResolver mapperResolver= new MapperResolver();
+	private TemplateContext mapperResolver= new TemplateContext();
 
 
 
@@ -100,7 +100,7 @@ public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProces
 		scanner.setBeanNameGenerator(this.nameGenerator);
 		scanner.registerFilters();
 		//设置通用 Mapper
-		scanner.setMapperResolver(this.mapperResolver);
+		scanner.setTemplateContext(this.mapperResolver);
 		scanner.scan(StringUtils.tokenizeToStringArray(this.basePackage, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS));
 	}
 

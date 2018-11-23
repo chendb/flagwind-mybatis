@@ -1,7 +1,7 @@
 package com.flagwind.mybatis.spring.boot;
 
 import com.flagwind.mybatis.common.Config;
-import com.flagwind.mybatis.common.MapperResolver;
+import com.flagwind.mybatis.common.TemplateContext;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
@@ -54,19 +54,19 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 
 	private Class<?> markerInterface;
 
-	public MapperResolver getMapperResolver()
+	public TemplateContext getTemplateContext()
 	{
-		return mapperResolver;
+		return templateContext;
 	}
 
-	public void setMapperResolver(MapperResolver mapperResolver)
+	public void setTemplateContext(TemplateContext templateContext)
 	{
-		this.mapperResolver = mapperResolver;
+		this.templateContext = templateContext;
 	}
 
-	private MapperResolver mapperResolver;
+	private TemplateContext templateContext;
 
-	private String mapperResolverBeanName;
+	private String templateContextBeanName;
 
 	private MapperFactoryBean<?> mapperFactoryBean = new MapperFactoryBean<>();
 
@@ -147,14 +147,14 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 			definition.getConstructorArgumentValues().addGenericArgumentValue(definition.getBeanClassName()); // issue #59
 			definition.setBeanClass(this.mapperFactoryBean.getClass());
 			//设置通用 Mapper
-			if(StringUtils.hasText(this.mapperResolverBeanName)){
-				definition.getPropertyValues().add("mapperResolver", new RuntimeBeanReference(this.mapperResolverBeanName));
+			if(StringUtils.hasText(this.templateContextBeanName)){
+				definition.getPropertyValues().add("templateContext", new RuntimeBeanReference(this.templateContextBeanName));
 			} else {
 				//不做任何配置的时候使用默认方式
-				if(this.mapperResolver == null){
-					this.mapperResolver = new MapperResolver();
+				if(this.templateContext == null){
+					this.templateContext = new TemplateContext();
 				}
-				definition.getPropertyValues().add("mapperResolver", this.mapperResolver);
+				definition.getPropertyValues().add("templateContext", this.templateContext);
 			}
 
 			definition.getPropertyValues().add("addToConfig", this.addToConfig);
@@ -229,18 +229,18 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 	 * @param config
 	 */
 	public void setConfig(Config config) {
-		if (mapperResolver == null) {
-			mapperResolver = new MapperResolver();
+		if (templateContext == null) {
+			templateContext = new TemplateContext();
 		}
-		mapperResolver.setConfig(config);
+		templateContext.setConfig(config);
 	}
 
 	public void setMapperFactoryBean(MapperFactoryBean<?> mapperFactoryBean) {
 		this.mapperFactoryBean = mapperFactoryBean != null ? mapperFactoryBean : new MapperFactoryBean<>();
 	}
 
-	public void setMapperResolverBeanName(String mapperResolverBeanName) {
-		this.mapperResolverBeanName = mapperResolverBeanName;
+	public void setTemplateContextBeanName(String templateContextBeanName) {
+		this.templateContextBeanName = templateContextBeanName;
 	}
 
 	/**
@@ -258,11 +258,11 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 		{
 			config = new Config();
 		}
-		if(mapperResolver == null)
+		if(templateContext == null)
 		{
-			mapperResolver = new MapperResolver();
+			templateContext = new TemplateContext();
 		}
-		mapperResolver.setConfig(config);
+		templateContext.setConfig(config);
 	}
 
 	/**
@@ -271,8 +271,8 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 	 * @param properties
 	 */
 	public void setMapperProperties(String prefix,String[] properties) {
-		if (mapperResolver == null) {
-			mapperResolver = new MapperResolver();
+		if (templateContext == null) {
+			templateContext = new TemplateContext();
 		}
 		Properties props = new Properties();
 		for (String property : properties) {
@@ -283,7 +283,7 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 			}
 			props.put(property.substring(0, index).trim(), property.substring(index + 1).trim());
 		}
-		mapperResolver.setProperties(prefix,props);
+		templateContext.setProperties(prefix,props);
 	}
 
 	public void setMarkerInterface(Class<?> markerInterface) {

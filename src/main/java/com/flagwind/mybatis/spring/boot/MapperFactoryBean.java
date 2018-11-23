@@ -1,10 +1,10 @@
 package com.flagwind.mybatis.spring.boot;
 
-import com.flagwind.mybatis.common.MapperResolver;
+import com.flagwind.mybatis.common.TemplateContext;
 
 public class MapperFactoryBean<T> extends org.mybatis.spring.mapper.MapperFactoryBean<T> {
 
-    private MapperResolver mapperResolver;
+    private TemplateContext mapperResolver;
 
     public MapperFactoryBean() {
     }
@@ -22,7 +22,7 @@ public class MapperFactoryBean<T> extends org.mybatis.spring.mapper.MapperFactor
         }
     }
 
-    public void setMapperResolver(MapperResolver mapperResolver) {
+    public void setMapperResolver(TemplateContext mapperResolver) {
         this.mapperResolver = mapperResolver;
     }
 }
