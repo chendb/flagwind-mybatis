@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 
 import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.reflection.entities.EntityField;
-import com.flagwind.mybatis.reflection.entities.EntityTypeHolder;
+import com.flagwind.mybatis.reflection.EntityTypeHolder;
 import com.flagwind.mybatis.metadata.EntityTableUtils;
 import com.flagwind.mybatis.utils.AssociationUtils;
 import com.flagwind.mybatis.utils.SimpleTypeUtils;

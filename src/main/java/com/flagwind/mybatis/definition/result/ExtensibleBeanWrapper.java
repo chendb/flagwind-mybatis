@@ -1,7 +1,7 @@
 package com.flagwind.mybatis.definition.result;
 
 import com.flagwind.mybatis.reflection.entities.EntityField;
-import com.flagwind.mybatis.reflection.entities.EntityTypeHolder;
+import com.flagwind.mybatis.reflection.EntityTypeHolder;
 import com.flagwind.persistent.AssociativeEntry;
 import com.flagwind.persistent.AssociativeProvider;
 import com.flagwind.persistent.DiscoveryFactory;

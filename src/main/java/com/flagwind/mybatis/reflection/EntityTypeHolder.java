@@ -1,4 +1,8 @@
-package com.flagwind.mybatis.reflection.entities;
+package com.flagwind.mybatis.reflection;
+
+import com.flagwind.mybatis.reflection.entities.EntityField;
+import com.flagwind.mybatis.reflection.entities.EntityType;
+import com.flagwind.mybatis.reflection.entities.EntityTypeUtils;
 
 import java.util.Collections;
 import java.util.List;
