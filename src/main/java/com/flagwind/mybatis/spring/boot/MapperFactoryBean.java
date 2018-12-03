@@ -4,7 +4,7 @@ import com.flagwind.mybatis.common.TemplateContext;
 
 public class MapperFactoryBean<T> extends org.mybatis.spring.mapper.MapperFactoryBean<T> {
 
-    private TemplateContext mapperResolver;
+    private TemplateContext templateContext;
 
     public MapperFactoryBean() {
     }
@@ -17,12 +17,12 @@ public class MapperFactoryBean<T> extends org.mybatis.spring.mapper.MapperFactor
     @Override
     protected void checkDaoConfig() {
         super.checkDaoConfig();
-        if (mapperResolver.isExtendCommonMapper(getObjectType())) {
-            mapperResolver.processConfiguration(getSqlSession().getConfiguration(), getObjectType());
+        if (templateContext.isExtendCommonMapper(getObjectType())) {
+            templateContext.processConfiguration(getSqlSession().getConfiguration(), getObjectType());
         }
     }
 
-    public void setMapperResolver(TemplateContext mapperResolver) {
-        this.mapperResolver = mapperResolver;
+    public void setTemplateContext(TemplateContext templateContext) {
+        this.templateContext = templateContext;
     }
 }
