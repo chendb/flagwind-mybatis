@@ -41,7 +41,6 @@ public class AssociationSqlHelper {
      * where主键条件(参数为单个值如userReository.getById("123456"))
      * @param entityClass
      * @param keyName
-     * @return
      */
     public static String wherePKColumn(String columnPrefix,Class<?> entityClass,String keyName) {
         StringBuilder sql = new StringBuilder();
@@ -65,7 +64,6 @@ public class AssociationSqlHelper {
     /**
      * 检查这个实体对应的类型是否有关联关系
      * @param entityClass
-     * @return
      */
     public static boolean hasAssociation(Class<?> entityClass) {
         EntityTable table = EntityTableFactory.getEntityTable(entityClass);
@@ -80,7 +78,6 @@ public class AssociationSqlHelper {
      *
      * @param entityClass
      * @param config
-     * @return
      */
     public static String fromTable(Class<?> entityClass, Config config) {
         StringBuilder sql = new StringBuilder();
@@ -106,7 +103,6 @@ public class AssociationSqlHelper {
     /**
      * 获取实体的表名以及关联表名
      * @param entityClass
-     * @return
      */
     public static String tableName(Class<?> entityClass,Config config) {
         EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);

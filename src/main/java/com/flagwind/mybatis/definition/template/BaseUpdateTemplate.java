@@ -14,7 +14,7 @@ public class BaseUpdateTemplate extends MapperTemplate {
     /**
      * 通过主键更新全部字段
      *
-     * @param ms
+     * @param ms 映射申明
      */
     public String update(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
@@ -28,7 +28,7 @@ public class BaseUpdateTemplate extends MapperTemplate {
     /**
      * 批量更新部分字段
      *
-     * @param ms
+     * @param ms 映射申明
      * @return
      */
     public String modify(MappedStatement ms) {
@@ -43,7 +43,7 @@ public class BaseUpdateTemplate extends MapperTemplate {
     /**
      * 通过主键更新不为null的字段
      *
-     * @param ms
+     * @param ms 映射申明
      * @return
      */
     public String updateSelective(MappedStatement ms) {

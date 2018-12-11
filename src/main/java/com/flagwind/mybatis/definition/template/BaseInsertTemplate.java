@@ -70,7 +70,7 @@ public class BaseInsertTemplate extends MapperTemplate {
             &lt;/trim&gt;
      </pre>
      *
-     * @param ms
+     * @param ms 映射申明
      * @return
      */
     public String insert(MappedStatement ms) {
@@ -141,7 +141,7 @@ public class BaseInsertTemplate extends MapperTemplate {
      </pre>
      * 这段代码可以注意对countryname的处理
      *
-     * @param ms
+     * @param ms 映射申明
      * @return
      */
     public String insertSelective(MappedStatement ms) {
@@ -201,7 +201,7 @@ public class BaseInsertTemplate extends MapperTemplate {
     /**
      * 批量插入
      *
-     * @param ms
+     * @param ms 映射申明
      */
     public String insertList(MappedStatement ms) {
         if (DialectType.MySQL.equals(this.getDialectType())) {
@@ -265,7 +265,7 @@ public class BaseInsertTemplate extends MapperTemplate {
     /**
      * 插入，主键id，自增
      *
-     * @param ms
+     * @param ms 映射申明
      */
     public String insertUseGeneratedKeys(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);

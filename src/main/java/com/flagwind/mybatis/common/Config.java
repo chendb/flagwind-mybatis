@@ -95,7 +95,6 @@ public class Config {
     /**
      * 获取主键自增回写SQL
      *
-     * @return
      */
     public String getIdentity() {
         if (StringUtils.isNotEmpty(this.identity)) {
@@ -136,7 +135,6 @@ public class Config {
     /**
      * 获取序列格式化模板
      *
-     * @return
      */
     public String getSequenceFormat() {
         if (StringUtils.isNotEmpty(this.sequenceFormat)) {
@@ -158,7 +156,6 @@ public class Config {
     /**
      * 获取UUID生成规则
      *
-     * @return
      */
     public String getUUID() {
         if (StringUtils.isNotEmpty(this.UUID)) {
@@ -206,7 +203,6 @@ public class Config {
     /**
      * 获取表前缀，带catalog或schema
      *
-     * @return
      */
     public String getPrefix() {
         if (StringUtils.isNotEmpty(this.schema)) {

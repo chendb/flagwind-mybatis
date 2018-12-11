@@ -65,7 +65,6 @@ public class TemplateContext
     /**
      * 获取通用Mapper配置
      *
-     * @return
      */
     public Config getConfig() {
         return config;
@@ -91,8 +90,6 @@ public class TemplateContext
      * 通过通用Mapper接口获取对应的MapperTemplate
      *
      * @param mapperClass
-     * @return
-     * @throws Exception
      */
     private MapperTemplate fromMapperClass(Class<?> mapperClass) {
         Method[] methods = mapperClass.getDeclaredMethods();
@@ -179,7 +176,6 @@ public class TemplateContext
      * 判断当前的接口方法是否需要进行拦截
      *
      * @param msId
-     * @return
      */
     public boolean isMapperMethod(String msId) {
         if (msIdSkip.get(msId) != null) {
@@ -200,7 +196,6 @@ public class TemplateContext
      * 判断接口是否包含通用接口
      *
      * @param mapperInterface
-     * @return
      */
     public boolean isExtendCommonMapper(Class<?> mapperInterface) {
         for (Class<?> mapperClass : registerClass) {
@@ -216,7 +211,7 @@ public class TemplateContext
      * <p/>
      * 执行该方法前必须使用isMapperMethod判断，否则msIdCache会空
      *
-     * @param ms
+     * @param ms 映射申明
      */
     public void setSqlSource(MappedStatement ms) {
         MapperTemplate mapperTemplate = msIdCache.get(ms.getId());

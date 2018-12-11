@@ -18,7 +18,6 @@ public class PackageUtils
 	 * 别名通配符设置
 	 *
 	 * @param typeAliasesPackage 类别名包路径
-	 * @return
 	 */
 	public static String[] convertTypeAliasesPackage(String typeAliasesPackage) {
 		ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
@@ -59,7 +58,6 @@ public class PackageUtils
 	 * </p>
 	 *
 	 * @param typePackage 扫描类包路径
-	 * @return
 	 */
 	public static Set<Class> scanTypePackage(String typePackage) {
 		ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();

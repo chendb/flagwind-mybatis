@@ -56,7 +56,7 @@ public class MapperClassUtils
     /**
      * 获取执行的方法名
      *
-     * @param ms
+     * @param ms 映射申明
      * @return 方法名
      */
     public static String getMethodName(MappedStatement ms) {

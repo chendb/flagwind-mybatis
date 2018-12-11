@@ -21,8 +21,7 @@ public class MultipleIdsTemplate extends MapperTemplate {
     /**
      * 根据主键字符串进行删除，类中只有存在一个带有@Id注解的字段
      *
-     * @param ms
-     * @return
+     * @param ms 映射申明
      */
     public String deleteByIds(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
@@ -43,8 +42,7 @@ public class MultipleIdsTemplate extends MapperTemplate {
     /**
      * 根据主键字符串进行查询，类中只有存在一个带有@Id注解的字段
      *
-     * @param ms
-     * @return
+     * @param ms 映射申明
      */
     public String selectByIds(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);

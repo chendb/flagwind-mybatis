@@ -32,7 +32,6 @@ public abstract class OGNL {
     /**
      * 是否为升序
      * @param parameter
-     * @return
      */
     public static boolean isAscending(Object parameter) {
         if (parameter != null && parameter instanceof Sorting) {
@@ -55,8 +54,7 @@ public abstract class OGNL {
 
     /**
      * 是否为单条件
-     * @param parameter
-     * @return
+     * @param parameter 条件短语
      */
     public static boolean isSingleClause(Object parameter) {
         if (parameter != null && parameter instanceof SingleClause) {
@@ -67,33 +65,22 @@ public abstract class OGNL {
 
     /**
      * 是否为多条件
-     * @param parameter
-     * @return
+     * @param parameter 条件短语
      */
     public static boolean isCombineClause(Object parameter) {
         if (parameter != null && parameter instanceof ChildClause) {
             return false;
         }
-        
-        if (parameter != null && parameter instanceof CombineClause) {
-            if (parameter instanceof ChildClause) {
-                return false;
-            }
-            return true;
-        }
-        return false;
+
+        return parameter != null && parameter instanceof CombineClause;
     }
 
     /**
      * 是否为子查询条件
-     * @param parameter
-     * @return
+     * @param parameter 条件短语
      */
     public static boolean isChildClause(Object parameter) {
-        if (parameter != null && parameter instanceof ChildClause) {
-            return true;
-        }
-        return false;
+        return parameter != null && parameter instanceof ChildClause;
     }
 
     public static boolean isNullValue(Object parameter) {

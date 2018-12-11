@@ -21,8 +21,8 @@ public class MappedStatementHelper
     /**
      * 新建SelectKey节点
      *
-     * @param ms
-     * @param column
+     * @param ms 映射申明
+     * @param column 列
      */
     public static void newSelectKeyMappedStatement(MappedStatement ms, EntityColumn column, Class<?> entityClass, Boolean executeBefore, String identity) {
         String keyId = ms.getId() + SelectKeyGenerator.SELECT_KEY_SUFFIX;

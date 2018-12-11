@@ -86,7 +86,6 @@ public class EntityTableFactory
 	/**
 	 * 判断实体类型是否注册
 	 * @param entityClass
-	 * @return
 	 */
 	public static boolean hasEntityTable(Class<?> entityClass)
 	{
@@ -98,7 +97,6 @@ public class EntityTableFactory
 	/**
 	 * 获取表对象
 	 * @param entityClass
-	 * @return
 	 */
 	public static EntityTable getEntityTable(Class<?> entityClass)
 	{
@@ -113,7 +111,6 @@ public class EntityTableFactory
 	/**
 	 * 获取默认的orderby语句
 	 * @param entityClass
-	 * @return
 	 */
 	public static String getOrderByClause(Class<?> entityClass)
 	{
@@ -141,7 +138,6 @@ public class EntityTableFactory
 	/**
 	 * 获取全部列
 	 * @param entityClass
-	 * @return
 	 */
 	public static Set<EntityColumn> getColumns(Class<?> entityClass)
 	{
@@ -168,7 +164,6 @@ public class EntityTableFactory
 	/**
 	 * 获取主键信息
 	 * @param entityClass
-	 * @return
 	 */
 	public static Set<EntityColumn> getPKColumns(Class<?> entityClass)
 	{
@@ -178,7 +173,6 @@ public class EntityTableFactory
 	/**
 	 * 获取查询的Select
 	 * @param entityClass
-	 * @return
 	 */
 	public static String getSelectColumns(Class<?> entityClass)
 	{
@@ -288,6 +282,10 @@ public class EntityTableFactory
 		for(ColumnProcessor processor : CACHE_COLUMN_PROCESSOR.values())
 		{
 			processor.process(entityColumn, field, style);
+		}
+
+		if(entityColumn.getColumn() == null){
+			entityColumn.setColumn(field.getName());
 		}
 
 		if(entityColumn.getJdbcType() == null)

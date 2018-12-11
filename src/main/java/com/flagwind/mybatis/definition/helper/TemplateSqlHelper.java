@@ -16,8 +16,7 @@ public class TemplateSqlHelper
     /**
      * <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
      *
-     * @param column
-     * @return
+     * @param column 列
      */
     public static String getBindCache(EntityColumn column) {
         StringBuilder sql = new StringBuilder();
@@ -30,8 +29,7 @@ public class TemplateSqlHelper
     /**
      * <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
      *
-     * @param column
-     * @return
+     * @param column 列
      */
     public static String getBindValue(EntityColumn column, String value) {
         StringBuilder sql = new StringBuilder();
@@ -44,8 +42,7 @@ public class TemplateSqlHelper
     /**
      * <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
      *
-     * @param column
-     * @return
+     * @param column 列
      */
     public static String getIfCacheNotNull(EntityColumn column, String contents) {
         StringBuilder sql = new StringBuilder();
@@ -58,8 +55,7 @@ public class TemplateSqlHelper
     /**
      * 如果_cache == null
      *
-     * @param column
-     * @return
+     * @param column 列
      */
     public static String getIfCacheIsNull(EntityColumn column, String contents) {
         StringBuilder sql = new StringBuilder();
@@ -72,10 +68,9 @@ public class TemplateSqlHelper
     /**
      * 判断自动!=null的条件结构
      *
-     * @param column
+     * @param column 列
      * @param contents
      * @param empty
-     * @return
      */
     public static String getIfNotNull(EntityColumn column, String contents, boolean empty) {
         return getIfNotNull(null, column, contents, empty);
@@ -84,10 +79,9 @@ public class TemplateSqlHelper
     /**
      * 判断自动==null的条件结构
      *
-     * @param column
+     * @param column 列
      * @param contents
      * @param empty
-     * @return
      */
     public static String getIfIsNull(EntityColumn column, String contents, boolean empty) {
         return getIfIsNull(null, column, contents, empty);
@@ -97,10 +91,9 @@ public class TemplateSqlHelper
      * 判断自动!=null的条件结构
      *
      * @param entityName
-     * @param column
+     * @param column 列
      * @param contents
      * @param empty
-     * @return
      */
     public static String getIfNotNull(String entityName, EntityColumn column, String contents, boolean empty) {
         StringBuilder sql = new StringBuilder();
@@ -126,10 +119,9 @@ public class TemplateSqlHelper
      * 判断自动==null的条件结构
      *
      * @param entityName
-     * @param column
+     * @param column 列
      * @param contents
      * @param empty
-     * @return
      */
     public static String getIfIsNull(String entityName, EntityColumn column, String contents, boolean empty) {
         StringBuilder sql = new StringBuilder();
@@ -155,7 +147,6 @@ public class TemplateSqlHelper
      * 获取所有查询列，如id,name,code...
      *
      * @param entityClass
-     * @return
      */
     public static String getAllColumns(Class<?> entityClass) {
         Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
@@ -172,7 +163,6 @@ public class TemplateSqlHelper
      * select xxx,xxx...
      *
      * @param entityClass
-     * @return
      */
     public static String selectAllColumns(Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
@@ -186,7 +176,6 @@ public class TemplateSqlHelper
      * select count(x)
      *
      * @param entityClass
-     * @return
      */
     public static String selectCount(Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
@@ -204,7 +193,6 @@ public class TemplateSqlHelper
      * select case when count(x) > 0 then 1 else 0 end
      *
      * @param entityClass
-     * @return
      */
     public static String selectCountExists(Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
@@ -224,7 +212,6 @@ public class TemplateSqlHelper
      *
      * @param entityClass
      * @param defaultTableName
-     * @return
      */
     public static String fromTable(Class<?> entityClass, String defaultTableName) {
         StringBuilder sql = new StringBuilder();
@@ -242,7 +229,6 @@ public class TemplateSqlHelper
      *
      * @param entityClass
      * @param defaultTableName 默认表名
-     * @return
      */
     public static String updateTable(Class<?> entityClass, String defaultTableName) {
         StringBuilder sql = new StringBuilder();
@@ -258,7 +244,6 @@ public class TemplateSqlHelper
      *
      * @param entityClass
      * @param defaultTableName
-     * @return
      */
     public static String deleteFromTable(Class<?> entityClass, String defaultTableName) {
         StringBuilder sql = new StringBuilder();
@@ -273,7 +258,6 @@ public class TemplateSqlHelper
      *
      * @param entityClass
      * @param defaultTableName
-     * @return
      */
     public static String insertIntoTable(Class<?> entityClass, String defaultTableName) {
         StringBuilder sql = new StringBuilder();
@@ -290,7 +274,6 @@ public class TemplateSqlHelper
      * @param skipId      是否从列中忽略id类型
      * @param notNull     是否判断!=null
      * @param notEmpty    是否判断String类型!=''
-     * @return
      */
     public static String insertColumns(Class<?> entityClass, boolean skipId, boolean notNull, boolean notEmpty) {
         StringBuilder sql = new StringBuilder();
@@ -322,7 +305,6 @@ public class TemplateSqlHelper
      * @param skipId      是否从列中忽略id类型
      * @param notNull     是否判断!=null
      * @param notEmpty    是否判断String类型!=''
-     * @return
      */
     public static String insertValuesColumns(Class<?> entityClass, boolean skipId, boolean notNull, boolean notEmpty) {
         StringBuilder sql = new StringBuilder();
@@ -354,7 +336,6 @@ public class TemplateSqlHelper
      * @param entityName  实体映射名
      * @param notNull     是否判断!=null
      * @param notEmpty    是否判断String类型!=''
-     * @return
      */
     public static String updateSetColumns(Class<?> entityClass, String entityName, boolean notNull, boolean notEmpty) {
         StringBuilder sql = new StringBuilder();
@@ -379,7 +360,6 @@ public class TemplateSqlHelper
      * where主键条件(参数为单个值如userReository.getById("123456"))
      * @param entityClass
      * @param keyName
-     * @return
      */
     public static String wherePKColumn(Class<?> entityClass,String keyName) {
         StringBuilder sql = new StringBuilder();
@@ -400,7 +380,6 @@ public class TemplateSqlHelper
      * where主键条件(参数为对象如userReository.selectByKey(user))
      *
      * @param entityClass
-     * @return
      */
     public static String wherePKColumns(Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
@@ -419,7 +398,6 @@ public class TemplateSqlHelper
      * where所有列的条件，会判断是否!=null
      *
      * @param entityClass
-     * @return
      */
     public static String whereAllIfColumns(Class<?> entityClass, boolean empty) {
         StringBuilder sql = new StringBuilder();
@@ -438,7 +416,6 @@ public class TemplateSqlHelper
      * 获取默认的orderBy，通过注解设置的
      *
      * @param entityClass
-     * @return
      */
     public static String orderByDefault(Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();

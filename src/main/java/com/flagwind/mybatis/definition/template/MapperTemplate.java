@@ -51,7 +51,6 @@ public abstract class MapperTemplate {
      * 该方法仅仅用来初始化ProviderSqlSource
      *
      * @param record
-     * @return
      */
     public String dynamicSQL(Object record) {
         return "dynamicSQL";
@@ -80,8 +79,7 @@ public abstract class MapperTemplate {
     /**
      * 获取IDENTITY值的表达式
      *
-     * @param column
-     * @return
+     * @param column 列
      */
     public String getIdentity(EntityColumn column) {
         return MessageFormat.format(getConfig().getIdentity(), column.getSequenceName(), column.getColumn(), column.getProperty(), column.getTable().getName());
@@ -92,7 +90,6 @@ public abstract class MapperTemplate {
      * 是否支持该通用方法
      *
      * @param msId
-     * @return
      */
     public boolean supportMethod(String msId) {
         Class<?> mapperClass = getMapperClass(msId);
@@ -106,7 +103,7 @@ public abstract class MapperTemplate {
     /**
      * 设置返回值类型 - 为了让typeHandler在select时有效，改为设置resultMap
      *
-     * @param ms
+     * @param ms 映射申明
      * @param entityClass
      */
     protected void setResultType(MappedStatement ms, Class<?> entityClass) {
@@ -130,7 +127,7 @@ public abstract class MapperTemplate {
     /**
      * 重新设置SqlSource
      *
-     * @param ms
+     * @param ms 映射申明
      * @param sqlSource
      */
     protected void setSqlSource(MappedStatement ms, SqlSource sqlSource) {
@@ -141,7 +138,7 @@ public abstract class MapperTemplate {
     /**
      * 重新设置SqlSource
      *
-     * @param ms
+     * @param ms 映射申明
      */
     public void setSqlSource(MappedStatement ms)
     {
@@ -179,9 +176,8 @@ public abstract class MapperTemplate {
     /**
      * 通过xmlSql创建sqlSource
      *
-     * @param ms
+     * @param ms 映射申明
      * @param xmlSql
-     * @return
      */
     public SqlSource createSqlSource(MappedStatement ms, String xmlSql) {
         return languageDriver.createSqlSource(ms.getConfiguration(), "<script>\n\t" + xmlSql + "</script>", null);
@@ -190,8 +186,7 @@ public abstract class MapperTemplate {
     /**
      * 获取返回值类型 - 实体类型
      *
-     * @param ms
-     * @return
+     * @param ms 映射申明
      */
     public Class<?> getEntityClass(MappedStatement ms) {
         String msId = ms.getId();
@@ -220,8 +215,7 @@ public abstract class MapperTemplate {
     /**
      * 获取序列下个值的表达式
      *
-     * @param column
-     * @return
+     * @param column 列
      */
     protected String getSeqNextVal(EntityColumn column) {
         return MessageFormat.format(context.getConfig().getSequenceFormat(), column.getSequenceName(), column.getColumn(), column.getProperty(), column.getTable().getName());
@@ -231,7 +225,6 @@ public abstract class MapperTemplate {
      * 获取实体类的表名
      *
      * @param entityClass
-     * @return
      */
     private String getTableName(Class<?> entityClass) {
         EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
@@ -249,7 +242,6 @@ public abstract class MapperTemplate {
     /**
      * 获取实体的表名
      * @param entityClass
-     * @return
      */
     protected String tableName(Class<?> entityClass) {
        return tableName(entityClass,false);
@@ -259,7 +251,6 @@ public abstract class MapperTemplate {
      * 获取实体的表名
      * @param entityClass 实体类型
      * @param addDefultAlias 是否增加默认别名
-     * @return
      */
     protected String tableName(Class<?> entityClass,boolean addDefultAlias) {
         StringBuilder sb = new StringBuilder();

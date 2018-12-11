@@ -49,7 +49,6 @@ public interface BaseSelectRepository<E, ID extends Serializable> {
      * @param fields 要查询的字段
      * @param clause 条件
      * @param sortings 排序条件
-     * @return
      */
     @SelectProvider(type = BaseSelectTemplate.class, method = "dynamicSQL")
     List<Map<String,Object>> querySelective(@Param("_table") String table, @Param("_fields") List<QueryField> fields, @Param("_clause") Clause clause, @Param("_startIndex") Integer startIndex,

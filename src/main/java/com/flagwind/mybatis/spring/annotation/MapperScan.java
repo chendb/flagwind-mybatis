@@ -82,9 +82,8 @@ public @interface MapperScan {
 	Class<? extends MapperFactoryBean> factoryBean() default MapperFactoryBean.class;
 
 	/**
-	 * 通用 Mapper 的配置，一行一个配置
+	 * 配置，一行一个配置
 	 *
-	 * @return
 	 */
 	String[] properties() default {};
 
@@ -93,7 +92,6 @@ public @interface MapperScan {
 	/**
 	 * 还可以直接配置一个 模版上下文 bean
 	 *
-	 * @return
 	 */
 	String templateContextRef() default "";
 

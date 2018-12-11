@@ -37,7 +37,7 @@ public class BaseSelectTemplate extends MapperTemplate {
     /**
      * 根据主键进行关联查询（当没有关联信息时与getById一样）
      *
-     * @param ms
+     * @param ms 映射申明
      */
     public String seekById(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
@@ -56,7 +56,7 @@ public class BaseSelectTemplate extends MapperTemplate {
     /**
      * 关联查询（当没有关联信息时与query一样）
      *
-     * @param ms
+     * @param ms 映射申明
      * @return
      */
     public String seek(MappedStatement ms) {
@@ -72,7 +72,7 @@ public class BaseSelectTemplate extends MapperTemplate {
     /**
      * 查询
      *
-     * @param ms
+     * @param ms 映射申明
      * @return
      */
     public String query(MappedStatement ms) {
@@ -91,7 +91,7 @@ public class BaseSelectTemplate extends MapperTemplate {
     /**
      * 查询
      *
-     * @param ms
+     * @param ms 映射申明
      * @return
      */
     public String take(MappedStatement ms) {
@@ -105,7 +105,7 @@ public class BaseSelectTemplate extends MapperTemplate {
     /**
      * 根据主键进行查询
      *
-     * @param ms
+     * @param ms 映射申明
      */
     public String getById(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
@@ -122,7 +122,7 @@ public class BaseSelectTemplate extends MapperTemplate {
     /**
      * 查询总数
      *
-     * @param ms
+     * @param ms 映射申明
      * @return
      */
     public String count(MappedStatement ms) {
@@ -138,7 +138,7 @@ public class BaseSelectTemplate extends MapperTemplate {
     /**
      * 根据主键查询总数
      *
-     * @param ms
+     * @param ms 映射申明
      * @return String
      */
     public String existsById(MappedStatement ms) {
@@ -162,8 +162,7 @@ public class BaseSelectTemplate extends MapperTemplate {
     /**
      * 查询全部结果
      *
-     * @param ms
-     * @return
+     * @param ms 映射申明
      */
     public String getAll(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
@@ -180,8 +179,7 @@ public class BaseSelectTemplate extends MapperTemplate {
 
     /**
      * 聚合多条件查询
-     * @param ms
-     * @return
+     * @param ms 映射申明
      */
     public String querySelective(MappedStatement ms) {
 
