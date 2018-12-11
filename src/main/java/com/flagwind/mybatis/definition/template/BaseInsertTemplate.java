@@ -48,7 +48,7 @@ public class BaseInsertTemplate extends MapperTemplate {
                 hasIdentityKey = true;
             } else if (column.isUuid()) {
                 //uuid的情况，直接插入bind节点
-                sql.append(TemplateSqlHelper.getBindValue(column, getConfig().getUUID()));
+                sql.append(TemplateSqlHelper.getBindValue(column, getConfig().getUuid()));
             }
         }
         return MutablePair.of(sql.toString(), hasIdentityKey);

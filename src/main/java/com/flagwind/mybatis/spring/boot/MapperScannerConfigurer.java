@@ -2,8 +2,6 @@ package com.flagwind.mybatis.spring.boot;
 
 import com.flagwind.mybatis.common.TemplateContext;
 import com.flagwind.persistent.AbstractRepository;
-import com.flagwind.persistent.Discovery;
-import com.flagwind.persistent.DiscoveryFactory;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.PropertyValue;
@@ -201,20 +199,6 @@ public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProces
 	public void setApplicationContext(ApplicationContext applicationContext)
 	{
 		this.applicationContext = applicationContext;
-		DiscoveryFactory.instance().initialize(new Discovery()
-		{
-			@Override
-			public <T> T discover(String name)
-			{
-				return (T) applicationContext.getBean(name);
-			}
-
-			@Override
-			public <T> T discover(Class<?> serviceType)
-			{
-				return (T) applicationContext.getBean(serviceType.getSimpleName());
-			}
-		});
 	}
 
 	/**

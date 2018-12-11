@@ -6,6 +6,8 @@ import com.flagwind.mybatis.definition.interceptor.OffsetLimitInterceptor;
 import com.flagwind.mybatis.spring.MybatisSqlSessionFactoryBean;
 import com.flagwind.mybatis.spring.boot.ClassPathMapperScanner;
 import com.flagwind.mybatis.spring.boot.FlagwindCacheDisabler;
+import com.flagwind.persistent.Discovery;
+import com.flagwind.persistent.DiscoveryFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.annotations.Mapper;

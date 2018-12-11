@@ -18,7 +18,7 @@ public class Config {
 
     public static final String PREFIX  = "flagwind.mybatis";
 
-    private String  UUID;
+    private String uuid;
     private String identity;
     private boolean before;
     private String  sequenceFormat;
@@ -157,9 +157,9 @@ public class Config {
      * 获取UUID生成规则
      *
      */
-    public String getUUID() {
-        if (StringUtils.isNotEmpty(this.UUID)) {
-            return this.UUID;
+    public String getUuid() {
+        if (StringUtils.isNotEmpty(this.uuid)) {
+            return this.uuid;
         }
         return "@java.util.UUID@randomUUID().toString().replace(\"-\", \"\")";
     }
@@ -169,10 +169,10 @@ public class Config {
      * <br>配置UUID生成策略需要使用OGNL表达式
      * <br>默认值32位长度:@java.util.UUID@randomUUID().toString().replace("-", "")
      *
-     * @param UUID
+     * @param uuid
      */
-    public void setUUID(String UUID) {
-        this.UUID = UUID;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public boolean isNotEmpty() {
@@ -239,7 +239,7 @@ public class Config {
         String UUID = properties.getProperty(prefix + "uuid");
         if(StringUtils.isNotEmpty(UUID))
         {
-            setUUID(UUID);
+            setUuid(UUID);
         }
         String IDENTITY = properties.getProperty(prefix + "identity");
         if(StringUtils.isNotEmpty(IDENTITY))
