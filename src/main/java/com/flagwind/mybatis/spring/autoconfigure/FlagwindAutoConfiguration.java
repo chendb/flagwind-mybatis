@@ -6,8 +6,6 @@ import com.flagwind.mybatis.definition.interceptor.OffsetLimitInterceptor;
 import com.flagwind.mybatis.spring.MybatisSqlSessionFactoryBean;
 import com.flagwind.mybatis.spring.boot.ClassPathMapperScanner;
 import com.flagwind.mybatis.spring.boot.FlagwindCacheDisabler;
-import com.flagwind.persistent.Discovery;
-import com.flagwind.persistent.DiscoveryFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.annotations.Mapper;
@@ -48,12 +46,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
 
 /**
  * {@link EnableAutoConfiguration Auto-Configuration} for Mybatis. Contributes a
@@ -74,6 +69,7 @@ import java.util.Properties;
 @ConditionalOnBean(DataSource.class)
 @EnableConfigurationProperties({MybatisProperties.class,FlagwindProperties.class})
 @AutoConfigureAfter(DataSourceAutoConfiguration.class)
+@Import({DiscoveryAutoConfiguration.class})
 @AutoConfigureBefore(name = "org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration")
 public class FlagwindAutoConfiguration
 {

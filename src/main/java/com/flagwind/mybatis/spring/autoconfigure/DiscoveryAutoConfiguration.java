@@ -1,12 +1,12 @@
 package com.flagwind.mybatis.spring.autoconfigure;
 
-import com.flagwind.persistent.Discovery;
-import com.flagwind.persistent.DiscoveryFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
+		import com.flagwind.persistent.Discovery;
+		import com.flagwind.persistent.DiscoveryFactory;
+		import org.springframework.beans.BeansException;
+		import org.springframework.beans.factory.BeanFactory;
+		import org.springframework.beans.factory.BeanFactoryAware;
 
-@org.springframework.context.annotation.Configuration
+
 public class DiscoveryAutoConfiguration implements BeanFactoryAware
 {
 	@Override
