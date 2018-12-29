@@ -18,9 +18,9 @@ public class ObjectSqlHelper
             return TEMPLATE_SQL.get(templateId);
         }
         String sql =
-                "<if test=\" _sortings!= null\">" +
+                "<if test=\" _sorts!= null\">" +
                         " order by " +
-                        "<foreach collection=\"_sortings\" index=\"key\" item=\"sorting\"  open=\"\"  close=\"\"  separator=\",\">" +
+                        "<foreach collection=\"_sorts\" index=\"key\" item=\"sorting\"  open=\"\"  close=\"\"  separator=\",\">" +
                             "<foreach collection=\"sorting.fields\" index=\"key\" item=\"field\"  open=\"\"  close=\"\"  separator=\",\">" +
                                 "${field}" +
                             "</foreach>" +
@@ -60,7 +60,7 @@ public class ObjectSqlHelper
             return TEMPLATE_SQL.get(templateId);
         }
         String sql =
-            "<if test=\"@com.flagwind.mybatis.utils.OGNL@hasAggregateFields(_fields)\">" +
+            "<if test=\"@com.flagwind.mybatis.utils.OGNL@hasGroupByFields(_fields)\">" +
                 " group by "+
                 "<foreach collection=\"_fields\" index=\"key\" item=\"field\"  open=\"\"  close=\"\"  separator=\",\">" +
                         "<if test=\"field.type==null\">" +

@@ -167,5 +167,7 @@ public class SingleClause implements Clause {
 	}
 
 	// endregion
+
+
 }
 

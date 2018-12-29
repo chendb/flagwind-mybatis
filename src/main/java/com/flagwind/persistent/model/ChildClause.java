@@ -10,11 +10,11 @@ public class ChildClause extends CombineClause {
     private boolean included = true;
     private ClauseOperator operator;
 
-    public ChildClause(String name, boolean included, String childFeild, String childTable, ClauseCombine combine) {
+    public ChildClause(String name, boolean included, String childField, String childTable, ClauseCombine combine) {
         super(combine);
         this.name = name;
         this.included = included;
-        this.childField = childFeild;
+        this.childField = childField;
         this.childTable = childTable;
         this.operator = ClauseOperator.Child;
     }

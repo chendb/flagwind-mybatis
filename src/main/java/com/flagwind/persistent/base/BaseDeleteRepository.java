@@ -11,12 +11,12 @@ import java.io.Serializable;
 
 public interface BaseDeleteRepository <ID extends Serializable>{
 
-    @Transactional
+
     @DeleteProvider(type = BaseDeleteTemplate.class, method = "dynamicSQL")
     int deleteById(@Param("_key") ID id);
 
 
-    @Transactional
+
     @DeleteProvider(type = BaseDeleteTemplate.class, method = "dynamicSQL")
     int delete(@Param("_clause") Clause clause);
 }

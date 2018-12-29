@@ -29,6 +29,18 @@ public abstract class OGNL {
         return false;
     }
 
+    public static boolean hasGroupByFields(Object fields) {
+        if (fields != null && fields instanceof List) {
+            List<QueryField> queryFields = TypeUtils.castTo( fields);
+            boolean flag = queryFields.stream().anyMatch(g -> g.getType() != null);
+            if(flag){
+                flag = queryFields.stream().anyMatch(g -> g.getType() == null);
+            }
+            return flag;
+        }
+        return false;
+    }
+
     /**
      * 是否为升序
      * @param parameter
