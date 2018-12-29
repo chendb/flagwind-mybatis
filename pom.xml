@@ -5,6 +5,7 @@
 		<artifactId>oss-parent</artifactId>
 		<version>7</version>
 	</parent>
+
 	<groupId>com.github.chendb</groupId>
 	<version>1.0.8</version>
 	<artifactId>flagwind-mybatis</artifactId>
