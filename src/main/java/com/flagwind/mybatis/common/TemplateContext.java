@@ -44,7 +44,16 @@ public class TemplateContext
     /**
      * 通用Mapper配置
      */
-    private Config config = new Config();
+    private static Config config = new Config();
+
+    /**
+     * 全局配置信息
+     */
+    public static Config config(){
+        return config;
+    }
+
+
 
     /**
      * 默认构造方法

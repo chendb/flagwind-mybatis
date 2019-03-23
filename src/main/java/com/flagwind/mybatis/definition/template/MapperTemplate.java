@@ -188,26 +188,31 @@ public abstract class MapperTemplate {
      *
      * @param ms 映射申明
      */
-    public Class<?> getEntityClass(MappedStatement ms) {
+    public Class<?> getEntityClass(MappedStatement ms)
+    {
         String msId = ms.getId();
-        if (entityClassMap.containsKey(msId)) {
+        if(entityClassMap.containsKey(msId))
+        {
             return entityClassMap.get(msId);
-        } else {
-            Class<?> mapperClass = getMapperClass(msId);
-            Type[] types = mapperClass.getGenericInterfaces();
-            for (Type type : types) {
-                if (type instanceof ParameterizedType) {
-                    ParameterizedType t = (ParameterizedType) type;
-                    if (t.getRawType() == this.mapperClass || this.mapperClass.isAssignableFrom((Class<?>) t.getRawType())) {
-                        Class<?> returnType = (Class<?>) t.getActualTypeArguments()[0];
-                        //获取该类型后，第一次对该类型进行初始化
-                        EntityTableFactory.register(returnType, context.getConfig());
-                        entityClassMap.put(msId, returnType);
-                        return returnType;
-                    }
+        }
+        Class<?> mapperClass = getMapperClass(msId);
+        Type[] types = mapperClass.getGenericInterfaces();
+        for(Type type : types)
+        {
+            if(type instanceof ParameterizedType)
+            {
+                ParameterizedType t = (ParameterizedType) type;
+                if(t.getRawType() == this.mapperClass || this.mapperClass.isAssignableFrom((Class<?>) t.getRawType()))
+                {
+                    Class<?> returnType = (Class<?>) t.getActualTypeArguments()[0];
+                    //获取该类型后，第一次对该类型进行初始化
+                    EntityTableFactory.register(returnType, context.getConfig());
+                    entityClassMap.put(msId, returnType);
+                    return returnType;
                 }
             }
         }
+
         throw new MapperException("无法获取 " + msId + " 方法的泛型信息!");
     }
 

@@ -2,6 +2,7 @@ package com.flagwind.mybatis.utils;
 
 import java.util.List;
 
+import com.flagwind.persistent.Functions;
 import com.flagwind.persistent.QueryField;
 import com.flagwind.persistent.model.ChildClause;
 import com.flagwind.persistent.model.ClauseOperator;
@@ -10,6 +11,7 @@ import com.flagwind.persistent.model.SingleClause;
 import com.flagwind.persistent.model.Sorting;
 import com.flagwind.persistent.model.Sorting.SortingMode;
 
+
 /**
  * OGNL静态方法
  *
@@ -17,6 +19,15 @@ import com.flagwind.persistent.model.Sorting.SortingMode;
  */
 public abstract class OGNL {
 
+    public static String clauseName(Object _clause){
+        SingleClause clause = (SingleClause)_clause;
+        return Functions.invoke(clause.getName());
+    }
+
+    public static String fieldColumn(Object _field){
+        QueryField field = (QueryField)_field;
+        return Functions.invoke(field.getColumn());
+    }
 
     /**
      * 判断是否有聚合字段

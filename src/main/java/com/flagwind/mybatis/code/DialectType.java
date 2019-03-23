@@ -2,7 +2,7 @@ package com.flagwind.mybatis.code;
 
 public enum DialectType
 {
-	Cloudscape,Derby,DB2_MF,DB2,H2,HSQL,Informix,MySQL,Oralce,PostgreSQL,SQLServer2005,SQLServer,Sybase;
+	Cloudscape,Derby,DB2_MF,DB2,H2,HSQL,Informix,MySQL,Oracle,PostgreSQL,SQLServer2005,SQLServer,Sybase;
 
 	public static DialectType parse(String dialect)
 	{
@@ -40,7 +40,7 @@ public enum DialectType
 		}
 		else if(dialect.toLowerCase().contains("oracle"))
 		{
-			return DialectType.Oralce;
+			return DialectType.Oracle;
 		}
 		else if(dialect.toLowerCase().contains("postgresql"))
 		{
@@ -60,7 +60,7 @@ public enum DialectType
 		}
 		else
 		{
-			return DialectType.Oralce;
+			return DialectType.Oracle;
 		}
 	}
 }

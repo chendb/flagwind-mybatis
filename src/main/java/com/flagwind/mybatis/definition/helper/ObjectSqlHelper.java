@@ -43,11 +43,12 @@ public class ObjectSqlHelper
         }
         String sql =
                 "<foreach collection=\"_fields\" index=\"key\" item=\"field\"  open=\"\"  close=\"\"  separator=\",\">" +
+                        "<bind name=\"__name\" value=\"@com.flagwind.mybatis.utils.OGNL@fieldColumn(field)\" />"+
                         "<if test=\"field.type==null\">" +
-                            "${field.column} ${field.alias}" +
+                            "${__name} ${field.alias}" +
                         "</if>"+
                         "<if test=\"field.type!=null\">" +
-                            " ${field.type.name}(${field.column}) ${field.alias}" +
+                            " ${field.type.name}(${__name}) ${field.alias}" +
                         "</if>"+
                 "</foreach>";
         TEMPLATE_SQL.put(templateId,sql);
@@ -63,8 +64,9 @@ public class ObjectSqlHelper
             "<if test=\"@com.flagwind.mybatis.utils.OGNL@hasGroupByFields(_fields)\">" +
                 " group by "+
                 "<foreach collection=\"_fields\" index=\"key\" item=\"field\"  open=\"\"  close=\"\"  separator=\",\">" +
+                        "<bind name=\"__name\" value=\"@com.flagwind.mybatis.utils.OGNL@fieldColumn(field)\" />"+
                         "<if test=\"field.type==null\">" +
-                            "${field.column}" +
+                            "${__name}" +
                         "</if>"+
                 "</foreach>"+
             "</if>";
@@ -100,7 +102,7 @@ public class ObjectSqlHelper
         }
 
         StringBuilder sql = new StringBuilder();
-        sql.append("<if test=\"" + clauseName + " != null\">");
+        sql.append("<if test=\"").append(clauseName).append(" != null\">");
         sql.append("<where>");
         sql.append("<choose>");
         sql.append(getSingleClauseSql(clauseName,true));
@@ -121,7 +123,9 @@ public class ObjectSqlHelper
     private static String getIfSingleValueSql(String clauseName){
         String sql=
         "<if test=\"@com.flagwind.mybatis.utils.OGNL@isSingleValue("+clauseName+")\">  " +
-            "${"+clauseName+".name} ${"+clauseName+".operator.alias} #{"+clauseName+".value}" +
+                "<bind name=\"__name\" value=\"@com.flagwind.mybatis.utils.OGNL@clauseName("+clauseName+")\" />"+
+                "${__name} ${"+clauseName+".operator.alias} #{"+clauseName+".value}" +
+//            "${"+clauseName+".name} ${"+clauseName+".operator.alias} #{"+clauseName+".value}" +
         "</if>" ;
         return sql;
     }
@@ -131,7 +135,8 @@ public class ObjectSqlHelper
         "<if test=\"@com.flagwind.mybatis.utils.OGNL@isListValue("+clauseName+")\">" +
         // region 若 list.length<1000 && operate=in 则  ${name} in ( #{value1},#{value2}.....)
         "<if test=\"@com.flagwind.mybatis.utils.OGNL@isNotOverflow(" + clauseName + ")\"> "+
-            "${"+clauseName+".name} ${"+clauseName+".operator.alias}" +
+            "<bind name=\"__name\" value=\"@com.flagwind.mybatis.utils.OGNL@clauseName("+clauseName+")\" />"+
+            "${__name} ${"+clauseName+".operator.alias}" +
             " <foreach collection=\""+clauseName+".values\" item=\"listItem\" open=\"(\"  close=\")\" separator=\",\">" +
             "#{listItem}" +
             " </foreach>" +
@@ -158,7 +163,8 @@ public class ObjectSqlHelper
     private static String getIfBetweenValueSql(String clauseName){
         String sql=
         "<if test=\"@com.flagwind.mybatis.utils.OGNL@isBetweenValue("+clauseName+")\">  " +
-        " ${"+clauseName+".name} ${"+clauseName+".operator.alias} #{"+clauseName+".startValue} and #{"+clauseName+".endValue}" +
+        "<bind name=\"__name\" value=\"@com.flagwind.mybatis.utils.OGNL@clauseName("+clauseName+")\" />"+
+        " ${__name} ${"+clauseName+".operator.alias} #{"+clauseName+".startValue} and #{"+clauseName+".endValue}" +
         "</if>" ;
         return sql;
     }
@@ -166,7 +172,8 @@ public class ObjectSqlHelper
     private static String getIfNullValueSql(String clauseName){
         String sql=
         "<if test=\"@com.flagwind.mybatis.utils.OGNL@isNullValue("+clauseName+")\">  " +
-            " ${"+clauseName+".name} ${"+clauseName+".operator.alias} NULL " +
+            "<bind name=\"__name\" value=\"@com.flagwind.mybatis.utils.OGNL@clauseName("+clauseName+")\" />"+
+            " ${__name} ${"+clauseName+".operator.alias} NULL " +
         "</if>" ;
         return sql;
     }
@@ -187,7 +194,8 @@ public class ObjectSqlHelper
     private static String getChildClauseSql(String clauseName,boolean isWrapByWhen) {
         String sql =
                 (isWrapByWhen?" <when test=\"@com.flagwind.mybatis.utils.OGNL@isChildClause(" + clauseName + ")\">":"") +
-                " ${" + clauseName + ".name} <if test=\"" + clauseName + ".included==false\"> not </if>  in  (" +
+                "<bind name=\"__name\" value=\"@com.flagwind.mybatis.utils.OGNL@clauseName("+clauseName+")\" />"+
+                " ${__name} <if test=\"" + clauseName + ".included==false\"> not </if>  in  (" +
                 " select ${" + clauseName + ".childField} from ${" + clauseName + ".childTable} " +
                 " <where>" +
                         getCombineClauseSql(clauseName, false,false,2) +
@@ -205,8 +213,7 @@ public class ObjectSqlHelper
      * 组合条件模版（使用默认递归层级）
      */
     private static String getCombineClauseSql(String clauseName,boolean isWrapByWhen,boolean isHasChildQuery) {
-        int maxLevel=MAX_LEVEL;
-        return getCombineClauseSql(clauseName, isWrapByWhen, isHasChildQuery, maxLevel);
+        return getCombineClauseSql(clauseName, isWrapByWhen, isHasChildQuery, MAX_LEVEL);
     }
 
     /**
@@ -214,7 +221,7 @@ public class ObjectSqlHelper
      */
     private static String getCombineClauseSql(String clauseName, boolean isWrapByWhen, boolean isHasChildQuery,
             int level) {
-        if (isNext(clauseName)==false||level <= 0) {
+        if (!isNext(clauseName) ||level <= 0) {
             return "";
         }
         level--;

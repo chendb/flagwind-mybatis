@@ -1,10 +1,11 @@
 package com.flagwind.persistent;
 
+import com.flagwind.persistent.base.BaseDeleteRepository;
+import com.flagwind.persistent.base.BaseInsertRepository;
+import com.flagwind.persistent.base.BaseSelectRepository;
+import com.flagwind.persistent.base.BaseUpdateRepository;
+
 import java.io.Serializable;
-
-import com.flagwind.persistent.base.*;
-
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author hbche
@@ -15,5 +16,6 @@ public interface AbstractRepository<E, ID extends Serializable> extends
 		BaseUpdateRepository<E>,
 		BaseDeleteRepository<ID>,
 		BaseSelectRepository<E,ID>{
+
 
 }

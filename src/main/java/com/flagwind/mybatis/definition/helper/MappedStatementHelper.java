@@ -63,8 +63,7 @@ public class MappedStatementHelper
             ResultMap.Builder inlineResultMapBuilder = new ResultMap.Builder(
                     configuration,
                     statementBuilder.id() + "-Inline",
-                    column.getJavaType(),
-                    new ArrayList<ResultMapping>(),
+                    column.getJavaType(), new ArrayList<>(),
                     null);
             resultMaps.add(inlineResultMapBuilder.build());
             statementBuilder.resultMaps(resultMaps);

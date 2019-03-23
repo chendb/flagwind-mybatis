@@ -61,7 +61,7 @@ public class OffsetLimitInterceptor implements Interceptor {
 
     private static ExecutorService Pool;
     // String dialectClass;
-    String dialect;
+    private String dialect;
     private boolean asyncTotalCount = false;
 
 
@@ -159,7 +159,7 @@ public class OffsetLimitInterceptor implements Interceptor {
         if (dialect.equalsIgnoreCase(DialectType.MySQL.name())) {
             return MySQLDialect.class;
         }
-        if (dialect.equalsIgnoreCase(DialectType.Oralce.name())) {
+        if (dialect.equalsIgnoreCase(DialectType.Oracle.name())) {
             return OracleDialect.class;
         }
         if (dialect.equalsIgnoreCase(DialectType.PostgreSQL.name())) {

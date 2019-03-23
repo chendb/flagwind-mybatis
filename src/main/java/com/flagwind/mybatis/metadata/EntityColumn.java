@@ -1,6 +1,7 @@
 package com.flagwind.mybatis.metadata;
 
 import com.flagwind.persistent.AggregateEntry;
+import com.flagwind.persistent.Functions;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
@@ -75,7 +76,7 @@ public class EntityColumn {
 	}
 
 	public void setColumn(String column) {
-		this.column = column;
+		this.column = Functions.invoke(column);
 	}
 
 	public Class<?> getJavaType() {

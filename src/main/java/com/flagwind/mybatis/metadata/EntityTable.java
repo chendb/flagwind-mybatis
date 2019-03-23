@@ -31,6 +31,22 @@ public class EntityTable {
 	private List<String> keyColumns;
 	private List<EntityField> associationFields;
 
+
+	/**
+	 * resultMap对象
+	 */
+	private ResultMap resultMap;
+
+	/**
+	 * 属性和列对应
+	 */
+	private Map<String, EntityColumn> propertyMap;
+
+	/**
+	 * 类
+	 */
+	private Class<?> entityClass;
+
 	public boolean isAssociationRegisted() {
 		return associationRegisted;
 	}
@@ -52,21 +68,6 @@ public class EntityTable {
 		this.associationFields = associationFields;
 	}
 
-
-	/**
-	 * resultMap对象
-	 */
-	private ResultMap resultMap;
-
-	/**
-	 * 属性和列对应
-	 */
-	private Map<String, EntityColumn> propertyMap;
-
-	/**
-	 * 类
-	 */
-	private Class<?> entityClass;
 
 
 

@@ -57,7 +57,6 @@ public class BaseSelectTemplate extends MapperTemplate {
      * 关联查询（当没有关联信息时与query一样）
      *
      * @param ms 映射申明
-     * @return
      */
     public String seek(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
@@ -73,7 +72,6 @@ public class BaseSelectTemplate extends MapperTemplate {
      * 查询
      *
      * @param ms 映射申明
-     * @return
      */
     public String query(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
@@ -146,7 +144,7 @@ public class BaseSelectTemplate extends MapperTemplate {
         StringBuilder sql = new StringBuilder();
         sql.append(TemplateSqlHelper.selectCountExists(entityClass));
         sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass)));
-        sql.append(TemplateSqlHelper.wherePKColumns(entityClass));
+        sql.append(TemplateSqlHelper.wherePKColumns(entityClass,null));
         return sql.toString();
     }
 

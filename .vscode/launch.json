@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - DecodeFunctionProcessor",
+            "request": "launch",
+            "mainClass": "com.flagwind.mybatis.metadata.processors.DecodeFunctionProcessor",
+            "projectName": "flagwind-mybatis"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Functions",
+            "request": "launch",
+            "mainClass": "Functions",
+            "projectName": "flagwind-mybatis"
+        }
+    ]
+}

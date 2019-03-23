@@ -290,7 +290,7 @@ public class EntityTableFactory
 
 		if(entityColumn.getJdbcType() == null)
 		{
-			entityColumn.setJdbcType(formJavaType(entityColumn.getJavaType()));
+			entityColumn.setJdbcType(EntityTableUtils.formJavaType(entityColumn.getJavaType()));
 		}
 		entityTable.getEntityClassColumns().add(entityColumn);
 		if(entityColumn.isId())
@@ -299,65 +299,5 @@ public class EntityTableFactory
 		}
 	}
 
-	public static JdbcType formJavaType(Class<?> javaType)
-	{
-		if(javaType == null)
-		{
-			return JdbcType.UNDEFINED;
-		}
-		if(javaType.isAssignableFrom(String.class))
-		{
-			return JdbcType.VARCHAR;
-		}
-		if(javaType.isAssignableFrom(Integer.class) || javaType.isAssignableFrom(int.class))
-		{
-			return JdbcType.INTEGER;
-		}
-		if(javaType.isAssignableFrom(Number.class))
-		{
-			return JdbcType.NUMERIC;
-		}
-		if(javaType.isAssignableFrom(Long.class) || javaType.isAssignableFrom(long.class))
-		{
-			return JdbcType.NUMERIC;
-		}
-		if(javaType.isAssignableFrom(Double.class) || javaType.isAssignableFrom(double.class))
-		{
-			return JdbcType.NUMERIC;
-		}
-		if(javaType.isAssignableFrom(Boolean.class) || javaType.isAssignableFrom(boolean.class))
-		{
-			return JdbcType.TINYINT;
-		}
-		if(javaType.isAssignableFrom(Float.class) || javaType.isAssignableFrom(float.class))
-		{
-			return JdbcType.FLOAT;
-		}
-
-		if(javaType.isAssignableFrom(Timestamp.class))
-		{
-			return JdbcType.TIMESTAMP;
-		}
-
-		if(javaType.isAssignableFrom(java.sql.Time.class))
-		{
-			return JdbcType.TIME;
-		}
-
-		if(javaType.isAssignableFrom(java.sql.Date.class) || javaType.isAssignableFrom(java.util.Date.class))
-		{
-			return JdbcType.DATE;
-		}
-
-		if(javaType.isAssignableFrom(byte[].class))
-		{
-			return JdbcType.BINARY;
-		}
-		if(javaType.isEnum())
-		{
-			return JdbcType.VARCHAR;
-		}
-		return JdbcType.UNDEFINED;
-	}
 
 }

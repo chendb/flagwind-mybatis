@@ -30,10 +30,6 @@ import org.apache.ibatis.transaction.Transaction;
 
 import com.flagwind.mybatis.definition.interceptor.paginator.dialects.Dialect;
 
-/**
- * @author poplar.yfyang
- * @author miemiedev
- */
 public class SQLHelper {
     private static Log LOG = LogFactory.getLog(SQLHelper.class);
 
@@ -45,8 +41,8 @@ public class SQLHelper {
     public static int getCount(final MappedStatement mappedStatement, final Transaction transaction,
                                final Object parameterObject, final BoundSql boundSql, Dialect dialect) throws SQLException {
         final String count_sql = dialect.getCountSQL();
-        LOG.debug(String.format("Total count SQL [{}] ", count_sql));
-        LOG.debug(String.format("Total count Parameters: {} ", parameterObject));
+        LOG.debug(String.format("Total count SQL [%s] ", count_sql));
+        LOG.debug(String.format("Total count Parameters: %s ", parameterObject));
 
         Connection connection = null;
 
@@ -61,7 +57,7 @@ public class SQLHelper {
             if (rs.next()) {
                 count = rs.getInt(1);
             }
-            LOG.debug(String.format("Total count: {}", count));
+            LOG.debug(String.format("Total count: %s", count));
             return count;
         }
         finally {

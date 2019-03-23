@@ -4,12 +4,12 @@ import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.reflection.entities.EntityField;
 import com.flagwind.mybatis.metadata.ColumnProcessor;
 import com.flagwind.mybatis.metadata.EntityColumn;
-import com.flagwind.mybatis.metadata.EntityTableFactory;
 import com.flagwind.mybatis.utils.StringUtil;
 import com.flagwind.persistent.ColumnTypeEntry;
 import com.flagwind.persistent.annotation.ColumnType;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.UnknownTypeHandler;
+import com.flagwind.mybatis.metadata.EntityTableUtils;;
 
 public class ColumnTypeAnnotationProcessor implements ColumnProcessor
 {
@@ -32,7 +32,7 @@ public class ColumnTypeAnnotationProcessor implements ColumnProcessor
 
 			}
 			if (columnTypeEntry.getJdbcType() == JdbcType.UNDEFINED ||columnTypeEntry.getJdbcType() == null) {
-				columnTypeEntry.setJdbcType(EntityTableFactory.formJavaType(field.getJavaType()));
+				columnTypeEntry.setJdbcType(EntityTableUtils.formJavaType(field.getJavaType()));
 			}
 
 

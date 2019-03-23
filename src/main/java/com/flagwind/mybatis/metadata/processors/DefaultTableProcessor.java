@@ -33,7 +33,7 @@ public class DefaultTableProcessor implements TableProcessor
 		}
 		else
 		{
-			//可以通过stye控制
+			//可以通过style控制
 			entityTable.setName(StringUtil.convertByStyle(entityTable.getEntityClass().getSimpleName(), style));
 		}
 

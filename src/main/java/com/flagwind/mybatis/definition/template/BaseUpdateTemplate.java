@@ -1,8 +1,8 @@
 package com.flagwind.mybatis.definition.template;
 
 import com.flagwind.mybatis.common.TemplateContext;
-import com.flagwind.mybatis.definition.helper.TemplateSqlHelper;
 import com.flagwind.mybatis.definition.helper.ObjectSqlHelper;
+import com.flagwind.mybatis.definition.helper.TemplateSqlHelper;
 import org.apache.ibatis.mapping.MappedStatement;
 
 public class BaseUpdateTemplate extends MapperTemplate {
@@ -21,7 +21,23 @@ public class BaseUpdateTemplate extends MapperTemplate {
         StringBuilder sql = new StringBuilder();
         sql.append(TemplateSqlHelper.updateTable(entityClass, tableName(entityClass)));
         sql.append(TemplateSqlHelper.updateSetColumns(entityClass, null, false, false));
-        sql.append(TemplateSqlHelper.wherePKColumns(entityClass));
+        sql.append(TemplateSqlHelper.wherePKColumns(entityClass,null));
+        return sql.toString();
+    }
+
+
+    public String updateList(MappedStatement ms) {
+        final Class<?> entityClass = getEntityClass(ms);
+        //开始拼sql
+        StringBuilder sql = new StringBuilder();
+
+        sql.append("<foreach collection=\"_list\" item=\"record\" separator=\";\" >");
+
+        sql.append(TemplateSqlHelper.updateTable(entityClass, tableName(entityClass)));
+        sql.append(TemplateSqlHelper.updateSetColumns(entityClass, "record", false, false));
+        sql.append(TemplateSqlHelper.wherePKColumns(entityClass,"record"));
+
+        sql.append("</foreach>");
         return sql.toString();
     }
 
@@ -51,7 +67,7 @@ public class BaseUpdateTemplate extends MapperTemplate {
         StringBuilder sql = new StringBuilder();
         sql.append(TemplateSqlHelper.updateTable(entityClass, tableName(entityClass)));
         sql.append(TemplateSqlHelper.updateSetColumns(entityClass, null, true, getConfig().isNotEmpty()));
-        sql.append(TemplateSqlHelper.wherePKColumns(entityClass));
+        sql.append(TemplateSqlHelper.wherePKColumns(entityClass,null));
         return sql.toString();
     }
 

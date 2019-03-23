@@ -25,6 +25,7 @@ public interface BaseUpdateRepository<E> {
      * @param entities 实体集
      * @param <S> 实体类型
      */
+    @UpdateProvider(type = BaseUpdateTemplate.class, method = "dynamicSQL")
     <S extends E> void updateList(@Param("_list")List<S> entities);
 
 
