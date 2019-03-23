@@ -7,7 +7,7 @@
 	</parent>
 
 	<groupId>com.github.chendb</groupId>
-	<version>1.0.9-SNAPSHOT</version>
+	<version>1.0.9</version>
 	<artifactId>flagwind-mybatis</artifactId>
 	<name>flagwind-mybatis</name>
 	<properties>
