@@ -37,23 +37,23 @@ public class Functions {
 		CACHE_FUNCTION_PROCESSOR.put("length", new LengthFunctionProcessor());
 		CACHE_FUNCTION_PROCESSOR.put("decode", new DecodeFunctionProcessor());
 		// 根据自定义格式显示时间
-		CACHE_FUNCTION_PROCESSOR.put("date.format",new DateFormatFunctionProcessor());
+		CACHE_FUNCTION_PROCESSOR.put("dt_format",new DateFormatFunctionProcessor());
 		// 显示yyy-mm-dd
-		CACHE_FUNCTION_PROCESSOR.put("get.date",new DateFunctionProcessor());
+		CACHE_FUNCTION_PROCESSOR.put("dt_date",new DateFunctionProcessor());
 		// 显示yyyy
-		CACHE_FUNCTION_PROCESSOR.put("get.year",new YearFunctionProcessor());
+		CACHE_FUNCTION_PROCESSOR.put("year",new YearFunctionProcessor());
 		// 显示month
-		CACHE_FUNCTION_PROCESSOR.put("get.month",new MonthFunctionProcessor());
+		CACHE_FUNCTION_PROCESSOR.put("month",new MonthFunctionProcessor());
 		// 显示day
-		CACHE_FUNCTION_PROCESSOR.put("get.day",new DayFunctionProcessor());
+		CACHE_FUNCTION_PROCESSOR.put("day",new DayFunctionProcessor());
 		// 显示hh24:mi:ss
-		CACHE_FUNCTION_PROCESSOR.put("get.time",new TimeFunctionProcessor());
+		CACHE_FUNCTION_PROCESSOR.put("dt_time",new TimeFunctionProcessor());
 		// 显示hh24
-		CACHE_FUNCTION_PROCESSOR.put("get.hour",new HourFunctionProcessor());
+		CACHE_FUNCTION_PROCESSOR.put("hour",new HourFunctionProcessor());
 		// 显示mi
-		CACHE_FUNCTION_PROCESSOR.put("get.minute",new MinuteFunctionProcessor());
+		CACHE_FUNCTION_PROCESSOR.put("minute",new MinuteFunctionProcessor());
 		// 显示ss
-		CACHE_FUNCTION_PROCESSOR.put("get.second",new SecondFunctionProcessor());
+		CACHE_FUNCTION_PROCESSOR.put("second",new SecondFunctionProcessor());
 	}
 
 
