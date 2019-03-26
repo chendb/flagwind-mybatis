@@ -2,6 +2,111 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - YearFunctionProcessor",
+            "request": "launch",
+            "mainClass": "com.flagwind.mybatis.metadata.processors.YearFunctionProcessor",
+            "projectName": "flagwind-mybatis"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - TimeFunctionProcessor",
+            "request": "launch",
+            "mainClass": "com.flagwind.mybatis.metadata.processors.TimeFunctionProcessor",
+            "projectName": "flagwind-mybatis"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - SecondFunctionProcessor",
+            "request": "launch",
+            "mainClass": "com.flagwind.mybatis.metadata.processors.SecondFunctionProcessor",
+            "projectName": "flagwind-mybatis"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - NowFunctionProcessor",
+            "request": "launch",
+            "mainClass": "com.flagwind.mybatis.metadata.processors.NowFunctionProcessor",
+            "projectName": "flagwind-mybatis"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MonthFunctionProcessor",
+            "request": "launch",
+            "mainClass": "com.flagwind.mybatis.metadata.processors.MonthFunctionProcessor",
+            "projectName": "flagwind-mybatis"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MinuteFunctionProcessor",
+            "request": "launch",
+            "mainClass": "com.flagwind.mybatis.metadata.processors.MinuteFunctionProcessor",
+            "projectName": "flagwind-mybatis"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - LengthFunctionProcessor",
+            "request": "launch",
+            "mainClass": "com.flagwind.mybatis.metadata.processors.LengthFunctionProcessor",
+            "projectName": "flagwind-mybatis"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - HourFunctionProcessor",
+            "request": "launch",
+            "mainClass": "com.flagwind.mybatis.metadata.processors.HourFunctionProcessor",
+            "projectName": "flagwind-mybatis"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - DayFunctionProcessor",
+            "request": "launch",
+            "mainClass": "com.flagwind.mybatis.metadata.processors.DayFunctionProcessor",
+            "projectName": "flagwind-mybatis"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - DateFunctionProcessor",
+            "request": "launch",
+            "mainClass": "com.flagwind.mybatis.metadata.processors.DateFunctionProcessor",
+            "projectName": "flagwind-mybatis"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - DateFormatFunctionProcessor",
+            "request": "launch",
+            "mainClass": "com.flagwind.mybatis.metadata.processors.DateFormatFunctionProcessor",
+            "projectName": "flagwind-mybatis"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - RightFunctionProcessor",
+            "request": "launch",
+            "mainClass": "com.flagwind.mybatis.metadata.processors.RightFunctionProcessor",
+            "projectName": "flagwind-mybatis"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - LeftFunctionProcessor",
+            "request": "launch",
+            "mainClass": "com.flagwind.mybatis.metadata.processors.LeftFunctionProcessor",
+            "projectName": "flagwind-mybatis"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - SubstringFunctionProcessor",
+            "request": "launch",
+            "mainClass": "com.flagwind.mybatis.metadata.processors.SubstringFunctionProcessor",
+            "projectName": "flagwind-mybatis"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Functions",
+            "request": "launch",
+            "mainClass": "com.flagwind.persistent.Functions",
+            "projectName": "flagwind-mybatis"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - DecodeFunctionProcessor",
             "request": "launch",
             "mainClass": "com.flagwind.mybatis.metadata.processors.DecodeFunctionProcessor",

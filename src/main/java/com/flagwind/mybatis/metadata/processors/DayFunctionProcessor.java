@@ -22,4 +22,11 @@ public class DayFunctionProcessor implements FunctionProcessor {
 				throw new MapperException("该函数没有针对" + dialectType + "类型数据库实现");
 		}
 	}
+
+	
+	public static void main(String[] args1) {
+		String arguments = "timestramp";
+		System.out.println("MySQL:"+(new DayFunctionProcessor()).process(arguments,null,DialectType.MySQL));;
+		System.out.println("Oracle:"+(new DayFunctionProcessor()).process(arguments,null,DialectType.Oracle));;
+	}
 }

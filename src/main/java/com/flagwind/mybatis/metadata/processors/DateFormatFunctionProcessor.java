@@ -6,7 +6,7 @@ import com.flagwind.mybatis.metadata.FunctionProcessor;
 import com.flagwind.mybatis.utils.StringUtil;
 
 /**
- * 取时间中的年 yyyy-mm-dd hh24:mi:ss
+ * 格式如下：yyyy-MM-dd HH:mm:ss
  */
 public class DateFormatFunctionProcessor implements FunctionProcessor {
 
@@ -17,17 +17,22 @@ public class DateFormatFunctionProcessor implements FunctionProcessor {
 		String format = arguments.split(",")[1];
 		switch (dialectType) {
 		case Oracle:
-			format = format.replaceAll("%Y","yyyy").replaceAll("%y","yy").replaceAll("%m","mm")
-					.replaceAll("%d","dd").replaceAll("%H","hh24").replaceAll("%h","hh").replaceAll("%i","mi")
-					.replaceAll("ss", "%s");
+			format = format.replaceAll("MM","mm").replace("mm", "mi");
 			return "to_char(" + column + "," + format + ")" + suffix;
 		case MySQL:
-			format = format.replaceAll("yyyy", "%Y").replaceAll("yy", "%y").replaceAll("mm", "%m")
-					.replaceAll("dd", "%d").replaceAll("hh24", "%H").replaceAll("hh", "%h").replaceAll("mi", "%i")
-					.replaceAll("ss", "%s");
+			format = format.replaceAll("yyyy", "%Y").replaceAll("yy", "%y").replaceAll("MM", "%m")
+						   .replaceAll("dd", "%d").replaceAll("HH", "%H").replaceAll("hh", "%h")
+						   .replaceAll("mm", "%i").replaceAll("ss", "%s");
 			return "date_format(" + column + "," + format + ")" + suffix;
 		default:
 			throw new MapperException("该函数没有针对" + dialectType + "类型数据库实现");
 		}
+	}
+
+	
+	public static void main(String[] args1) {
+		String arguments = "timestramp,'yyyy-MM-dd'";
+		System.out.println("MySQL:"+(new DateFormatFunctionProcessor()).process(arguments,null,DialectType.MySQL));;
+		System.out.println("Oracle:"+(new DateFormatFunctionProcessor()).process(arguments,null,DialectType.Oracle));;
 	}
 }
