@@ -21,10 +21,10 @@ mvn release:perform
 
 * 2019-3-29
   
-  增加自定义函数
+  增加自定义函数，以便适配不同数据库,目前自定义函数只支持msql和oracle两种数据库类型
     ```
     @now()                                                  // 取当前时间
-    
+
     @length(name)                                           // 取字段 name 长度
 
     @decode(status,1:'在线',2:'离线','未知')                 // 类似case when else end
