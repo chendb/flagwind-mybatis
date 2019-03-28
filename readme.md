@@ -19,7 +19,7 @@ mvn release:perform
 
 ### 更新日志
 
-* 2019-3-29
+* 2019-3-27
   
   增加自定义函数，以便适配不同数据库,目前自定义函数只支持msql和oracle两种数据库类型
     ```
@@ -53,3 +53,6 @@ mvn release:perform
 
     @right(name,2)                                          // 取 name 的右边两位
     ```
+
+* 2019-3-28
+    解决使用ChildCause后程序异常BUG
