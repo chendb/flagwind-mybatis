@@ -11,7 +11,6 @@ import com.flagwind.persistent.model.SingleClause;
 import com.flagwind.persistent.model.Sorting;
 import com.flagwind.persistent.model.Sorting.SortingMode;
 
-
 /**
  * OGNL静态方法
  *
@@ -19,13 +18,16 @@ import com.flagwind.persistent.model.Sorting.SortingMode;
  */
 public abstract class OGNL {
 
-    public static String clauseName(Object _clause){
-        SingleClause clause = (SingleClause)_clause;
-        return Functions.invoke(clause.getName());
+    public static String clauseName(Object _clause) {
+        if (_clause instanceof ChildClause) {
+            return Functions.invoke(((ChildClause) _clause).getName());
+        } else {
+            return Functions.invoke(((SingleClause) _clause).getName());
+        }
     }
 
-    public static String fieldColumn(Object _field){
-        QueryField field = (QueryField)_field;
+    public static String fieldColumn(Object _field) {
+        QueryField field = (QueryField) _field;
         return Functions.invoke(field.getColumn());
     }
 
@@ -34,7 +36,7 @@ public abstract class OGNL {
      */
     public static boolean hasAggregateFields(Object fields) {
         if (fields != null && fields instanceof List) {
-            List<QueryField> queryFields = TypeUtils.castTo( fields);
+            List<QueryField> queryFields = TypeUtils.castTo(fields);
             return queryFields.stream().anyMatch(g -> g.getType() != null);
         }
         return false;
@@ -42,9 +44,9 @@ public abstract class OGNL {
 
     public static boolean hasGroupByFields(Object fields) {
         if (fields != null && fields instanceof List) {
-            List<QueryField> queryFields = TypeUtils.castTo( fields);
+            List<QueryField> queryFields = TypeUtils.castTo(fields);
             boolean flag = queryFields.stream().anyMatch(g -> g.getType() != null);
-            if(flag){
+            if (flag) {
                 flag = queryFields.stream().anyMatch(g -> g.getType() == null);
             }
             return flag;
@@ -54,6 +56,7 @@ public abstract class OGNL {
 
     /**
      * 是否为升序
+     * 
      * @param parameter
      */
     public static boolean isAscending(Object parameter) {
@@ -77,6 +80,7 @@ public abstract class OGNL {
 
     /**
      * 是否为单条件
+     * 
      * @param parameter 条件短语
      */
     public static boolean isSingleClause(Object parameter) {
@@ -88,6 +92,7 @@ public abstract class OGNL {
 
     /**
      * 是否为多条件
+     * 
      * @param parameter 条件短语
      */
     public static boolean isCombineClause(Object parameter) {
@@ -100,6 +105,7 @@ public abstract class OGNL {
 
     /**
      * 是否为子查询条件
+     * 
      * @param parameter 条件短语
      */
     public static boolean isChildClause(Object parameter) {
