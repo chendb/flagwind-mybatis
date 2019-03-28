@@ -107,7 +107,6 @@ public class Functions {
 	}
 
 	public static String parse(String express) {
-		System.out.println(express);
 		int count = express.split("@").length - 1;
 		if (count <= 0) {
 			return express;
@@ -125,10 +124,6 @@ public class Functions {
 	}
 
 	public static void main(String[] args) {
-		// String[] attr = "@decode(state,1:10,2:20) as time".split("@|\\(|\\)|as");
-		// for(String xx:attr){
-		// 	System.out.println(xx);
-		// }
 		System.out.println(invoke("@decode(state,1:10,2:20) as time"));
 	}
 }

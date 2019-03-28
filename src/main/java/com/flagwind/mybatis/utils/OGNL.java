@@ -161,7 +161,7 @@ public abstract class OGNL {
         if (clause.getValues() != null && clause.getValues().length > 1000) {
             overflow = true;
         }
-        System.out.println("isOverflow:" + overflow);
+        // System.out.println("isOverflow:" + overflow);
         return overflow;
 
     }
