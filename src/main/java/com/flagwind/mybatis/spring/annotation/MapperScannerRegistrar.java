@@ -84,7 +84,7 @@ public class MapperScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
 		String[] properties = annoAttrs.getStringArray("properties");
 		if (StringUtils.hasText(templateContextRef)) {
 			scanner.setTemplateContextBeanName(templateContextRef);
-		} else if (properties != null && properties.length > 0) {
+		} else if (properties.length > 0) {
 			scanner.setMapperProperties(prefix,properties);
 		} else {
 			try {

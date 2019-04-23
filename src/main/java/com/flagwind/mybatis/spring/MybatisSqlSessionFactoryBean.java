@@ -3,10 +3,12 @@ package com.flagwind.mybatis.spring;
 import com.flagwind.mybatis.utils.PackageUtils;
 import org.springframework.util.StringUtils;
 
-public class MybatisSqlSessionFactoryBean extends org.mybatis.spring.SqlSessionFactoryBean {
+public class MybatisSqlSessionFactoryBean extends org.mybatis.spring.SqlSessionFactoryBean
+{
 
 	@Override
-	public void setTypeAliasesPackage(String typeAliasesPackage) {
+	public void setTypeAliasesPackage(String typeAliasesPackage)
+	{
 
 		super.setTypeAliasesPackage(standardPackage(typeAliasesPackage));
 	}
@@ -16,7 +18,6 @@ public class MybatisSqlSessionFactoryBean extends org.mybatis.spring.SqlSessionF
 	{
 		super.setTypeHandlersPackage(standardPackage(typeHandlersPackage));
 	}
-
 
 
 	private String standardPackage(String packages)
@@ -45,9 +46,12 @@ public class MybatisSqlSessionFactoryBean extends org.mybatis.spring.SqlSessionF
 		return builder.toString();
 	}
 
-	private void appendArrayToBuilder(StringBuilder builder, String[] array) {
-		if (builder != null && array != null && array.length > 0) {
-			for (String item : array) {
+	private void appendArrayToBuilder(StringBuilder builder, String[] array)
+	{
+		if(builder != null && array != null && array.length > 0)
+		{
+			for(String item : array)
+			{
 				builder.append(item).append(",");
 			}
 		}

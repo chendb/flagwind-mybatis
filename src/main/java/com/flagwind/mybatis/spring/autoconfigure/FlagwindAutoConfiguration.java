@@ -1,17 +1,19 @@
 package com.flagwind.mybatis.spring.autoconfigure;
 
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+
 import com.flagwind.mybatis.common.Config;
-import com.flagwind.mybatis.definition.interceptor.OffsetLimitInterceptor;
-import com.flagwind.mybatis.spring.MybatisSqlSessionFactoryBean;
 import com.flagwind.mybatis.spring.boot.ClassPathMapperScanner;
 import com.flagwind.mybatis.spring.boot.FlagwindCacheDisabler;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -34,20 +36,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
-import java.util.List;
 
 /**
  * {@link EnableAutoConfiguration Auto-Configuration} for Mybatis. Contributes a
@@ -64,42 +59,78 @@ import java.util.List;
  * @author Eduardo Macarrón
  */
 @org.springframework.context.annotation.Configuration
-@ConditionalOnClass({ SqlSessionFactory.class, SqlSessionFactoryBean.class })
-@ConditionalOnBean(DataSource.class)
-@EnableConfigurationProperties({ MybatisProperties.class, FlagwindProperties.class })
 @AutoConfigureAfter(DataSourceAutoConfiguration.class)
 @Import({ DiscoveryAutoConfiguration.class })
 @AutoConfigureBefore(name = "org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration")
-public class FlagwindAutoConfiguration extends AbstractAutoConfiguration {
+public class FlagwindAutoConfiguration /*extends AbstractAutoConfiguration*/
+{
 
 	private static final Log LOG = LogFactory.getLog(FlagwindAutoConfiguration.class);
 
-	public FlagwindAutoConfiguration(MybatisProperties properties,
-									 FlagwindProperties flagwindProperties,
-									 ObjectProvider<Interceptor[]> interceptorsProvider,
-									 ResourceLoader resourceLoader,
-									 ObjectProvider<DatabaseIdProvider> databaseIdProvider,
-									 ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider) {
- 
-										super(properties, flagwindProperties, interceptorsProvider, resourceLoader, databaseIdProvider, configurationCustomizersProvider);
-									 }
+	/*
+	public FlagwindAutoConfiguration(MybatisProperties properties, FlagwindProperties flagwindProperties, ObjectProvider<Interceptor[]> interceptorsProvider, ResourceLoader resourceLoader, ObjectProvider<DatabaseIdProvider> databaseIdProvider, ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider)
+	{
+
+		super(properties, flagwindProperties, interceptorsProvider, resourceLoader, databaseIdProvider, configurationCustomizersProvider);
+	}
 
 	@PostConstruct
-	public void checkConfigFileExists() {
+	public void checkConfigFileExists()
+	{
 		super.checkConfigFileExists();
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
-	public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
+	public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception
+	{
 		return super.sqlSessionFactory(dataSource);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
-	public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
+	public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory)
+	{
 		return super.sqlSessionTemplate(sqlSessionFactory);
 	}
+	*/
+
+
+
+	@Configuration
+	@ConditionalOnMissingBean(AbstractAutoConfiguration.class)
+	@ConditionalOnClass({ SqlSessionFactory.class, SqlSessionFactoryBean.class })
+	@ConditionalOnBean(DataSource.class)
+	@EnableConfigurationProperties({ MybatisProperties.class, FlagwindProperties.class })
+	public static class DatabaseAutoConfiguration extends AbstractAutoConfiguration
+	{
+		public DatabaseAutoConfiguration(MybatisProperties properties, FlagwindProperties flagwindProperties, ObjectProvider<Interceptor[]> interceptorsProvider, ResourceLoader resourceLoader, ObjectProvider<DatabaseIdProvider> databaseIdProvider, ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider)
+		{
+			super(properties, flagwindProperties, interceptorsProvider, resourceLoader, databaseIdProvider, configurationCustomizersProvider);
+		}
+
+		@PostConstruct
+		public void checkConfigFileExists()
+		{
+			super.checkConfigFileExists();
+		}
+
+		@Bean
+		@ConditionalOnMissingBean
+		public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception
+		{
+			return super.sqlSessionFactory(dataSource);
+		}
+
+		@Bean
+		@ConditionalOnMissingBean
+		public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory)
+		{
+			return super.sqlSessionTemplate(sqlSessionFactory);
+		}
+
+	}
+
 
 	/**
 	 * This will just scan the same base package as Spring Boot does. If you want
