@@ -21,9 +21,9 @@ import com.flagwind.mybatis.metadata.processors.IdAnnotationProcessor;
 import com.flagwind.mybatis.metadata.processors.OrderByAnnotationProcessor;
 import com.flagwind.mybatis.metadata.processors.SequenceGeneratorAnnotationProcessor;
 import com.flagwind.mybatis.utils.AssociationUtils;
-import com.flagwind.mybatis.utils.SimpleTypeUtils;
 import com.flagwind.persistent.annotation.NameStyle;
 import com.flagwind.reflect.EntityTypeHolder;
+import com.flagwind.reflect.SimpleTypeUtils;
 import com.flagwind.reflect.entities.EntityField;
 
 /**

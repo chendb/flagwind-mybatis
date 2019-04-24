@@ -4,6 +4,7 @@ import com.flagwind.associative.AssociativeEntry;
 import com.flagwind.associative.AssociativeUtils;
 import com.flagwind.associative.annotation.Associative;
 import com.flagwind.associative.annotation.Associatives;
+import com.flagwind.associative.annotation.Associative.TriggerType;
 import com.flagwind.lang.ExtensibleObject;
 import com.flagwind.reflect.EntityTypeHolder;
 import com.flagwind.reflect.entities.EntityField;
@@ -34,7 +35,7 @@ public class ExtensibleBeanWrapper extends BeanWrapper
 			super.set(prop, value);
 			return;
 		}
-		AssociativeUtils.setFieldValue(this.extensibleObject, field, value);
+		AssociativeUtils.setFieldValue(TriggerType.Database, this.extensibleObject, field, value);
 
 		// if(field.isAnnotationPresent(Associatives.class))
 		// {

@@ -1,10 +1,10 @@
 package com.flagwind.mybatis.common;
 
-
 import com.flagwind.mybatis.code.IdentityDialect;
 import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.exceptions.MapperException;
-import com.flagwind.mybatis.utils.SimpleTypeUtils;
+import com.flagwind.reflect.SimpleTypeUtils;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Properties;
@@ -298,7 +298,7 @@ public class Config {
         String simpleTypes = properties.getProperty(prefix + "simple-types");
         if(StringUtils.isNotEmpty(simpleTypes))
         {
-            SimpleTypeUtils.registerSimpleType(simpleTypes);
+            SimpleTypeUtils.register(simpleTypes);
         }
         String styleStr = properties.getProperty(prefix + "style");
         if(StringUtils.isNotEmpty(styleStr))

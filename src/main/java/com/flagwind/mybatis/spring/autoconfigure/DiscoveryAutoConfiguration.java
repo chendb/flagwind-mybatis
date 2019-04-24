@@ -1,7 +1,7 @@
 package com.flagwind.mybatis.spring.autoconfigure;
 
-import com.flagwind.associative.ProviderFactory;
-import com.flagwind.associative.ProviderFactory.Discovery;
+import com.flagwind.associative.AssociativeProviderFactory;
+import com.flagwind.associative.AssociativeProviderFactory.Discovery;
 
 import org.springframework.beans.BeansException;
 		import org.springframework.beans.factory.BeanFactory;
@@ -13,7 +13,7 @@ public class DiscoveryAutoConfiguration implements BeanFactoryAware
 	@Override
 	public void setBeanFactory(BeanFactory beanFactory) throws BeansException
 	{
-		ProviderFactory.setInstance(new ProviderFactory(new Discovery(){
+		AssociativeProviderFactory.setInstance(new AssociativeProviderFactory(new Discovery(){
 
 			@Override
 			public <T> T discover(String name) {

@@ -12,11 +12,11 @@ import javax.persistence.OneToOne;
 import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.metadata.EntityTableUtils;
 import com.flagwind.mybatis.utils.AssociationUtils;
-import com.flagwind.mybatis.utils.SimpleTypeUtils;
 import com.flagwind.mybatis.utils.StringUtil;
 import com.flagwind.mybatis.utils.TypeUtils;
 import com.flagwind.persistent.ColumnTypeEntry;
 import com.flagwind.reflect.EntityTypeHolder;
+import com.flagwind.reflect.SimpleTypeUtils;
 import com.flagwind.reflect.entities.EntityField;
 
 import org.apache.ibatis.builder.MapperBuilderAssistant;
