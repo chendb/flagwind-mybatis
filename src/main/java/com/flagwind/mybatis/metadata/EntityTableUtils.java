@@ -1,10 +1,11 @@
 package com.flagwind.mybatis.metadata;
 
 import com.flagwind.mybatis.code.Style;
-import com.flagwind.mybatis.reflection.entities.EntityField;
 import com.flagwind.mybatis.utils.StringUtil;
 import com.flagwind.persistent.ColumnTypeEntry;
 import com.flagwind.persistent.annotation.ColumnType;
+import com.flagwind.reflect.entities.EntityField;
+
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.UnknownTypeHandler;
 

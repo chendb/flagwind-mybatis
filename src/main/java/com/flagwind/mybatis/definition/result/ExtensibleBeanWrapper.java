@@ -1,13 +1,13 @@
 package com.flagwind.mybatis.definition.result;
 
-import com.flagwind.mybatis.reflection.entities.EntityField;
-import com.flagwind.mybatis.reflection.EntityTypeHolder;
-import com.flagwind.persistent.AssociativeEntry;
-import com.flagwind.persistent.AssociativeProvider;
-import com.flagwind.persistent.DiscoveryFactory;
-import com.flagwind.persistent.ExtensibleObject;
-import com.flagwind.persistent.annotation.Associative;
-import com.flagwind.persistent.annotation.Associatives;
+import com.flagwind.associative.AssociativeEntry;
+import com.flagwind.associative.AssociativeUtils;
+import com.flagwind.associative.annotation.Associative;
+import com.flagwind.associative.annotation.Associatives;
+import com.flagwind.lang.ExtensibleObject;
+import com.flagwind.reflect.EntityTypeHolder;
+import com.flagwind.reflect.entities.EntityField;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.reflection.MetaObject;
@@ -34,38 +34,39 @@ public class ExtensibleBeanWrapper extends BeanWrapper
 			super.set(prop, value);
 			return;
 		}
+		AssociativeUtils.setFieldValue(this.extensibleObject, field, value);
 
-		if(field.isAnnotationPresent(Associatives.class))
-		{
-			Associatives associatives = field.getAnnotation(Associatives.class);
-			for(Associative associative : associatives.value())
-			{
-				setAssociativeField(associative, prop, value);
-			}
+		// if(field.isAnnotationPresent(Associatives.class))
+		// {
+		// 	Associatives associatives = field.getAnnotation(Associatives.class);
+		// 	for(Associative associative : associatives.value())
+		// 	{
+		// 		setAssociativeField(associative, prop, value);
+		// 	}
 
-		}
-		if(field.isAnnotationPresent(Associative.class))
-		{
-			Associative associative = field.getAnnotation(Associative.class);
-			setAssociativeField(associative, prop, value);
-		}
+		// }
+		// if(field.isAnnotationPresent(Associative.class))
+		// {
+		// 	Associative associative = field.getAnnotation(Associative.class);
+		// 	setAssociativeField(associative, prop, value);
+		// }
 		super.set(prop, value);
 	}
 
-	private void setAssociativeField(Associative associative, PropertyTokenizer prop, Object value)
-	{
-		AssociativeProvider provider = DiscoveryFactory.instance().resolve(associative.source());
-		if(provider != null)
-		{
-			if(!this.extensibleObject.contains(associative.name()))
-			{
-				AssociativeEntry entry = new AssociativeEntry(associative);
-				entry.excute(extensibleObject, value);
-			}
-		}
-		else
-		{
-			LOG.warn(String.format("没有发现属性%s的Associative定义%s %s", prop.getName(), associative.source(), associative.name()));
-		}
-	}
+	// private void setAssociativeField(Associative associative, PropertyTokenizer prop, Object value)
+	// {
+	// 	AssociativeProvider provider = DiscoveryFactory.instance().resolve(associative.source());
+	// 	if(provider != null)
+	// 	{
+	// 		if(!this.extensibleObject.contains(associative.name()))
+	// 		{
+	// 			AssociativeEntry entry = new AssociativeEntry(associative);
+	// 			entry.excute(extensibleObject, value);
+	// 		}
+	// 	}
+	// 	else
+	// 	{
+	// 		LOG.warn(String.format("没有发现属性%s的Associative定义%s %s", prop.getName(), associative.source(), associative.name()));
+	// 	}
+	// }
 }

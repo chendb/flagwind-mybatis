@@ -1,7 +1,8 @@
 package com.flagwind.mybatis.metadata;
 
 import com.flagwind.mybatis.exceptions.MapperException;
-import com.flagwind.mybatis.reflection.entities.EntityField;
+import com.flagwind.reflect.entities.EntityField;
+
 import org.apache.ibatis.mapping.ResultFlag;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;

@@ -1,7 +1,7 @@
 package com.flagwind.mybatis.definition.result;
 
+import com.flagwind.lang.ExtensibleObject;
 
-import com.flagwind.persistent.ExtensibleObject;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;

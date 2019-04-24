@@ -20,11 +20,11 @@ import com.flagwind.mybatis.metadata.processors.GeneratedValueAnnotationProcesso
 import com.flagwind.mybatis.metadata.processors.IdAnnotationProcessor;
 import com.flagwind.mybatis.metadata.processors.OrderByAnnotationProcessor;
 import com.flagwind.mybatis.metadata.processors.SequenceGeneratorAnnotationProcessor;
-import com.flagwind.mybatis.reflection.EntityTypeHolder;
-import com.flagwind.mybatis.reflection.entities.EntityField;
 import com.flagwind.mybatis.utils.AssociationUtils;
 import com.flagwind.mybatis.utils.SimpleTypeUtils;
 import com.flagwind.persistent.annotation.NameStyle;
+import com.flagwind.reflect.EntityTypeHolder;
+import com.flagwind.reflect.entities.EntityField;
 
 /**
  * 实体类工具类 - 处理实体和数据库表以及字段关键的一个类

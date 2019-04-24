@@ -10,11 +10,11 @@ import javax.persistence.OneToOne;
 import com.flagwind.mybatis.common.Config;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.metadata.EntityColumn;
-import com.flagwind.mybatis.reflection.entities.EntityField;
 import com.flagwind.mybatis.metadata.EntityTableFactory;
 import com.flagwind.mybatis.metadata.EntityTable;
 import com.flagwind.mybatis.utils.AssociationUtils;
 import com.flagwind.mybatis.utils.StringUtil;
+import com.flagwind.reflect.entities.EntityField;
 
 public class AssociationSqlHelper {
 
