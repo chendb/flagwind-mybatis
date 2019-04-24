@@ -1,19 +1,30 @@
 package com.flagwind.mybatis.metadata;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
+
+import javax.persistence.Transient;
+
 import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.common.Config;
 import com.flagwind.mybatis.exceptions.MapperException;
-import com.flagwind.mybatis.reflection.entities.EntityField;
+import com.flagwind.mybatis.metadata.processors.AggregateAnnotationProcessor;
+import com.flagwind.mybatis.metadata.processors.ColumnAnnotationProcessor;
+import com.flagwind.mybatis.metadata.processors.ColumnTypeAnnotationProcessor;
+import com.flagwind.mybatis.metadata.processors.DefaultTableProcessor;
+import com.flagwind.mybatis.metadata.processors.EnumeratedAnnotationProcessor;
+import com.flagwind.mybatis.metadata.processors.GeneratedValueAnnotationProcessor;
+import com.flagwind.mybatis.metadata.processors.IdAnnotationProcessor;
+import com.flagwind.mybatis.metadata.processors.OrderByAnnotationProcessor;
+import com.flagwind.mybatis.metadata.processors.SequenceGeneratorAnnotationProcessor;
 import com.flagwind.mybatis.reflection.EntityTypeHolder;
-import com.flagwind.mybatis.metadata.processors.*;
+import com.flagwind.mybatis.reflection.entities.EntityField;
 import com.flagwind.mybatis.utils.AssociationUtils;
 import com.flagwind.mybatis.utils.SimpleTypeUtils;
 import com.flagwind.persistent.annotation.NameStyle;
-import org.apache.ibatis.type.JdbcType;
-
-import javax.persistence.Transient;
-import java.sql.Timestamp;
-import java.util.*;
 
 /**
  * 实体类工具类 - 处理实体和数据库表以及字段关键的一个类
