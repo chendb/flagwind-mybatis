@@ -17,13 +17,13 @@ public class PackageUtils
 	/**
 	 * 别名通配符设置
 	 *
-	 * @param typeAliasesPackage 类别名包路径
+	 * @param convertTypePackage 类别名包路径
 	 */
-	public static String[] convertTypeAliasesPackage(String typeAliasesPackage) {
+	public static String[] convertTypePackage(String typePackage) {
 		ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(resolver);
 		String pkg = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
-				+ ClassUtils.convertClassNameToResourcePath(typeAliasesPackage) + "/*.class";
+				+ ClassUtils.convertClassNameToResourcePath(typePackage) + "/*.class";
 		/*
 		 * 将加载多个绝对匹配的所有Resource
 		 * 将首先通过ClassLoader.getResource("META-INF")加载非模式路径部分，然后进行遍历模式匹配，排除重复包路径
@@ -31,7 +31,7 @@ public class PackageUtils
 		try {
 			Set<String> set = new HashSet<>();
 			Resource[] resources = resolver.getResources(pkg);
-			if (resources != null && resources.length > 0) {
+			if (resources.length > 0) {
 				MetadataReader metadataReader;
 				for (Resource resource : resources) {
 					if (resource.isReadable()) {
@@ -59,14 +59,14 @@ public class PackageUtils
 	 *
 	 * @param typePackage 扫描类包路径
 	 */
-	public static Set<Class> scanTypePackage(String typePackage) {
+	public static Set<Class<?>> scanTypePackage(String typePackage) {
 		ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(resolver);
 		String pkg = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
 				+ ClassUtils.convertClassNameToResourcePath(typePackage) + "/*.class";
 
 		try {
-			Set<Class> set = new HashSet<>();
+			Set<Class<?>> set = new HashSet<>();
 			Resource[] resources = resolver.getResources(pkg);
 			if (resources != null && resources.length > 0) {
 				MetadataReader metadataReader;

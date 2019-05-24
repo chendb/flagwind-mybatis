@@ -64,8 +64,12 @@ public class AbstractAutoConfiguration
 		}
 	}
 
-
 	public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception
+	{
+		return sqlSessionFactoryBean(dataSource).getObject();
+	}
+
+	public MybatisSqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) throws Exception
 	{
 		MybatisSqlSessionFactoryBean factory = new MybatisSqlSessionFactoryBean();
 		factory.setDataSource(dataSource);
@@ -126,9 +130,8 @@ public class AbstractAutoConfiguration
 			factory.setMapperLocations(this.properties.resolveMapperLocations());
 		}
 
-		return factory.getObject();
+		return factory;
 	}
-
 
 	public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
 		ExecutorType executorType = this.properties.getExecutorType();

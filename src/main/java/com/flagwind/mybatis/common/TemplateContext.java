@@ -177,7 +177,7 @@ public class TemplateContext
         try {
             registerMapper(Class.forName(mapperClass));
         } catch (ClassNotFoundException e) {
-            throw new MapperException("注册通用Mapper[" + mapperClass + "]失败，找不到该通用Mapper!");
+            throw new MapperException("注册Mapper[" + mapperClass + "]失败，找不到该Mapper!");
         }
     }
 

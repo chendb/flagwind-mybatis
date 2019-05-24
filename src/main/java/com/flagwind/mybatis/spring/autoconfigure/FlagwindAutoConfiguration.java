@@ -119,6 +119,7 @@ public class FlagwindAutoConfiguration /*extends AbstractAutoConfiguration*/
 		@ConditionalOnMissingBean
 		public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception
 		{
+
 			return super.sqlSessionFactory(dataSource);
 		}
 
