@@ -247,7 +247,7 @@ public class TemplateContext
 //        {
 //            mapper = properties.getProperty("mappers");
 //        }
-//        if(StringUtil.isNotEmpty(mapper))
+//        if(NameUtils.isNotEmpty(mapper))
 //        {
 //            String[] mappers = mapper.split(",");
 //            for(String mapperClass : mappers)

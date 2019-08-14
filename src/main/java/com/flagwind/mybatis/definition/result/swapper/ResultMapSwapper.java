@@ -1,24 +1,14 @@
 package com.flagwind.mybatis.definition.result.swapper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
+import com.flagwind.commons.StringUtils;
 import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.metadata.EntityTableUtils;
 import com.flagwind.mybatis.utils.AssociationUtils;
-import com.flagwind.mybatis.utils.StringUtil;
 import com.flagwind.mybatis.utils.TypeUtils;
 import com.flagwind.persistent.ColumnTypeEntry;
 import com.flagwind.reflect.EntityTypeHolder;
 import com.flagwind.reflect.SimpleTypeUtils;
 import com.flagwind.reflect.entities.EntityField;
-
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.mapping.ResultFlag;
 import org.apache.ibatis.mapping.ResultMap;
@@ -26,6 +16,14 @@ import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
+
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author chendb
@@ -86,7 +84,7 @@ public class ResultMapSwapper {
         String nestedResultMap = id + ".association[" + javaType.getSimpleName() + "]";
 
         String childColumnPrefix = columnPrefix;
-        if (StringUtil.isEmpty(childColumnPrefix)) {
+        if (StringUtils.isEmpty(childColumnPrefix)) {
             childColumnPrefix = field.getName() + "_";
         } else {
             childColumnPrefix += "_" + field.getName() + "_";
@@ -119,7 +117,7 @@ public class ResultMapSwapper {
         ResultMapping resultMapping = assistant.buildResultMapping(
                 type,
                 property,
-                (StringUtil.isEmpty(columnPrefix) ? "" : columnPrefix) + column,
+                (StringUtils.isEmpty(columnPrefix) ? "" : columnPrefix) + column,
                 javaType,
                 jdbcType,
                 nestedSelect,
@@ -158,7 +156,7 @@ public class ResultMapSwapper {
         String nestedResultMap = id + ".association[" + oneToMany.targetEntity().getSimpleName() + "]";
 
         String childColumnPrefix = columnPrefix;
-        if (StringUtil.isEmpty(childColumnPrefix)) {
+        if (StringUtils.isEmpty(childColumnPrefix)) {
             childColumnPrefix = field.getName() + "_";
         } else {
             childColumnPrefix += "_" + field.getName() + "_";
@@ -168,7 +166,7 @@ public class ResultMapSwapper {
 
         String notNullColumn = null;
 //        String columnPrefix = field.getName();
-//        if(StringUtil.isNotEmpty(id)) {
+//        if(StringUtils.isNotEmpty(id)) {
 //            columnPrefix = id +"_"+ columnPrefix;
 //        }
 
@@ -194,7 +192,7 @@ public class ResultMapSwapper {
                 type,
                 property,
 
-                (StringUtil.isEmpty(columnPrefix) ? "" : columnPrefix) + column,
+                (StringUtils.isEmpty(columnPrefix) ? "" : columnPrefix) + column,
 
                 javaType,
                 jdbcType,
@@ -230,14 +228,14 @@ public class ResultMapSwapper {
             }
 
             if (field.isAnnotationPresent(OneToOne.class)) {
-                if (StringUtil.isNotEmpty(id) && id.split("association").length > 1) {
+                if (StringUtils.isNotEmpty(id) && id.split("association").length > 1) {
                     continue;
                 }
                 resultMappings.add(resolveOneToOneResultMapping(columnPrefix, field, assistant, resource, id, type, style));
                 continue;
             }
             if (field.isAnnotationPresent(OneToMany.class)) {
-                if (StringUtil.isNotEmpty(id) && id.split("association").length > 1) {
+                if (StringUtils.isNotEmpty(id) && id.split("association").length > 1) {
                     continue;
                 }
                 resultMappings.add(resolveOneToManyResultMapping(columnPrefix, field, assistant, resource, id, type, style));
@@ -301,7 +299,7 @@ public class ResultMapSwapper {
             ResultMapping resultMapping = assistant.buildResultMapping(
                     type,
                     property,
-                    (StringUtil.isEmpty(columnPrefix) ? "" : columnPrefix) + column,
+                    (StringUtils.isEmpty(columnPrefix) ? "" : columnPrefix) + column,
                     javaType,
                     jdbcType,
                     nestedSelect,

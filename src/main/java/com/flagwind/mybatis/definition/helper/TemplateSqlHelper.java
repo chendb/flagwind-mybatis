@@ -1,11 +1,11 @@
 package com.flagwind.mybatis.definition.helper;
 
-import java.util.Set;
-
+import com.flagwind.commons.StringUtils;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.metadata.EntityColumn;
 import com.flagwind.mybatis.metadata.EntityTableFactory;
-import com.flagwind.mybatis.utils.StringUtil;
+
+import java.util.Set;
 
 public class TemplateSqlHelper
 {
@@ -98,13 +98,13 @@ public class TemplateSqlHelper
     public static String getIfNotNull(String entityName, EntityColumn column, String contents, boolean empty) {
         StringBuilder sql = new StringBuilder();
         sql.append("<if test=\"");
-        if (StringUtil.isNotEmpty(entityName)) {
+        if (StringUtils.isNotEmpty(entityName)) {
             sql.append(entityName).append(".");
         }
         sql.append(column.getProperty()).append(" != null");
         if (empty && column.getJavaType().equals(String.class)) {
             sql.append(" and ");
-            if (StringUtil.isNotEmpty(entityName)) {
+            if (StringUtils.isNotEmpty(entityName)) {
                 sql.append(entityName).append(".");
             }
             sql.append(column.getProperty()).append(" != '' ");
@@ -126,13 +126,13 @@ public class TemplateSqlHelper
     public static String getIfIsNull(String entityName, EntityColumn column, String contents, boolean empty) {
         StringBuilder sql = new StringBuilder();
         sql.append("<if test=\"");
-        if (StringUtil.isNotEmpty(entityName)) {
+        if (StringUtils.isNotEmpty(entityName)) {
             sql.append(entityName).append(".");
         }
         sql.append(column.getProperty()).append(" == null");
         if (empty && column.getJavaType().equals(String.class)) {
             sql.append(" or ");
-            if (StringUtil.isNotEmpty(entityName)) {
+            if (StringUtils.isNotEmpty(entityName)) {
                 sql.append(entityName).append(".");
             }
             sql.append(column.getProperty()).append(" == '' ");

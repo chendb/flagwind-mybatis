@@ -4,7 +4,7 @@ import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.common.Config;
 import com.flagwind.mybatis.metadata.EntityTable;
 import com.flagwind.mybatis.metadata.TableProcessor;
-import com.flagwind.mybatis.utils.StringUtil;
+import com.flagwind.mybatis.utils.NameUtils;
 import com.flagwind.persistent.annotation.NameStyle;
 
 import javax.persistence.Table;
@@ -34,7 +34,7 @@ public class DefaultTableProcessor implements TableProcessor
 		else
 		{
 			//可以通过style控制
-			entityTable.setName(StringUtil.convertByStyle(entityTable.getEntityClass().getSimpleName(), style));
+			entityTable.setName(NameUtils.convertByStyle(entityTable.getEntityClass().getSimpleName(), style));
 		}
 
 	}

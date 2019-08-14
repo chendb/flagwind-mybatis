@@ -1,17 +1,17 @@
 package com.flagwind.mybatis.metadata.processors;
 
+import com.flagwind.commons.StringUtils;
 import com.flagwind.mybatis.code.Style;
-
 import com.flagwind.mybatis.metadata.ColumnProcessor;
 import com.flagwind.mybatis.metadata.EntityColumn;
-import com.flagwind.mybatis.utils.StringUtil;
+import com.flagwind.mybatis.metadata.EntityTableUtils;
 import com.flagwind.persistent.ColumnTypeEntry;
 import com.flagwind.persistent.annotation.ColumnType;
 import com.flagwind.reflect.entities.EntityField;
-
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.UnknownTypeHandler;
-import com.flagwind.mybatis.metadata.EntityTableUtils;;
+
+;
 
 public class ColumnTypeAnnotationProcessor implements ColumnProcessor
 {
@@ -44,7 +44,7 @@ public class ColumnTypeAnnotationProcessor implements ColumnProcessor
 			if (columnTypeEntry.getTypeHandler() != null) {
 				entityColumn.setTypeHandler(columnTypeEntry.getTypeHandler());
 			}
-			if(StringUtil.isNotEmpty(entityColumn.getColumn())){
+			if(StringUtils.isNotEmpty(entityColumn.getColumn())){
 				entityColumn.setColumn(columnTypeEntry.getColumn());
 			}
 		}

@@ -1,7 +1,8 @@
 package com.flagwind.mybatis.metadata;
 
+import com.flagwind.commons.StringUtils;
 import com.flagwind.mybatis.code.Style;
-import com.flagwind.mybatis.utils.StringUtil;
+import com.flagwind.mybatis.utils.NameUtils;
 import com.flagwind.persistent.ColumnTypeEntry;
 import com.flagwind.persistent.annotation.ColumnType;
 import com.flagwind.reflect.entities.EntityField;
@@ -99,12 +100,12 @@ public class EntityTableUtils
 		if(field.isAnnotationPresent(Column.class))
 		{
 			Column column = field.getAnnotation(Column.class);
-			if(StringUtil.isNotEmpty(column.name()))
+			if(StringUtils.isNotEmpty(column.name()))
 			{
 				return column.name();
 			}
 		}
-		return StringUtil.convertByStyle(field.getName(), style);
+		return NameUtils.convertByStyle(field.getName(), style);
 
 	}
 

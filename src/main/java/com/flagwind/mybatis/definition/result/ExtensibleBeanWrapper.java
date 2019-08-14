@@ -1,10 +1,10 @@
 package com.flagwind.mybatis.definition.result;
 
-import com.flagwind.associative.AssociativeEntry;
-import com.flagwind.associative.AssociativeUtils;
-import com.flagwind.associative.annotation.Associative;
-import com.flagwind.associative.annotation.Associatives;
-import com.flagwind.associative.annotation.Associative.TriggerType;
+import com.flagwind.persistent.AssociativeEntry;
+import com.flagwind.persistent.AssociativeUtils;
+import com.flagwind.persistent.annotation.Associative;
+import com.flagwind.persistent.annotation.Associatives;
+import com.flagwind.persistent.annotation.Associative.TriggerType;
 import com.flagwind.lang.ExtensibleObject;
 import com.flagwind.reflect.EntityTypeHolder;
 import com.flagwind.reflect.entities.EntityField;

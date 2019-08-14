@@ -1,9 +1,8 @@
 package com.flagwind.mybatis.spring.autoconfigure;
 
-import com.flagwind.associative.AssociativeProviderFactory;
-import com.flagwind.associative.AssociativeProviderFactory.Discovery;
+import com.flagwind.persistent.AssociativeProviderFactory;
+import com.flagwind.persistent.AssociativeProviderFactory.Discovery;
 import com.flagwind.mybatis.utils.TypeUtils;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;

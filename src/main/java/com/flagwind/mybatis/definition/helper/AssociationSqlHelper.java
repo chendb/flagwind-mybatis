@@ -1,20 +1,19 @@
 package com.flagwind.mybatis.definition.helper;
 
-import java.util.List;
-import java.util.Set;
+import com.flagwind.commons.StringUtils;
+import com.flagwind.mybatis.common.Config;
+import com.flagwind.mybatis.exceptions.MapperException;
+import com.flagwind.mybatis.metadata.EntityColumn;
+import com.flagwind.mybatis.metadata.EntityTable;
+import com.flagwind.mybatis.metadata.EntityTableFactory;
+import com.flagwind.mybatis.utils.AssociationUtils;
+import com.flagwind.reflect.entities.EntityField;
 
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
-import com.flagwind.mybatis.common.Config;
-import com.flagwind.mybatis.exceptions.MapperException;
-import com.flagwind.mybatis.metadata.EntityColumn;
-import com.flagwind.mybatis.metadata.EntityTableFactory;
-import com.flagwind.mybatis.metadata.EntityTable;
-import com.flagwind.mybatis.utils.AssociationUtils;
-import com.flagwind.mybatis.utils.StringUtil;
-import com.flagwind.reflect.entities.EntityField;
+import java.util.List;
+import java.util.Set;
 
 public class AssociationSqlHelper {
 
@@ -49,7 +48,7 @@ public class AssociationSqlHelper {
         if (columnList.size() == 1) {
             EntityColumn column = columnList.iterator().next();
             sql.append(" where ");
-            if (StringUtil.isNotEmpty(columnPrefix) && !column.getColumn().contains(".")) {
+            if (StringUtils.isNotEmpty(columnPrefix) && !column.getColumn().contains(".")) {
                 sql.append(columnPrefix).append(".");
             }
             sql.append(column.getColumn());
@@ -90,11 +89,11 @@ public class AssociationSqlHelper {
     private static String getTableName(Class<?> entityClass, Config config) {
         EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
         String prefix = entityTable.getPrefix();
-        if (StringUtil.isEmpty(prefix)) {
+        if (StringUtils.isEmpty(prefix)) {
             //使用全局配置
             prefix = config.getPrefix();
         }
-        if (StringUtil.isNotEmpty(prefix)) {
+        if (StringUtils.isNotEmpty(prefix)) {
             return prefix + "." + entityTable.getName();
         }
         return entityTable.getName();
@@ -176,18 +175,18 @@ public class AssociationSqlHelper {
 //        if (entityTable.getBaseSelect() != null) {
 //            return entityTable.getBaseSelect();
 //        }
-        if(StringUtil.isNotEmpty(aliasPrefix)) {
+        if(StringUtils.isNotEmpty(aliasPrefix)) {
             aliasPrefix += "_";
         }
         Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
         StringBuilder selectBuilder = new StringBuilder();
         for (EntityColumn entityColumn : columnList) {
-            if (StringUtil.isNotEmpty(columnPrefix) && !entityColumn.getColumn().contains(".")) {
+            if (StringUtils.isNotEmpty(columnPrefix) && !entityColumn.getColumn().contains(".")) {
                 selectBuilder.append(columnPrefix).append(".");
             }
             selectBuilder.append(entityColumn.getColumn());
             selectBuilder.append(" as ");
-            if(StringUtil.isNotEmpty(aliasPrefix)){
+            if(StringUtils.isNotEmpty(aliasPrefix)){
                 selectBuilder.append(aliasPrefix);
             }
             selectBuilder.append(entityColumn.getProperty()).append(",");
@@ -205,16 +204,16 @@ public class AssociationSqlHelper {
         Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
         StringBuilder selectBuilder = new StringBuilder();
 
-        if(StringUtil.isNotEmpty(aliasPrefix)) {
+        if(StringUtils.isNotEmpty(aliasPrefix)) {
             aliasPrefix += "_";
         }
 
         for (EntityColumn entityColumn : columnList) {
-            if (StringUtil.isNotEmpty(columnPrefix) && !entityColumn.getColumn().contains(".")) {
+            if (StringUtils.isNotEmpty(columnPrefix) && !entityColumn.getColumn().contains(".")) {
                 selectBuilder.append(columnPrefix).append(".");
             }
             selectBuilder.append(entityColumn.getColumn()).append(" as ");
-            if(StringUtil.isNotEmpty(aliasPrefix)){
+            if(StringUtils.isNotEmpty(aliasPrefix)){
                 selectBuilder.append(aliasPrefix);
             }
             selectBuilder.append(entityColumn.getProperty()).append(",");

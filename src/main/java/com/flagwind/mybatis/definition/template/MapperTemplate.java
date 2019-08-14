@@ -1,7 +1,24 @@
 package com.flagwind.mybatis.definition.template;
 
-import static com.flagwind.mybatis.utils.MapperClassUtils.getMapperClass;
-import static com.flagwind.mybatis.utils.MapperClassUtils.getMethodName;
+import com.flagwind.commons.StringUtils;
+import com.flagwind.mybatis.code.DialectType;
+import com.flagwind.mybatis.common.Config;
+import com.flagwind.mybatis.common.TemplateContext;
+import com.flagwind.mybatis.definition.helper.AssociationSqlHelper;
+import com.flagwind.mybatis.definition.result.swapper.ResultMapSwapper;
+import com.flagwind.mybatis.definition.result.swapper.ResultMapSwapperHolder;
+import com.flagwind.mybatis.exceptions.MapperException;
+import com.flagwind.mybatis.metadata.EntityColumn;
+import com.flagwind.mybatis.metadata.EntityTable;
+import com.flagwind.mybatis.metadata.EntityTableFactory;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.SystemMetaObject;
+import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
+import org.apache.ibatis.scripting.xmltags.SqlNode;
+import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,26 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.flagwind.mybatis.code.DialectType;
-import com.flagwind.mybatis.common.Config;
-import com.flagwind.mybatis.common.TemplateContext;
-import com.flagwind.mybatis.exceptions.MapperException;
-import com.flagwind.mybatis.definition.helper.AssociationSqlHelper;
-import com.flagwind.mybatis.metadata.EntityTableFactory;
-import com.flagwind.mybatis.metadata.EntityColumn;
-import com.flagwind.mybatis.metadata.EntityTable;
-import com.flagwind.mybatis.definition.result.swapper.ResultMapSwapper;
-import com.flagwind.mybatis.definition.result.swapper.ResultMapSwapperHolder;
-import com.flagwind.mybatis.utils.StringUtil;
-
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ResultMap;
-import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.reflection.MetaObject;
-import org.apache.ibatis.reflection.SystemMetaObject;
-import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
-import org.apache.ibatis.scripting.xmltags.SqlNode;
-import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
+import static com.flagwind.mybatis.utils.MapperClassUtils.getMapperClass;
+import static com.flagwind.mybatis.utils.MapperClassUtils.getMethodName;
 
 public abstract class MapperTemplate {
     private static final XMLLanguageDriver languageDriver = new XMLLanguageDriver();
@@ -234,11 +233,11 @@ public abstract class MapperTemplate {
     private String getTableName(Class<?> entityClass) {
         EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
         String prefix = entityTable.getPrefix();
-        if (StringUtil.isEmpty(prefix)) {
+        if (StringUtils.isEmpty(prefix)) {
             //使用全局配置
             prefix = context.getConfig().getPrefix();
         }
-        if (StringUtil.isNotEmpty(prefix)) {
+        if (StringUtils.isNotEmpty(prefix)) {
             return prefix + "." + entityTable.getName();
         }
         return entityTable.getName();

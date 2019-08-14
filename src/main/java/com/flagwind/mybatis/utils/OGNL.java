@@ -1,15 +1,11 @@
 package com.flagwind.mybatis.utils;
 
-import java.util.List;
-
 import com.flagwind.persistent.Functions;
 import com.flagwind.persistent.QueryField;
-import com.flagwind.persistent.model.ChildClause;
-import com.flagwind.persistent.model.ClauseOperator;
-import com.flagwind.persistent.model.CombineClause;
-import com.flagwind.persistent.model.SingleClause;
-import com.flagwind.persistent.model.Sorting;
+import com.flagwind.persistent.model.*;
 import com.flagwind.persistent.model.Sorting.SortingMode;
+
+import java.util.List;
 
 /**
  * OGNL静态方法
@@ -201,6 +197,29 @@ public abstract class OGNL {
             return (clause.getOperator() == ClauseOperator.Between);
         }
         return false;
+    }
+
+
+    /**
+     * 判断参数是否为列 （用于组织 createTime != modifyTime 条件）
+     * @param parameter
+     * @return
+     */
+    public static boolean isColumn(Object parameter) {
+        SingleClause clause = (SingleClause) parameter;
+        if (clause!=null && clause.getParameterType()==ParameterType.Column) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断参数是否为值（用于组织 code > 123 条件）
+     * @param parameter
+     * @return
+     */
+    public static boolean isValue(Object parameter) {
+        return !isColumn(parameter);
     }
 
 }

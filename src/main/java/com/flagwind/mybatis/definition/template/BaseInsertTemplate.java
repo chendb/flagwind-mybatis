@@ -1,14 +1,13 @@
 package com.flagwind.mybatis.definition.template;
 
+import com.flagwind.commons.StringUtils;
 import com.flagwind.mybatis.code.DialectType;
 import com.flagwind.mybatis.common.TemplateContext;
-import com.flagwind.mybatis.metadata.EntityColumn;
-import com.flagwind.mybatis.exceptions.MapperException;
-import com.flagwind.mybatis.metadata.EntityTableFactory;
 import com.flagwind.mybatis.definition.helper.MappedStatementHelper;
 import com.flagwind.mybatis.definition.helper.TemplateSqlHelper;
-import com.flagwind.mybatis.utils.StringUtil;
-
+import com.flagwind.mybatis.exceptions.MapperException;
+import com.flagwind.mybatis.metadata.EntityColumn;
+import com.flagwind.mybatis.metadata.EntityTableFactory;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.ibatis.mapping.MappedStatement;
 
@@ -28,7 +27,7 @@ public class BaseInsertTemplate extends MapperTemplate {
             if (!column.isInsertable()) {
                 continue;
             }
-            if (StringUtil.isNotEmpty(column.getSequenceName())) {
+            if (StringUtils.isNotEmpty(column.getSequenceName())) {
             } else if (column.isIdentity()) {
                 //这种情况下,如果原先的字段有值,需要先缓存起来,否则就一定会使用自动增长
                 //这是一个bind节点
@@ -84,7 +83,7 @@ public class BaseInsertTemplate extends MapperTemplate {
 
         //Identity列只能有一个
         // Boolean hasIdentityKey = pair.right;
-        if (StringUtil.isNotEmpty(pair.left)) {
+        if (StringUtils.isNotEmpty(pair.left)) {
             sql.append(pair.left);
         }
 
@@ -105,7 +104,7 @@ public class BaseInsertTemplate extends MapperTemplate {
             }
             //当属性为null时，如果存在主键策略，会自动获取值，如果不存在，则使用null
             //序列的情况
-            if (StringUtil.isNotEmpty(column.getSequenceName())) {
+            if (StringUtils.isNotEmpty(column.getSequenceName())) {
                 sql.append(TemplateSqlHelper.getIfIsNull(column, getSeqNextVal(column) + " ,", false));
             } else if (column.isIdentity()) {
                 sql.append(TemplateSqlHelper.getIfCacheIsNull(column, column.getColumnHolder() + ","));
@@ -154,7 +153,7 @@ public class BaseInsertTemplate extends MapperTemplate {
 
         //Identity列只能有一个
         // Boolean hasIdentityKey = pair.right;
-        if (StringUtil.isNotEmpty(pair.left)) {
+        if (StringUtils.isNotEmpty(pair.left)) {
             sql.append(pair.left);
         }
 
@@ -164,7 +163,7 @@ public class BaseInsertTemplate extends MapperTemplate {
             if (!column.isInsertable()) {
                 continue;
             }
-            if (StringUtil.isNotEmpty(column.getSequenceName()) || column.isIdentity() || column.isUuid()) {
+            if (StringUtils.isNotEmpty(column.getSequenceName()) || column.isIdentity() || column.isUuid()) {
                 sql.append(column.getColumn()).append(",");
             } else {
                 sql.append(TemplateSqlHelper.getIfNotNull(column, column.getColumn() + ",", getConfig().isNotEmpty()));
@@ -186,7 +185,7 @@ public class BaseInsertTemplate extends MapperTemplate {
             }
             //当属性为null时，如果存在主键策略，会自动获取值，如果不存在，则使用null
             //序列的情况
-            if (StringUtil.isNotEmpty(column.getSequenceName())) {
+            if (StringUtils.isNotEmpty(column.getSequenceName())) {
                 sql.append(TemplateSqlHelper.getIfIsNull(column, getSeqNextVal(column) + " ,", getConfig().isNotEmpty()));
             } else if (column.isIdentity()) {
                 sql.append(TemplateSqlHelper.getIfCacheIsNull(column, column.getColumnHolder() + ","));

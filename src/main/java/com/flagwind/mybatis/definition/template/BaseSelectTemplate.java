@@ -189,7 +189,7 @@ public class BaseSelectTemplate extends MapperTemplate {
         sql.append(" ");
         sql.append(ObjectSqlHelper.getQueryFieldGroupBySql());
         sql.append(" ");
-        sql.append(ObjectSqlHelper.getSortingSql());
+        // sql.append(ObjectSqlHelper.getSortingSql());
         return sql.toString();
     }
 }

@@ -1,8 +1,8 @@
 package com.flagwind.mybatis.definition.helper;
 
-import java.util.HashMap;
-
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashMap;
 
 public class ObjectSqlHelper
 {
@@ -124,11 +124,18 @@ public class ObjectSqlHelper
         String sql=
         "<if test=\"@com.flagwind.mybatis.utils.OGNL@isSingleValue("+clauseName+")\">  " +
                 "<bind name=\"__name\" value=\"@com.flagwind.mybatis.utils.OGNL@clauseName("+clauseName+")\" />"+
-                "${__name} ${"+clauseName+".operator.alias} #{"+clauseName+".value}" +
-//            "${"+clauseName+".name} ${"+clauseName+".operator.alias} #{"+clauseName+".value}" +
+                //"${__name} ${"+clauseName+".operator.alias} #{"+clauseName+".value}" +
+                "${__name} ${"+clauseName+".operator.alias} " +getValueSql(clauseName,"value")+
         "</if>" ;
         return sql;
     }
+
+    private static String getValueSql(String clauseName,String valueName){
+        String sql=
+                "<choose> <when test=\"@com.flagwind.mybatis.utils.OGNL@isColumn("+clauseName+")\"> ${"+clauseName+"."+valueName+"} </when>  <otherwise> #{"+clauseName+"."+valueName+"} </otherwise> </choose>";
+        return sql;
+    }
+
 
     private static String getIfListValueSql(String clauseName){
         String sql=

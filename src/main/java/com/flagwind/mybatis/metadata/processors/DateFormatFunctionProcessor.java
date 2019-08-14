@@ -1,9 +1,9 @@
 package com.flagwind.mybatis.metadata.processors;
 
+import com.flagwind.commons.StringUtils;
 import com.flagwind.mybatis.code.DialectType;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.metadata.FunctionProcessor;
-import com.flagwind.mybatis.utils.StringUtil;
 
 /**
  * 格式如下：yyyy-MM-dd HH:mm:ss
@@ -12,7 +12,7 @@ public class DateFormatFunctionProcessor implements FunctionProcessor {
 
 	@Override
 	public String process(String arguments, String alias, DialectType dialectType) {
-		String suffix = (StringUtil.isEmpty(alias) ? "" : (" as " + alias));
+		String suffix = (StringUtils.isEmpty(alias) ? "" : (" as " + alias));
 		String column = arguments.split(",")[0];
 		String format = arguments.split(",")[1];
 		switch (dialectType) {
