@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>com.github.chendb</groupId>
 			<artifactId>flagwind-core</artifactId>
-			<version>[1.0.7,)</version>
+			<version>[1.0.8,)</version>
 		</dependency>
 
 		<dependency>
@@ -163,7 +163,7 @@
 					<version>3.0.0</version>
 					<configuration>
 						<!-- 解决 java8 下发布到 maven 中心库时，生成 doc 的异常 -->
-						<additionalparam>-Xdoclint:none</additionalparam>
+						<additionalJOption>-Xdoclint:none</additionalJOption>
 						<doclint>none</doclint>
 						<charset>UTF-8</charset>
 						<encoding>UTF-8</encoding>
