@@ -1,30 +1,17 @@
 package com.flagwind.mybatis.metadata;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
-
-import javax.persistence.Transient;
-
 import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.common.Config;
 import com.flagwind.mybatis.exceptions.MapperException;
-import com.flagwind.mybatis.metadata.processors.AggregateAnnotationProcessor;
-import com.flagwind.mybatis.metadata.processors.ColumnAnnotationProcessor;
-import com.flagwind.mybatis.metadata.processors.ColumnTypeAnnotationProcessor;
-import com.flagwind.mybatis.metadata.processors.DefaultTableProcessor;
-import com.flagwind.mybatis.metadata.processors.EnumeratedAnnotationProcessor;
-import com.flagwind.mybatis.metadata.processors.GeneratedValueAnnotationProcessor;
-import com.flagwind.mybatis.metadata.processors.IdAnnotationProcessor;
-import com.flagwind.mybatis.metadata.processors.OrderByAnnotationProcessor;
-import com.flagwind.mybatis.metadata.processors.SequenceGeneratorAnnotationProcessor;
+import com.flagwind.mybatis.metadata.processors.*;
 import com.flagwind.mybatis.utils.AssociationUtils;
 import com.flagwind.persistent.annotation.NameStyle;
 import com.flagwind.reflect.EntityTypeHolder;
 import com.flagwind.reflect.SimpleTypeUtils;
 import com.flagwind.reflect.entities.EntityField;
+
+import javax.persistence.Transient;
+import java.util.*;
 
 /**
  * 实体类工具类 - 处理实体和数据库表以及字段关键的一个类
@@ -38,8 +25,7 @@ public class EntityTableFactory
 
 	private static final Map<Class<?>, ColumnProcessor> CACHE_COLUMN_PROCESSOR = Collections.synchronizedMap(new WeakHashMap<Class<?>, ColumnProcessor>());
 
-	static
-	{
+	static {
 		CACHE_TABLE_PROCESSOR.put(DefaultTableProcessor.class, new DefaultTableProcessor());
 		CACHE_COLUMN_PROCESSOR.put(IdAnnotationProcessor.class, new IdAnnotationProcessor());
 		CACHE_COLUMN_PROCESSOR.put(ColumnAnnotationProcessor.class, new ColumnAnnotationProcessor());
@@ -49,6 +35,7 @@ public class EntityTableFactory
 		CACHE_COLUMN_PROCESSOR.put(AggregateAnnotationProcessor.class, new AggregateAnnotationProcessor());
 		CACHE_COLUMN_PROCESSOR.put(SequenceGeneratorAnnotationProcessor.class, new SequenceGeneratorAnnotationProcessor());
 		CACHE_COLUMN_PROCESSOR.put(GeneratedValueAnnotationProcessor.class, new GeneratedValueAnnotationProcessor());
+		CACHE_COLUMN_PROCESSOR.put(CodeColumnProcessor.class, new CodeColumnProcessor());
 	}
 
 

@@ -1,13 +1,8 @@
 package com.flagwind.mybatis.spring.autoconfigure;
 
 
-import java.util.List;
-
-import javax.sql.DataSource;
-
 import com.flagwind.mybatis.definition.interceptor.OffsetLimitInterceptor;
 import com.flagwind.mybatis.spring.MybatisSqlSessionFactoryBean;
-
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.Configuration;
@@ -21,6 +16,9 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
+import javax.sql.DataSource;
+import java.util.List;
 
 /**
  * 为方便多数据源扩展应用，提出一个抽象基础类，便于不同数据源配置扩展
@@ -104,6 +102,7 @@ public class AbstractAutoConfiguration
 				customizer.customize(configuration);
 			}
 		}
+
 		factory.setConfiguration(configuration);
 		if(this.properties.getConfigurationProperties() != null)
 		{

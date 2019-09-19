@@ -23,13 +23,14 @@ public class ObjectSqlHelper
                         "<foreach collection=\"_sorts\" index=\"key\" item=\"sorting\"  open=\"\"  close=\"\"  separator=\",\">" +
                             "<foreach collection=\"sorting.fields\" index=\"key\" item=\"field\"  open=\"\"  close=\"\"  separator=\",\">" +
                                 "${field}" +
-                            "</foreach>" +
-                            "<if  test=\"@com.flagwind.mybatis.utils.OGNL@isAscending(sorting)\">" +
+                                "<if  test=\"@com.flagwind.mybatis.utils.OGNL@isAscending(sorting)\">" +
                                 " ASC " +
-                            "</if>"+
-                            "<if  test=\"@com.flagwind.mybatis.utils.OGNL@isDescending(sorting)\">" +
+                                "</if>"+
+                                "<if  test=\"@com.flagwind.mybatis.utils.OGNL@isDescending(sorting)\">" +
                                 " DESC " +
-                            "</if>"+
+                                "</if>"+
+                            "</foreach>" +
+
                         "</foreach>" +
                   "</if>";
         TEMPLATE_SQL.put(templateId,sql);
