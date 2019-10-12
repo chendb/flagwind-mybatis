@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>com.github.chendb</groupId>
 			<artifactId>flagwind-core</artifactId>
-			<version>[1.0.9,)</version>
+			<version>[1.0.11,)</version>
 		</dependency>
 
 		<dependency>
