@@ -159,7 +159,7 @@ public class ObjectSqlHelper
         // endregion
         // region 若 list.length>=1000 && operate=not in 则  ${name} <>  #{value} or ${name} <>  #{value}
         " <if test=\"@com.flagwind.mybatis.utils.OGNL@isOverflowWithNotIn(" + clauseName + ")\"> "+
-            " <foreach collection=\"" + clauseName + ".values\" item=\"listItem\" open=\"(\"  close=\")\" separator=\"or\">" +
+            " <foreach collection=\"" + clauseName + ".values\" item=\"listItem\" open=\"(\"  close=\")\" separator=\"and\">" +
             "  ${" + clauseName + ".name} != #{listItem} " +
             " </foreach>" +
         " </if>" +
