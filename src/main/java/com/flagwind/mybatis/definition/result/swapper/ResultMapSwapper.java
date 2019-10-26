@@ -42,9 +42,11 @@ public class ResultMapSwapper {
     }
 
     public ResultMap reloadResultMap(String resource, String id, Class<?> type, Style style) {
-        if (!resultMaps.containsKey(id)) {
-            resultMaps.put(id, resolveResultMap(null, resource, id, type, style));
+        synchronized (resultMaps) {
+            if (!resultMaps.containsKey(id)) {
+                resultMaps.put(id, resolveResultMap(null, resource, id, type, style));
 
+            }
         }
         return resultMaps.get(id);
     }
