@@ -255,14 +255,16 @@ public class EntityColumn {
 		if (StringUtils.isNotEmpty(suffix)) {
 			sb.append(suffix);
 		}
-		if (this.jdbcType != null) {
-			sb.append(",jdbcType=");
-			sb.append(this.jdbcType.toString());
-		} else if (this.typeHandler != null) {
+		if (this.typeHandler != null) {
 			sb.append(",typeHandler=");
 			sb.append(this.typeHandler.getCanonicalName());
 			//当类型为数组时，不设置javaType#103
-		} else if (!this.javaType.isArray()) {
+		}
+		if (this.jdbcType != null) {
+			sb.append(",jdbcType=");
+			sb.append(this.jdbcType.toString());
+		}
+		if (!this.javaType.isArray()) {
 			sb.append(",javaType=");
 			sb.append(javaType.getCanonicalName());
 		}
