@@ -1,8 +1,10 @@
 package com.flagwind.mybatis.definition.result.swapper;
 
 import com.flagwind.commons.StringUtils;
+import com.flagwind.lang.CodeType;
 import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.metadata.EntityTableUtils;
+import com.flagwind.mybatis.type.CodeTypeHandler;
 import com.flagwind.mybatis.utils.AssociationUtils;
 import com.flagwind.mybatis.utils.TypeUtils;
 import com.flagwind.persistent.ColumnTypeEntry;
@@ -290,10 +292,17 @@ public class ResultMapSwapper {
 
             Class<? extends TypeHandler<?>> typeHandlerClass = columnTypeEntry.getTypeHandler();
 
+
+
             if(typeHandlerClass==null) {
                 TypeHandler<?> typeHandler = configuration.getTypeHandlerRegistry().getTypeHandler(javaType, jdbcType);
+
+                if (typeHandler == null && CodeType.class.isAssignableFrom(javaType)) {
+                    typeHandler = new CodeTypeHandler(field.getJavaType());
+                }
+
                 if (typeHandler != null) {
-                    typeHandlerClass = TypeUtils.castTo( typeHandler.getClass());
+                    typeHandlerClass = TypeUtils.castTo(typeHandler.getClass());
                 }
             }
 

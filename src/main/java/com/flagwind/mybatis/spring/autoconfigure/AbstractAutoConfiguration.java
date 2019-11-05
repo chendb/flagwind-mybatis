@@ -1,10 +1,8 @@
 package com.flagwind.mybatis.spring.autoconfigure;
 
 
-import com.flagwind.lang.CodeType;
 import com.flagwind.mybatis.definition.interceptor.OffsetLimitInterceptor;
 import com.flagwind.mybatis.spring.MybatisSqlSessionFactoryBean;
-import com.flagwind.mybatis.type.CodeTypeHandler;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.Configuration;
@@ -104,7 +102,7 @@ public class AbstractAutoConfiguration
 				customizer.customize(configuration);
 			}
 		}
-		configuration.getTypeHandlerRegistry().register(CodeType.class, CodeTypeHandler.class);
+		//configuration.getTypeHandlerRegistry().register(CodeType.class, CodeTypeHandler.class);
 		factory.setConfiguration(configuration);
 		if(this.properties.getConfigurationProperties() != null)
 		{
