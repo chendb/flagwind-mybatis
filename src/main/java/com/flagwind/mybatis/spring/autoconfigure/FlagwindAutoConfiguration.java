@@ -1,14 +1,8 @@
 package com.flagwind.mybatis.spring.autoconfigure;
 
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
-
 import com.flagwind.mybatis.common.Config;
 import com.flagwind.mybatis.spring.boot.ClassPathMapperScanner;
 import com.flagwind.mybatis.spring.boot.FlagwindCacheDisabler;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.annotations.Mapper;
@@ -43,6 +37,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.util.StringUtils;
+
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+import java.util.List;
 
 /**
  * {@link EnableAutoConfiguration Auto-Configuration} for Mybatis. Contributes a
@@ -96,7 +94,6 @@ public class FlagwindAutoConfiguration /*extends AbstractAutoConfiguration*/
 	*/
 
 
-
 	@Configuration
 	@ConditionalOnMissingBean(AbstractAutoConfiguration.class)
 	@ConditionalOnClass({ SqlSessionFactory.class, SqlSessionFactoryBean.class })
@@ -119,7 +116,6 @@ public class FlagwindAutoConfiguration /*extends AbstractAutoConfiguration*/
 		@ConditionalOnMissingBean
 		public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception
 		{
-
 			return super.sqlSessionFactory(dataSource);
 		}
 

@@ -131,7 +131,6 @@ public class AbstractAutoConfiguration
 
 
 
-
 		return factory;
 	}
 
