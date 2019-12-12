@@ -154,7 +154,7 @@ public class ResultMapSwapper {
                 .resultSet(resultSet).typeHandler(typeHandler)
                 .flags((List) (flags == null ? new ArrayList() : flags))
                 .composites(composites).notNullColumns(this.parseMultipleColumnNames(notNullColumn))
-                .columnPrefix(columnPrefix).foreignColumn(foreignColumn).lazy(lazy).build();
+                .columnPrefix(null).foreignColumn(foreignColumn).lazy(lazy).build();
 
 
         return resultMapping;
@@ -366,18 +366,18 @@ public class ResultMapSwapper {
             } else {
                 typeHandler = this.resolveTypeHandler(javaType, columnTypeEntry.getTypeHandler());
             }
-
+            String col = (StringUtils.isEmpty(columnPrefix) ? "" : columnPrefix) + column;
 
             Class<?> javaTypeClass = this.resolveResultJavaType(type, property, javaType);
 
-            List<ResultMapping> composites = this.parseCompositeColumnName(column);
-            ResultMapping resultMapping = (new org.apache.ibatis.mapping.ResultMapping.Builder(this.configuration, property, column, javaTypeClass))
+            List<ResultMapping> composites = this.parseCompositeColumnName(col);
+            ResultMapping resultMapping = (new org.apache.ibatis.mapping.ResultMapping.Builder(this.configuration, property, col, javaTypeClass))
                     .jdbcType(jdbcType).nestedQueryId(assistant.applyCurrentNamespace(nestedSelect, true))
                     .nestedResultMapId(assistant.applyCurrentNamespace(nestedResultMap, true))
                     .resultSet(resultSet).typeHandler(typeHandler)
-                    .flags((List) (flags == null ? new ArrayList() : flags))
+                    .flags(flags == null ? new ArrayList() : flags)
                     .composites(composites).notNullColumns(this.parseMultipleColumnNames(notNullColumn))
-                    .columnPrefix(columnPrefix).foreignColumn(foreignColumn).lazy(lazy).build();
+                    .columnPrefix(null).foreignColumn(foreignColumn).lazy(lazy).build();
 
 
 //            ResultMapping resultMapping = assistant.buildResultMapping(
