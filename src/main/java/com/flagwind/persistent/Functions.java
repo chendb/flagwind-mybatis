@@ -37,23 +37,23 @@ public class Functions {
 		CACHE_FUNCTION_PROCESSOR.put("length", new LengthFunctionProcessor());
 		// @decode(status,1:'在线',2:'离线','未知')
 		CACHE_FUNCTION_PROCESSOR.put("decode", new DecodeFunctionProcessor());
-		// @dt_format(timestramp,'yyyy-MM-dd HH:mm:ss')
+		// @dt_format(timestamp,'yyyy-MM-dd HH:mm:ss')
 		CACHE_FUNCTION_PROCESSOR.put("dt_format", new DateFormatFunctionProcessor());
-		// @dt_date(timestramp) -> yyyy-MM-dd
+		// @dt_date(timestamp) -> yyyy-MM-dd
 		CACHE_FUNCTION_PROCESSOR.put("dt_date", new DateFunctionProcessor());
-		// @year(timestramp) -> yyyy
+		// @year(timestamp) -> yyyy
 		CACHE_FUNCTION_PROCESSOR.put("year", new YearFunctionProcessor());
-		// @month(timestramp) -> MM
+		// @month(timestamp) -> MM
 		CACHE_FUNCTION_PROCESSOR.put("month", new MonthFunctionProcessor());
-		// @day(timestramp) -> dd
+		// @day(timestamp) -> dd
 		CACHE_FUNCTION_PROCESSOR.put("day", new DayFunctionProcessor());
-		// @dt_time(timestramp) -> HH:mm:ss
+		// @dt_time(timestamp) -> HH:mm:ss
 		CACHE_FUNCTION_PROCESSOR.put("dt_time", new TimeFunctionProcessor());
-		// @hour(timestramp) -> HH
+		// @hour(timestamp) -> HH
 		CACHE_FUNCTION_PROCESSOR.put("hour", new HourFunctionProcessor());
-		// @minute(timestramp) -> mm
+		// @minute(timestamp) -> mm
 		CACHE_FUNCTION_PROCESSOR.put("minute", new MinuteFunctionProcessor());
-		// @second(timestramp) -> ss
+		// @second(timestamp) -> ss
 		CACHE_FUNCTION_PROCESSOR.put("second", new SecondFunctionProcessor());
 		// @substring(regionId,1,2) 或 @substring(regionId,1)
 		CACHE_FUNCTION_PROCESSOR.put("substring", new SubstringFunctionProcessor());
@@ -104,6 +104,18 @@ public class Functions {
 		String sql = CACHE_FUNCTION_PROCESSOR.get(method).process(argument, alias, dialectType);
 		sql = sql.replace("(", "&{").replace(")", "}&");
 		return sql;
+	}
+
+	/**
+	 * 增加函数
+	 * @param name 函数名称
+	 * @param processor 函数的实现
+	 */
+	public static void add(String name,FunctionProcessor processor) {
+		if (CACHE_FUNCTION_PROCESSOR.containsKey(name)) {
+			throw new RuntimeException("该函数名已被占用");
+		}
+		CACHE_FUNCTION_PROCESSOR.put(name, processor);
 	}
 
 	public static String parse(String express) {
