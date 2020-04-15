@@ -29,23 +29,23 @@ mvn release:perform
 
     @decode(status,1:'在线',2:'离线','未知')                 // 类似case when else end
     
-    @dt_format(timestramp,'yyyy-MM-dd HH:mm:ss')            // 时间格式化
+    @dt_format(timestamp,'yyyy-MM-dd HH:mm:ss')            // 时间格式化
     
-    @dt_date(timestramp)                                    // 输出 yyyy-MM-dd 时间文档
+    @dt_date(timestamp)                                    // 输出 yyyy-MM-dd 时间文档
 
-    @year(timestramp)                                       // 输出 yyyy 时间文档
+    @year(timestamp)                                       // 输出 yyyy 时间文档
 
-    @month(timestramp)                                      // 输出 MM 时间文档
+    @month(timestamp)                                      // 输出 MM 时间文档
 
-    @day(timestramp)                                        // 输出 dd 时间文档
+    @day(timestamp)                                        // 输出 dd 时间文档
 
-    @dt_time(timestramp)                                    // 输出 HH:mm:ss 时间文档
+    @dt_time(timestamp)                                    // 输出 HH:mm:ss 时间文档
 
-    @hour(timestramp)                                       // 输出 HH 时间文档
+    @hour(timestamp)                                       // 输出 HH 时间文档
 
-    @minute(timestramp)                                     // 输出 mm 时间文档
+    @minute(timestamp)                                     // 输出 mm 时间文档
 
-    @second(timestramp)                                     // 输出 ss 时间文档
+    @second(timestamp)                                     // 输出 ss 时间文档
 
     @substring(regionId,1,2) 或 @substring(regionId,2)      // 取region前两位 或 从第二个字符取值
 
