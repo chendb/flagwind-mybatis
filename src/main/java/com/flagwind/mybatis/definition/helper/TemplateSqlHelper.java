@@ -1,18 +1,94 @@
 package com.flagwind.mybatis.definition.helper;
 
 import com.flagwind.commons.StringUtils;
+import com.flagwind.mybatis.definition.Config;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.metadata.EntityColumn;
+import com.flagwind.mybatis.metadata.EntityTable;
 import com.flagwind.mybatis.metadata.EntityTableFactory;
 
 import java.util.Set;
 
-public class TemplateSqlHelper
-{
+public class TemplateSqlHelper {
 
-    public static String getTableName(Class<?> entityClass, String defaultTableName) {
+    private static String getTableName(Config config,Class<?> entityClass) {
+        EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
+        String prefix = entityTable.getPrefix();
+        if (StringUtils.isEmpty(prefix)) {
+            //使用全局配置
+            prefix = config.getPrefix();
+        }
+        if (StringUtils.isNotEmpty(prefix)) {
+            return prefix + "." + entityTable.getName();
+        }
+        return entityTable.getName();
+    }
+
+    public static String tableName(Config config,Class<?> entityClass, boolean addDefaultAlias) {
+        StringBuilder sb = new StringBuilder();
+        String table = getTableName(config,entityClass);
+        sb.append(table);
+        if (addDefaultAlias) {
+            sb.append(" ").append(TemplateSqlHelper.tableAlias(entityClass));
+        }
+        return sb.toString();
+    }
+
+
+    public static String tableName(Class<?> entityClass, String defaultTableName) {
         return defaultTableName;
     }
+
+    public static String selectColumnsFromTable(Config config,Class<?> entityClass) {
+        StringBuilder sql = new StringBuilder();
+
+        sql.append("select ");
+        sql.append(TemplateSqlHelper.columns(entityClass));
+        sql.append(" FROM ");
+        boolean hasTableAlias = sql.toString().contains(".");
+        sql.append(tableName(config, entityClass, hasTableAlias));
+
+        return sql.toString();
+
+    }
+
+    public static String selectCountFromTable(Config config,Class<?> entityClass) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT ");
+        Set<EntityColumn> pkColumns = EntityTableFactory.getPKColumns(entityClass);
+        if (pkColumns.size() == 1) {
+            sql.append("COUNT(").append(pkColumns.iterator().next().getColumn()).append(") ");
+        } else {
+            sql.append("COUNT(*) ");
+        }
+
+        boolean hasTableAlias = sql.toString().contains(".");
+        sql.append(tableName(config,entityClass, hasTableAlias));
+
+        return sql.toString();
+    }
+
+    /**
+     * select case when count(x) > 0 then 1 else 0 end
+     *
+     * @param entityClass
+     */
+    public static String selectCountExistsFromTable(Config config,Class<?> entityClass) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT CASE WHEN ");
+        Set<EntityColumn> pkColumns = EntityTableFactory.getPKColumns(entityClass);
+        if (pkColumns.size() == 1) {
+            sql.append("COUNT(").append(pkColumns.iterator().next().getColumn()).append(") ");
+        } else {
+            sql.append("COUNT(*) ");
+        }
+        sql.append(" > 0 THEN 1 ELSE 0 END AS result ");
+
+        boolean hasTableAlias = sql.toString().contains(".");
+        sql.append(tableName(config,entityClass, hasTableAlias));
+        return sql.toString();
+    }
+
     /**
      * <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
      *
@@ -68,7 +144,7 @@ public class TemplateSqlHelper
     /**
      * 判断自动!=null的条件结构
      *
-     * @param column 列
+     * @param column   列
      * @param contents
      * @param empty
      */
@@ -79,7 +155,7 @@ public class TemplateSqlHelper
     /**
      * 判断自动==null的条件结构
      *
-     * @param column 列
+     * @param column   列
      * @param contents
      * @param empty
      */
@@ -91,7 +167,7 @@ public class TemplateSqlHelper
      * 判断自动!=null的条件结构
      *
      * @param entityName
-     * @param column 列
+     * @param column     列
      * @param contents
      * @param empty
      */
@@ -119,7 +195,7 @@ public class TemplateSqlHelper
      * 判断自动==null的条件结构
      *
      * @param entityName
-     * @param column 列
+     * @param column     列
      * @param contents
      * @param empty
      */
@@ -148,7 +224,7 @@ public class TemplateSqlHelper
      *
      * @param entityClass
      */
-    public static String getAllColumns(Class<?> entityClass) {
+    public static String columns(Class<?> entityClass) {
         Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
         StringBuilder sql = new StringBuilder();
         for (EntityColumn entityColumn : columnList) {
@@ -158,82 +234,77 @@ public class TemplateSqlHelper
     }
 
 
-
     /**
-     * select xxx,xxx...
+     * 表的别名  如：where com_user _user  ,其中_user为别名
      *
-     * @param entityClass
+     * @param entityClass 实体类型
+     * @return
      */
-    public static String selectAllColumns(Class<?> entityClass) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT ");
-        sql.append(getAllColumns(entityClass));
-        sql.append(" ");
-        return sql.toString();
+    public static String tableAlias(Class<?> entityClass) {
+        return "_" + entityClass.getSimpleName();
     }
+
+
+
+
+//    /**
+//     * select xxx,xxx...
+//     *
+//     * @param entityClass
+//     */
+//    public static String selectAllColumns(Class<?> entityClass) {
+//        StringBuilder sql = new StringBuilder();
+//        sql.append("SELECT ");
+//        sql.append(columns(entityClass));
+//        sql.append(" ");
+//        return sql.toString();
+//    }
 
     /**
      * select count(x)
      *
      * @param entityClass
      */
-    public static String selectCount(Class<?> entityClass) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT ");
-        Set<EntityColumn> pkColumns = EntityTableFactory.getPKColumns(entityClass);
-        if (pkColumns.size() == 1) {
-            sql.append("COUNT(").append(pkColumns.iterator().next().getColumn()).append(") ");
-        } else {
-            sql.append("COUNT(*) ");
-        }
-        return sql.toString();
-    }
-
-    /**
-     * select case when count(x) > 0 then 1 else 0 end
-     *
-     * @param entityClass
-     */
-    public static String selectCountExists(Class<?> entityClass) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT CASE WHEN ");
-        Set<EntityColumn> pkColumns = EntityTableFactory.getPKColumns(entityClass);
-        if (pkColumns.size() == 1) {
-            sql.append("COUNT(").append(pkColumns.iterator().next().getColumn()).append(") ");
-        } else {
-            sql.append("COUNT(*) ");
-        }
-        sql.append(" > 0 THEN 1 ELSE 0 END AS result ");
-        return sql.toString();
-    }
-
-    /**
-     * from tableName - 动态表名
-     *
-     * @param entityClass
-     * @param defaultTableName
-     */
-    public static String fromTable(Class<?> entityClass, String defaultTableName) {
-        StringBuilder sql = new StringBuilder();
-        sql.append(" FROM ");
-        sql.append(getTableName(entityClass, defaultTableName));
-        sql.append(" ");
-        return sql.toString();
-    }
+//    public static String selectCount(Class<?> entityClass) {
+//        StringBuilder sql = new StringBuilder();
+//        sql.append("SELECT ");
+//        Set<EntityColumn> pkColumns = EntityTableFactory.getPKColumns(entityClass);
+//        if (pkColumns.size() == 1) {
+//            sql.append("COUNT(").append(pkColumns.iterator().next().getColumn()).append(") ");
+//        } else {
+//            sql.append("COUNT(*) ");
+//        }
+//        return sql.toString();
+//    }
 
 
+
+
+//    /**
+//     * from tableName - 动态表名
+//     *
+//     * @param entityClass
+//     * @param defaultTableName
+//     */
+//    public static String fromTable(Class<?> entityClass, String defaultTableName) {
+//        StringBuilder sql = new StringBuilder();
+//        sql.append(" FROM ");
+//        sql.append(tableName(entityClass, defaultTableName));
+//        sql.append(" ");
+//        return sql.toString();
+//    }
 
 
     /**
      * update tableName - 动态表名
      *
      * @param entityClass
-     * @param defaultTableName 默认表名
+     * @param config 默认表名
      */
-    public static String updateTable(Class<?> entityClass, String defaultTableName) {
+    public static String updateTable(Config config,Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
         sql.append("UPDATE ");
-        sql.append(getTableName(entityClass, defaultTableName));
+        sql.append(tableName(config,entityClass, false));
         sql.append(" ");
         return sql.toString();
     }
@@ -243,12 +314,12 @@ public class TemplateSqlHelper
      * delete tableName - 动态表名
      *
      * @param entityClass
-     * @param defaultTableName
+     * @param config
      */
-    public static String deleteFromTable(Class<?> entityClass, String defaultTableName) {
+    public static String deleteFromTable(Config config, Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
         sql.append("DELETE FROM ");
-        sql.append(getTableName(entityClass, defaultTableName));
+        sql.append(tableName(config,entityClass,false));
         sql.append(" ");
         return sql.toString();
     }
@@ -257,12 +328,12 @@ public class TemplateSqlHelper
      * insert into tableName - 动态表名
      *
      * @param entityClass
-     * @param defaultTableName
+     * @param config
      */
-    public static String insertIntoTable(Class<?> entityClass, String defaultTableName) {
+    public static String insertIntoTable(Config config, Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
         sql.append("INSERT INTO ");
-        sql.append(getTableName(entityClass, defaultTableName));
+        sql.append( tableName(config,entityClass,false));
         sql.append(" ");
         return sql.toString();
     }
@@ -358,10 +429,11 @@ public class TemplateSqlHelper
 
     /**
      * where主键条件(参数为单个值如userReository.getById("123456"))
+     *
      * @param entityClass
      * @param keyName
      */
-    public static String wherePKColumn(Class<?> entityClass,String keyName) {
+    public static String wherePKColumn(Class<?> entityClass, String keyName) {
         StringBuilder sql = new StringBuilder();
         //获取全部列
         Set<EntityColumn> columnList = EntityTableFactory.getPKColumns(entityClass);
@@ -377,11 +449,11 @@ public class TemplateSqlHelper
     }
 
     /**
-     * where主键条件(参数为对象如userReository.selectByKey(user))
+     * where主键条件(参数为对象如userRepository.selectByKey(user))
      *
      * @param entityClass
      */
-    public static String wherePKColumns(Class<?> entityClass,String entityName) {
+    public static String wherePKColumns(Class<?> entityClass, String entityName) {
         StringBuilder sql = new StringBuilder();
         sql.append("<where>");
         //获取全部列

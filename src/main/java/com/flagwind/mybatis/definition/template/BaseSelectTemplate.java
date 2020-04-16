@@ -1,6 +1,6 @@
 package com.flagwind.mybatis.definition.template;
 
-import com.flagwind.mybatis.common.TemplateContext;
+import com.flagwind.mybatis.definition.TemplateContext;
 import com.flagwind.mybatis.definition.helper.AssociationSqlHelper;
 import com.flagwind.mybatis.definition.helper.TemplateSqlHelper;
 import com.flagwind.mybatis.definition.helper.ObjectSqlHelper;
@@ -18,17 +18,28 @@ public class BaseSelectTemplate extends MapperTemplate {
         super(mapperClass, mapperResolver);
     }
 
-    protected String selectAllColumnsFromTable(Class<?> entityClass) {
+    protected String selectColumnsFromTable(Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
         if (AssociationSqlHelper.hasAssociation(entityClass)) {
             AssociationSqlHelper.registerEntityClass(entityClass, context.getConfig());
-            sql.append(AssociationSqlHelper.selectAllColumns(entityClass));
 
-            sql.append(AssociationSqlHelper.fromTable(entityClass, context.getConfig()));
+            sql.append(AssociationSqlHelper.selectColumnsFromTable(context.getConfig(),entityClass));
+
+//            sql.append("select ");
+//            sql.append(AssociationSqlHelper.columns(entityClass));
+//            sql.append(" FROM ");
+//            sql.append(AssociationSqlHelper.tableName(entityClass, context.getConfig()));
+//            sql.append(" ");
         } else {
-            sql.append(TemplateSqlHelper.selectAllColumns(entityClass));
-            boolean hasTableAlias = sql.toString().contains(".");
-            sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass,hasTableAlias)));
+
+            sql.append(TemplateSqlHelper.selectColumnsFromTable(context.getConfig(),entityClass));
+
+//            sql.append("select ");
+//            sql.append(TemplateSqlHelper.columns(entityClass));
+//            sql.append(" FROM ");
+//            boolean hasTableAlias = sql.toString().contains(".");
+//            sql.append(tableName(entityClass, hasTableAlias));
+
         }
         return sql.toString();
 
@@ -44,9 +55,9 @@ public class BaseSelectTemplate extends MapperTemplate {
         //将返回值修改为实体类型
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
-        sql.append(selectAllColumnsFromTable(entityClass));
+        sql.append(selectColumnsFromTable(entityClass));
         if (AssociationSqlHelper.hasAssociation(entityClass)) {
-            sql.append(AssociationSqlHelper.wherePKColumn(entityClass.getSimpleName(), entityClass, "_key"));
+            sql.append(AssociationSqlHelper.wherePKColumn(entityClass, "_key"));
         } else {
             sql.append(TemplateSqlHelper.wherePKColumn(entityClass, "_key"));
         }
@@ -63,7 +74,7 @@ public class BaseSelectTemplate extends MapperTemplate {
         //修改返回值类型为实体类型
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
-        sql.append(selectAllColumnsFromTable(entityClass));
+        sql.append(selectColumnsFromTable(entityClass));
         sql.append(ObjectSqlHelper.getWhereSql("_clause", 5));
         return sql.toString();
     }
@@ -77,10 +88,13 @@ public class BaseSelectTemplate extends MapperTemplate {
         Class<?> entityClass = getEntityClass(ms);
         //修改返回值类型为实体类型
         setResultType(ms, entityClass);
+
         StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.selectAllColumns(entityClass));
-        boolean hasTableAlias = sql.toString().contains(".");
-        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass, hasTableAlias)));
+        sql.append(TemplateSqlHelper.selectColumnsFromTable(context.getConfig(),entityClass));
+
+//        sql.append(TemplateSqlHelper.selectAllColumns(entityClass));
+//        boolean hasTableAlias = sql.toString().contains(".");
+//        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass, hasTableAlias)));
         sql.append(ObjectSqlHelper.getWhereSql("_clause", 5));
         sql.append(TemplateSqlHelper.orderByDefault(entityClass));
         return sql.toString();
@@ -110,9 +124,11 @@ public class BaseSelectTemplate extends MapperTemplate {
         //将返回值修改为实体类型
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.selectAllColumns(entityClass));
-        boolean hasTableAlias = sql.toString().contains(".");
-        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass,hasTableAlias)));
+        sql.append(TemplateSqlHelper.selectColumnsFromTable(context.getConfig(),entityClass));
+//        sql.append(TemplateSqlHelper.selectAllColumns(entityClass));
+//        boolean hasTableAlias = sql.toString().contains(".");
+//        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass, hasTableAlias)));
+
         sql.append(TemplateSqlHelper.wherePKColumn(entityClass, "_key"));
         return sql.toString();
     }
@@ -126,10 +142,10 @@ public class BaseSelectTemplate extends MapperTemplate {
     public String count(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
         StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.selectCount(entityClass));
-        boolean hasTableAlias = sql.toString().contains(".");
-        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass,hasTableAlias)));
-        sql.append(ObjectSqlHelper.getWhereSql("_clause",5));
+        sql.append(TemplateSqlHelper.selectCountFromTable(context.getConfig(),entityClass));
+//        boolean hasTableAlias = sql.toString().contains(".");
+//        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass, hasTableAlias)));
+        sql.append(ObjectSqlHelper.getWhereSql("_clause", 5));
         return sql.toString();
     }
 
@@ -142,18 +158,17 @@ public class BaseSelectTemplate extends MapperTemplate {
     public String existsById(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
         StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.selectCountExists(entityClass));
-        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass)));
-        sql.append(TemplateSqlHelper.wherePKColumns(entityClass,null));
+        sql.append(TemplateSqlHelper.selectCountExistsFromTable(context.getConfig(), entityClass));
+//        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass)));
+        sql.append(TemplateSqlHelper.wherePKColumns(entityClass, null));
         return sql.toString();
     }
 
     public String exists(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
         StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.selectCountExists(entityClass));
-        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass)));
-        sql.append(ObjectSqlHelper.getWhereSql("_clause",5));
+        sql.append(TemplateSqlHelper.selectCountExistsFromTable(context.getConfig(), entityClass));
+        sql.append(ObjectSqlHelper.getWhereSql("_clause", 5));
         return sql.toString();
     }
 
@@ -167,9 +182,10 @@ public class BaseSelectTemplate extends MapperTemplate {
         //修改返回值类型为实体类型
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.selectAllColumns(entityClass));
-        boolean hasTableAlias = sql.toString().contains(".");
-        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass,hasTableAlias)));
+        sql.append(TemplateSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass));
+//        sql.append(TemplateSqlHelper.selectAllColumns(entityClass));
+//        boolean hasTableAlias = sql.toString().contains(".");
+//        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass, hasTableAlias)));
         sql.append(TemplateSqlHelper.orderByDefault(entityClass));
         return sql.toString();
     }
@@ -177,6 +193,7 @@ public class BaseSelectTemplate extends MapperTemplate {
 
     /**
      * 聚合多条件查询
+     *
      * @param ms 映射申明
      */
     public String querySelective(MappedStatement ms) {

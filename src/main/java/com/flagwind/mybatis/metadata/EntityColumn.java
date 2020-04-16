@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
+import java.util.Objects;
+
 /**
  * 实体字段对应数据库列的信息
  * @author chendb
@@ -295,31 +297,31 @@ public class EntityColumn {
 		if (identity != that.identity) {
 			return false;
 		}
-		if (table != null ? !table.equals(that.table) : that.table != null) {
+		if (!Objects.equals(table, that.table)) {
 			return false;
 		}
-		if (property != null ? !property.equals(that.property) : that.property != null) {
+		if (!Objects.equals(property, that.property)) {
 			return false;
 		}
-		if (column != null ? !column.equals(that.column) : that.column != null) {
+		if (!Objects.equals(column, that.column)) {
 			return false;
 		}
-		if (javaType != null ? !javaType.equals(that.javaType) : that.javaType != null) {
+		if (!Objects.equals(javaType, that.javaType)) {
 			return false;
 		}
 		if (jdbcType != that.jdbcType) {
 			return false;
 		}
-		if (typeHandler != null ? !typeHandler.equals(that.typeHandler) : that.typeHandler != null) {
+		if (!Objects.equals(typeHandler, that.typeHandler)) {
 			return false;
 		}
-		if (sequenceName != null ? !sequenceName.equals(that.sequenceName) : that.sequenceName != null) {
+		if (!Objects.equals(sequenceName, that.sequenceName)) {
 			return false;
 		}
-		if (generator != null ? !generator.equals(that.generator) : that.generator != null) {
+		if (!Objects.equals(generator, that.generator)) {
 			return false;
 		}
-		return !(orderBy != null ? !orderBy.equals(that.orderBy) : that.orderBy != null);
+		return !(!Objects.equals(orderBy, that.orderBy));
 
 	}
 

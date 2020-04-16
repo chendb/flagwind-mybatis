@@ -1,7 +1,7 @@
 package com.flagwind.mybatis.metadata;
 
 import com.flagwind.mybatis.code.Style;
-import com.flagwind.mybatis.common.Config;
+import com.flagwind.mybatis.definition.Config;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.metadata.processors.*;
 import com.flagwind.mybatis.utils.AssociationUtils;

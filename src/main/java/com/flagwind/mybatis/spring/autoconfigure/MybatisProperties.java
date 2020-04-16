@@ -17,149 +17,149 @@ import java.util.Properties;
 @ConfigurationProperties(prefix = MybatisProperties.MYBATIS_PREFIX)
 public class MybatisProperties {
 
-	public static final String MYBATIS_PREFIX = "mybatis";
+    public static final String MYBATIS_PREFIX = "mybatis";
 
-	/**
-	 * Location of MyBatis xml config file.
-	 */
-	private String configLocation;
+    /**
+     * Location of MyBatis xml config file.
+     */
+    private String configLocation;
 
-	/**
-	 * Locations of MyBatis mapper files.
-	 */
-	private String[] mapperLocations;
+    /**
+     * Locations of MyBatis mapper files.
+     */
+    private String[] mapperLocations;
 
-	/**
-	 * Packages to search type aliases. (Package delimiters are ",; \t\n")
-	 */
-	private String typeAliasesPackage;
+    /**
+     * Packages to search type aliases. (Package delimiters are ",; \t\n")
+     */
+    private String typeAliasesPackage;
 
-	/**
-	 * Packages to search for type handlers. (Package delimiters are ",; \t\n")
-	 */
-	private String typeHandlersPackage;
+    /**
+     * Packages to search for type handlers. (Package delimiters are ",; \t\n")
+     */
+    private String typeHandlersPackage;
 
-	/**
-	 * Indicates whether perform presence check of the MyBatis xml config file.
-	 */
-	private boolean checkConfigLocation = false;
+    /**
+     * Indicates whether perform presence check of the MyBatis xml config file.
+     */
+    private boolean checkConfigLocation = false;
 
-	/**
-	 * Execution mode for {@link org.mybatis.spring.SqlSessionTemplate}.
-	 */
-	private ExecutorType executorType;
+    /**
+     * Execution mode for {@link org.mybatis.spring.SqlSessionTemplate}.
+     */
+    private ExecutorType executorType;
 
-	/**
-	 * Externalized properties for MyBatis configuration.
-	 */
-	private Properties configurationProperties;
+    /**
+     * Externalized properties for MyBatis configuration.
+     */
+    private Properties configurationProperties;
 
-	/**
-	 * A Configuration object for customize default settings. If {@link #configLocation}
-	 * is specified, this property is not used.
-	 */
-	@NestedConfigurationProperty
-	private Configuration configuration;
+    /**
+     * A Configuration object for customize default settings. If {@link #configLocation}
+     * is specified, this property is not used.
+     */
+    @NestedConfigurationProperty
+    private Configuration configuration;
 
-	/**
-	 * @since 1.1.0
-	 */
-	public String getConfigLocation() {
-		return this.configLocation;
-	}
+    /**
+     * @since 1.1.0
+     */
+    public String getConfigLocation() {
+        return this.configLocation;
+    }
 
-	/**
-	 * @since 1.1.0
-	 */
-	public void setConfigLocation(String configLocation) {
-		this.configLocation = configLocation;
-	}
+    /**
+     * @since 1.1.0
+     */
+    public void setConfigLocation(String configLocation) {
+        this.configLocation = configLocation;
+    }
 
-	@Deprecated
-	public String getConfig() {
-		return this.configLocation;
-	}
+    @Deprecated
+    public String getConfig() {
+        return this.configLocation;
+    }
 
-	@Deprecated
-	public void setConfig(String config) {
-		this.configLocation = config;
-	}
+    @Deprecated
+    public void setConfig(String config) {
+        this.configLocation = config;
+    }
 
-	public String[] getMapperLocations() {
-		return this.mapperLocations;
-	}
+    public String[] getMapperLocations() {
+        return this.mapperLocations;
+    }
 
-	public void setMapperLocations(String[] mapperLocations) {
-		this.mapperLocations = mapperLocations;
-	}
+    public void setMapperLocations(String[] mapperLocations) {
+        this.mapperLocations = mapperLocations;
+    }
 
-	public String getTypeHandlersPackage() {
-		return this.typeHandlersPackage;
-	}
+    public String getTypeHandlersPackage() {
+        return this.typeHandlersPackage;
+    }
 
-	public void setTypeHandlersPackage(String typeHandlersPackage) {
-		this.typeHandlersPackage = typeHandlersPackage;
-	}
+    public void setTypeHandlersPackage(String typeHandlersPackage) {
+        this.typeHandlersPackage = typeHandlersPackage;
+    }
 
-	public String getTypeAliasesPackage() {
-		return this.typeAliasesPackage;
-	}
+    public String getTypeAliasesPackage() {
+        return this.typeAliasesPackage;
+    }
 
-	public void setTypeAliasesPackage(String typeAliasesPackage) {
-		this.typeAliasesPackage = typeAliasesPackage;
-	}
+    public void setTypeAliasesPackage(String typeAliasesPackage) {
+        this.typeAliasesPackage = typeAliasesPackage;
+    }
 
-	public boolean isCheckConfigLocation() {
-		return this.checkConfigLocation;
-	}
+    public boolean isCheckConfigLocation() {
+        return this.checkConfigLocation;
+    }
 
-	public void setCheckConfigLocation(boolean checkConfigLocation) {
-		this.checkConfigLocation = checkConfigLocation;
-	}
+    public void setCheckConfigLocation(boolean checkConfigLocation) {
+        this.checkConfigLocation = checkConfigLocation;
+    }
 
-	public ExecutorType getExecutorType() {
-		return this.executorType;
-	}
+    public ExecutorType getExecutorType() {
+        return this.executorType;
+    }
 
-	public void setExecutorType(ExecutorType executorType) {
-		this.executorType = executorType;
-	}
+    public void setExecutorType(ExecutorType executorType) {
+        this.executorType = executorType;
+    }
 
-	/**
-	 * @since 1.2.0
-	 */
-	public Properties getConfigurationProperties() {
-		return configurationProperties;
-	}
+    /**
+     * @since 1.2.0
+     */
+    public Properties getConfigurationProperties() {
+        return configurationProperties;
+    }
 
-	/**
-	 * @since 1.2.0
-	 */
-	public void setConfigurationProperties(Properties configurationProperties) {
-		this.configurationProperties = configurationProperties;
-	}
+    /**
+     * @since 1.2.0
+     */
+    public void setConfigurationProperties(Properties configurationProperties) {
+        this.configurationProperties = configurationProperties;
+    }
 
-	public Configuration getConfiguration() {
-		return configuration;
-	}
+    public Configuration getConfiguration() {
+        return configuration;
+    }
 
-	public void setConfiguration(Configuration configuration) {
-		this.configuration = configuration;
-	}
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
 
-	public Resource[] resolveMapperLocations() {
-		ResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
-		List<Resource> resources = new ArrayList<Resource>();
-		if (this.mapperLocations != null) {
-			for (String mapperLocation : this.mapperLocations) {
-				try {
-					Resource[] mappers = resourceResolver.getResources(mapperLocation);
-					resources.addAll(Arrays.asList(mappers));
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-		}
-		return resources.toArray(new Resource[resources.size()]);
-	}
+    public Resource[] resolveMapperLocations() {
+        ResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
+        List<Resource> resources = new ArrayList<Resource>();
+        if (this.mapperLocations != null) {
+            for (String mapperLocation : this.mapperLocations) {
+                try {
+                    Resource[] mappers = resourceResolver.getResources(mapperLocation);
+                    resources.addAll(Arrays.asList(mappers));
+                } catch (IOException e) {
+                    // ignore
+                }
+            }
+        }
+        return resources.toArray(new Resource[resources.size()]);
+    }
 }

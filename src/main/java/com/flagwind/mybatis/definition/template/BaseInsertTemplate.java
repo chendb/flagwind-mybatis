@@ -1,8 +1,8 @@
 package com.flagwind.mybatis.definition.template;
 
 import com.flagwind.commons.StringUtils;
-import com.flagwind.mybatis.code.DialectType;
-import com.flagwind.mybatis.common.TemplateContext;
+import com.flagwind.mybatis.code.DatabaseType;
+import com.flagwind.mybatis.definition.TemplateContext;
 import com.flagwind.mybatis.definition.helper.MappedStatementHelper;
 import com.flagwind.mybatis.definition.helper.TemplateSqlHelper;
 import com.flagwind.mybatis.exceptions.MapperException;
@@ -20,7 +20,7 @@ public class BaseInsertTemplate extends MapperTemplate {
     }
 
     private MutablePair<String, Boolean> getSequenceKeyMapping(Set<EntityColumn> columnList, Class<?> entityClass,
-            MappedStatement ms) {
+                                                               MappedStatement ms) {
         Boolean hasIdentityKey = false;
         StringBuilder sql = new StringBuilder();
         for (EntityColumn column : columnList) {
@@ -53,41 +53,46 @@ public class BaseInsertTemplate extends MapperTemplate {
         return MutablePair.of(sql.toString(), hasIdentityKey);
     }
 
+
     /**
      * 插入全部,这段代码比较复杂，这里举个例子
      * CountryU生成的insert方法结构如下：
      * <pre>
-            &lt;bind name="countryname_bind" value='@java.util.UUID@randomUUID().toString().replace("-", "")'/&gt;
-            INSERT INTO country_u(id,countryname,countrycode) VALUES
-            &lt;trim prefix="(" suffix=")" suffixOverrides=","&gt;
-            &lt;if test="id != null"&gt;#{id,javaType=java.lang.Integer},&lt;/if&gt;
-            &lt;if test="id == null"&gt;#{id,javaType=java.lang.Integer},&lt;/if&gt;
-            &lt;if test="countryname != null"&gt;#{countryname,javaType=java.lang.String},&lt;/if&gt;
-            &lt;if test="countryname == null"&gt;#{countryname_bind,javaType=java.lang.String},&lt;/if&gt;
-            &lt;if test="countrycode != null"&gt;#{countrycode,javaType=java.lang.String},&lt;/if&gt;
-            &lt;if test="countrycode == null"&gt;#{countrycode,javaType=java.lang.String},&lt;/if&gt;
-            &lt;/trim&gt;
-     </pre>
+     * &lt;bind name="countryname_bind" value='@java.util.UUID@randomUUID().toString().replace("-", "")'/&gt;
+     * INSERT INTO country_u(id,countryname,countrycode) VALUES
+     * &lt;trim prefix="(" suffix=")" suffixOverrides=","&gt;
+     * &lt;if test="id != null"&gt;#{id,javaType=java.lang.Integer},&lt;/if&gt;
+     * &lt;if test="id == null"&gt;#{id,javaType=java.lang.Integer},&lt;/if&gt;
+     * &lt;if test="countryname != null"&gt;#{countryname,javaType=java.lang.String},&lt;/if&gt;
+     * &lt;if test="countryname == null"&gt;#{countryname_bind,javaType=java.lang.String},&lt;/if&gt;
+     * &lt;if test="countrycode != null"&gt;#{countrycode,javaType=java.lang.String},&lt;/if&gt;
+     * &lt;if test="countrycode == null"&gt;#{countrycode,javaType=java.lang.String},&lt;/if&gt;
+     * &lt;/trim&gt;
+     * </pre>
      *
      * @param ms 映射申明
      * @return
      */
     public String insert(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        StringBuilder sql = new StringBuilder();
         //获取全部列
         Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
+
+
+        StringBuilder sql = new StringBuilder();
+
 
         //先处理cache或bind节点
         MutablePair<String, Boolean> pair = getSequenceKeyMapping(columnList, entityClass, ms);
 
-        //Identity列只能有一个
+        // Identity列只能有一个
         // Boolean hasIdentityKey = pair.right;
         if (StringUtils.isNotEmpty(pair.left)) {
             sql.append(pair.left);
         }
 
-        sql.append(TemplateSqlHelper.insertIntoTable(entityClass, tableName(entityClass)));
+        sql.append(TemplateSqlHelper.insertIntoTable(context.getConfig(), entityClass));
+
         sql.append(TemplateSqlHelper.insertColumns(entityClass, false, false, false));
         sql.append("<trim prefix=\"VALUES(\" suffix=\")\" suffixOverrides=\",\">");
         for (EntityColumn column : columnList) {
@@ -123,21 +128,21 @@ public class BaseInsertTemplate extends MapperTemplate {
      * 插入不为null的字段,这段代码比较复杂，这里举个例子
      * CountryU生成的insertSelective方法结构如下：
      * <pre>
-            &lt;bind name="countryname_bind" value='@java.util.UUID@randomUUID().toString().replace("-", "")'/&gt;
-            INSERT INTO country_u
-            &lt;trim prefix="(" suffix=")" suffixOverrides=","&gt;
-            &lt;if test="id != null"&gt;id,&lt;/if&gt;
-            countryname,
-            &lt;if test="countrycode != null"&gt;countrycode,&lt;/if&gt;
-            &lt;/trim&gt;
-            VALUES
-            &lt;trim prefix="(" suffix=")" suffixOverrides=","&gt;
-            &lt;if test="id != null"&gt;#{id,javaType=java.lang.Integer},&lt;/if&gt;
-            &lt;if test="countryname != null"&gt;#{countryname,javaType=java.lang.String},&lt;/if&gt;
-            &lt;if test="countryname == null"&gt;#{countryname_bind,javaType=java.lang.String},&lt;/if&gt;
-            &lt;if test="countrycode != null"&gt;#{countrycode,javaType=java.lang.String},&lt;/if&gt;
-            &lt;/trim&gt;
-     </pre>
+     * &lt;bind name="countryname_bind" value='@java.util.UUID@randomUUID().toString().replace("-", "")'/&gt;
+     * INSERT INTO country_u
+     * &lt;trim prefix="(" suffix=")" suffixOverrides=","&gt;
+     * &lt;if test="id != null"&gt;id,&lt;/if&gt;
+     * countryname,
+     * &lt;if test="countrycode != null"&gt;countrycode,&lt;/if&gt;
+     * &lt;/trim&gt;
+     * VALUES
+     * &lt;trim prefix="(" suffix=")" suffixOverrides=","&gt;
+     * &lt;if test="id != null"&gt;#{id,javaType=java.lang.Integer},&lt;/if&gt;
+     * &lt;if test="countryname != null"&gt;#{countryname,javaType=java.lang.String},&lt;/if&gt;
+     * &lt;if test="countryname == null"&gt;#{countryname_bind,javaType=java.lang.String},&lt;/if&gt;
+     * &lt;if test="countrycode != null"&gt;#{countrycode,javaType=java.lang.String},&lt;/if&gt;
+     * &lt;/trim&gt;
+     * </pre>
      * 这段代码可以注意对countryname的处理
      *
      * @param ms 映射申明
@@ -145,9 +150,12 @@ public class BaseInsertTemplate extends MapperTemplate {
      */
     public String insertSelective(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        StringBuilder sql = new StringBuilder();
         //获取全部列
         Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
+
+
+        StringBuilder sql = new StringBuilder();
+
         //先处理cache或bind节点
         MutablePair<String, Boolean> pair = getSequenceKeyMapping(columnList, entityClass, ms);
 
@@ -157,7 +165,7 @@ public class BaseInsertTemplate extends MapperTemplate {
             sql.append(pair.left);
         }
 
-        sql.append(TemplateSqlHelper.insertIntoTable(entityClass, tableName(entityClass)));
+        sql.append(TemplateSqlHelper.insertIntoTable(context.getConfig(), entityClass));
         sql.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
         for (EntityColumn column : columnList) {
             if (!column.isInsertable()) {
@@ -203,7 +211,7 @@ public class BaseInsertTemplate extends MapperTemplate {
      * @param ms 映射申明
      */
     public String insertList(MappedStatement ms) {
-        if (DialectType.MySQL.equals(this.getDialectType())) {
+        if (DatabaseType.MySQL == this.getDatabaseType()) {
             return insertListFromMySql(ms);
         } else {
             return insertListFromOracle(ms);
@@ -214,7 +222,7 @@ public class BaseInsertTemplate extends MapperTemplate {
         final Class<?> entityClass = getEntityClass(ms);
         //开始拼sql
         StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.insertIntoTable(entityClass, tableName(entityClass)));
+        sql.append(TemplateSqlHelper.insertIntoTable(context.getConfig(), entityClass));
         sql.append(TemplateSqlHelper.insertColumns(entityClass, false, false, false));
         sql.append("  ");
         sql.append("<foreach collection=\"_list\" item=\"record\" separator=\"UNION ALL\" >");
@@ -237,14 +245,14 @@ public class BaseInsertTemplate extends MapperTemplate {
         final Class<?> entityClass = getEntityClass(ms);
         //开始拼sql
         StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.insertIntoTable(entityClass, tableName(entityClass)));
+        sql.append(TemplateSqlHelper.insertIntoTable(context.getConfig(), entityClass));
         sql.append(TemplateSqlHelper.insertColumns(entityClass, false, false, false));
         sql.append("  ");
         sql.append(" values ");
         sql.append("<foreach collection=\"_list\" item=\"record\" separator=\",\" >");
         sql.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
 
-  
+
         //获取全部列
         Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
         //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
@@ -269,7 +277,7 @@ public class BaseInsertTemplate extends MapperTemplate {
     public String insertUseGeneratedKeys(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
         StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.insertIntoTable(entityClass, tableName(entityClass)));
+        sql.append(TemplateSqlHelper.insertIntoTable(context.getConfig(), entityClass));
         sql.append(TemplateSqlHelper.insertColumns(entityClass, true, false, false));
         sql.append(TemplateSqlHelper.insertValuesColumns(entityClass, true, false, false));
         return sql.toString();

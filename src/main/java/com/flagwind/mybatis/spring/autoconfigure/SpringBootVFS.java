@@ -18,31 +18,31 @@ import java.util.List;
  */
 public class SpringBootVFS extends VFS {
 
-	private final ResourcePatternResolver resourceResolver;
+    private final ResourcePatternResolver resourceResolver;
 
-	public SpringBootVFS() {
-		this.resourceResolver = new PathMatchingResourcePatternResolver(getClass().getClassLoader());
-	}
+    public SpringBootVFS() {
+        this.resourceResolver = new PathMatchingResourcePatternResolver(getClass().getClassLoader());
+    }
 
-	@Override
-	public boolean isValid() {
-		return true;
-	}
+    @Override
+    public boolean isValid() {
+        return true;
+    }
 
-	@Override
-	protected List<String> list(URL url, String path) throws IOException {
-		Resource[] resources = resourceResolver.getResources("classpath*:" + path + "/**/*.class");
-		List<String> resourcePaths = new ArrayList<String>();
-		for (Resource resource : resources) {
-			resourcePaths.add(preserveSubpackageName(resource.getURI(), path));
-		}
-		return resourcePaths;
-	}
+    @Override
+    protected List<String> list(URL url, String path) throws IOException {
+        Resource[] resources = resourceResolver.getResources("classpath*:" + path + "/**/*.class");
+        List<String> resourcePaths = new ArrayList<String>();
+        for (Resource resource : resources) {
+            resourcePaths.add(preserveSubpackageName(resource.getURI(), path));
+        }
+        return resourcePaths;
+    }
 
-	private static String preserveSubpackageName(final URI uri, final String rootPath) {
-		final String uriStr = uri.toString();
-		final int start = uriStr.indexOf(rootPath);
-		return uriStr.substring(start);
-	}
+    private static String preserveSubpackageName(final URI uri, final String rootPath) {
+        final String uriStr = uri.toString();
+        final int start = uriStr.indexOf(rootPath);
+        return uriStr.substring(start);
+    }
 
 }

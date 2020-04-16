@@ -1,6 +1,8 @@
 package com.flagwind.mybatis.spring.autoconfigure;
 
-import com.flagwind.mybatis.common.Config;
+import com.flagwind.mybatis.definition.Config;
+import com.flagwind.mybatis.definition.interceptor.PaginationInterceptor;
+import com.flagwind.mybatis.spring.MybatisSqlSessionFactoryBean;
 import com.flagwind.mybatis.spring.boot.ClassPathMapperScanner;
 import com.flagwind.mybatis.spring.boot.FlagwindCacheDisabler;
 import org.apache.commons.logging.Log;
@@ -16,11 +18,11 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackages;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -42,183 +44,155 @@ import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.util.List;
 
-/**
- * {@link EnableAutoConfiguration Auto-Configuration} for Mybatis. Contributes a
- * {@link SqlSessionFactory} and a {@link SqlSessionTemplate}.
- *
- * If {@link org.mybatis.spring.annotation.MapperScan} is used, or a
- * configuration file is specified as a property, those will be considered,
- * otherwise this auto-configuration will attempt to register mappers based on
- * the interface definitions in or under the root auto-configuration package.
- *
- * @author Eddú Meléndez
- * @author Josh Long
- * @author Kazuki Shimizu
- * @author Eduardo Macarrón
- */
+
 @org.springframework.context.annotation.Configuration
 @AutoConfigureAfter(DataSourceAutoConfiguration.class)
-@Import({ DiscoveryAutoConfiguration.class })
 @AutoConfigureBefore(name = "org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration")
-public class FlagwindAutoConfiguration /*extends AbstractAutoConfiguration*/
-{
+public class FlagwindAutoConfiguration {
 
-	private static final Log LOG = LogFactory.getLog(FlagwindAutoConfiguration.class);
+    private static final Log LOG = LogFactory.getLog(FlagwindAutoConfiguration.class);
 
-	/*
-	public FlagwindAutoConfiguration(MybatisProperties properties, FlagwindProperties flagwindProperties, ObjectProvider<Interceptor[]> interceptorsProvider, ResourceLoader resourceLoader, ObjectProvider<DatabaseIdProvider> databaseIdProvider, ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider)
-	{
-
-		super(properties, flagwindProperties, interceptorsProvider, resourceLoader, databaseIdProvider, configurationCustomizersProvider);
-	}
-
-	@PostConstruct
-	public void checkConfigFileExists()
-	{
-		super.checkConfigFileExists();
-	}
-
-	@Bean
-	@ConditionalOnMissingBean
-	public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception
-	{
-		return super.sqlSessionFactory(dataSource);
-	}
-
-	@Bean
-	@ConditionalOnMissingBean
-	public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory)
-	{
-		return super.sqlSessionTemplate(sqlSessionFactory);
-	}
-	*/
+    @Bean
+    @ConditionalOnMissingBean
+    public PaginationInterceptor paginationInterceptor() {
+        return new PaginationInterceptor();
+    }
 
 
-	@Configuration
-	@ConditionalOnMissingBean(AbstractAutoConfiguration.class)
-	@ConditionalOnClass({ SqlSessionFactory.class, SqlSessionFactoryBean.class })
-	@ConditionalOnBean(DataSource.class)
-	@EnableConfigurationProperties({ MybatisProperties.class, FlagwindProperties.class })
-	public static class DatabaseAutoConfiguration extends AbstractAutoConfiguration
-	{
-		public DatabaseAutoConfiguration(MybatisProperties properties, FlagwindProperties flagwindProperties, ObjectProvider<Interceptor[]> interceptorsProvider, ResourceLoader resourceLoader, ObjectProvider<DatabaseIdProvider> databaseIdProvider, ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider)
-		{
-			super(properties, flagwindProperties, interceptorsProvider, resourceLoader, databaseIdProvider, configurationCustomizersProvider);
-		}
+    @Configuration
+    @ConditionalOnMissingBean(AbstractAutoConfiguration.class)
+    @ConditionalOnClass({SqlSessionFactory.class, SqlSessionFactoryBean.class})
+    @ConditionalOnBean(DataSource.class)
+    @EnableConfigurationProperties({MybatisProperties.class, FlagwindProperties.class})
+    public static class DatabaseAutoConfiguration extends AbstractAutoConfiguration {
+        public DatabaseAutoConfiguration(MybatisProperties properties, FlagwindProperties flagwindProperties, ObjectProvider<Interceptor[]> interceptorsProvider, ResourceLoader resourceLoader, ObjectProvider<DatabaseIdProvider> databaseIdProvider, ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider) {
+            super(properties, flagwindProperties, interceptorsProvider, resourceLoader, databaseIdProvider, configurationCustomizersProvider);
+        }
 
-		@PostConstruct
-		public void checkConfigFileExists()
-		{
-			super.checkConfigFileExists();
-		}
+        @Autowired(required = false)
+        private PaginationInterceptor paginationInterceptor;
 
-		@Bean
-		@ConditionalOnMissingBean
-		public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception
-		{
-			return super.sqlSessionFactory(dataSource);
-		}
+        @PostConstruct
+        public void checkConfigFileExists() {
+            super.checkConfigFileExists();
+        }
 
-		@Bean
-		@ConditionalOnMissingBean
-		public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory)
-		{
-			return super.sqlSessionTemplate(sqlSessionFactory);
-		}
+        @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+        @Bean
+        @ConditionalOnMissingBean
+        public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
+            return super.sqlSessionFactory(dataSource);
+        }
 
-	}
+        @Override
+        public MybatisSqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) {
+            MybatisSqlSessionFactoryBean mybatisSqlSessionFactoryBean = super.sqlSessionFactoryBean(dataSource);
+            if (paginationInterceptor != null) {
+                mybatisSqlSessionFactoryBean.setPlugins(new Interceptor[]{paginationInterceptor});
+            }
+            return mybatisSqlSessionFactoryBean;
+        }
 
 
-	/**
-	 * This will just scan the same base package as Spring Boot does. If you want
-	 * more power, you can explicitly use
-	 * {@link org.mybatis.spring.annotation.MapperScan} but this will get typed
-	 * mappers working correctly, out-of-the-box, similar to using Spring Data JPA
-	 * repositories.
-	 */
-	public static class AutoConfiguredMapperScannerRegistrar
-			implements BeanFactoryAware, ImportBeanDefinitionRegistrar, ResourceLoaderAware, EnvironmentAware {
+        @Bean
+        @ConditionalOnMissingBean
+        public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
+            return super.sqlSessionTemplate(sqlSessionFactory);
+        }
 
-		private BeanFactory beanFactory;
+    }
 
-		private ResourceLoader resourceLoader;
 
-		private Environment environment;
+    /**
+     * This will just scan the same base package as Spring Boot does. If you want
+     * more power, you can explicitly use
+     * {@link org.mybatis.spring.annotation.MapperScan} but this will get typed
+     * mappers working correctly, out-of-the-box, similar to using Spring Data JPA
+     * repositories.
+     */
+    public static class AutoConfiguredMapperScannerRegistrar
+            implements BeanFactoryAware, ImportBeanDefinitionRegistrar, ResourceLoaderAware, EnvironmentAware {
 
-		@Override
-		public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
-				BeanDefinitionRegistry registry) {
+        private BeanFactory beanFactory;
 
-			LOG.debug("Searching for mappers annotated with @Mapper");
+        private ResourceLoader resourceLoader;
 
-			ClassPathMapperScanner scanner = new ClassPathMapperScanner(registry);
-			scanner.setMapperProperties(Config.PREFIX, environment);
-			try {
-				if (this.resourceLoader != null) {
-					scanner.setResourceLoader(this.resourceLoader);
-				}
+        private Environment environment;
 
-				List<String> packages = AutoConfigurationPackages.get(this.beanFactory);
-				if (LOG.isDebugEnabled()) {
-					for (String pkg : packages) {
-						LOG.debug(String.format("Using auto-configuration base package '%s'", pkg));
-					}
-				}
+        @Override
+        public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
+                                            BeanDefinitionRegistry registry) {
 
-				scanner.setAnnotationClass(Mapper.class);
-				scanner.registerFilters();
-				scanner.doScan(StringUtils.toStringArray(packages));
-			} catch (IllegalStateException ex) {
-				LOG.debug("Could not determine auto-configuration package, automatic mapper scanning disabled.", ex);
-			}
-		}
+            LOG.debug("Searching for mappers annotated with @Mapper");
 
-		@Override
-		public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-			this.beanFactory = beanFactory;
-		}
+            ClassPathMapperScanner scanner = new ClassPathMapperScanner(registry);
+            scanner.setMapperProperties(Config.PREFIX, environment);
+            try {
+                if (this.resourceLoader != null) {
+                    scanner.setResourceLoader(this.resourceLoader);
+                }
 
-		@Override
-		public void setEnvironment(Environment environment) {
-			this.environment = environment;
-		}
+                List<String> packages = AutoConfigurationPackages.get(this.beanFactory);
+                if (LOG.isDebugEnabled()) {
+                    for (String pkg : packages) {
+                        LOG.debug(String.format("Using auto-configuration base package '%s'", pkg));
+                    }
+                }
 
-		@Override
-		public void setResourceLoader(ResourceLoader resourceLoader) {
-			this.resourceLoader = resourceLoader;
-		}
-	}
+                scanner.setAnnotationClass(Mapper.class);
+                scanner.registerFilters();
+                scanner.doScan(StringUtils.toStringArray(packages));
+            } catch (IllegalStateException ex) {
+                LOG.debug("Could not determine auto-configuration package, automatic mapper scanning disabled.", ex);
+            }
+        }
 
-	/**
-	 * {@link org.mybatis.spring.annotation.MapperScan} ultimately ends up creating
-	 * instances of {@link MapperFactoryBean}. If
-	 * {@link org.mybatis.spring.annotation.MapperScan} is used then this
-	 * auto-configuration is not needed. If it is _not_ used, however, then this
-	 * will bring in a bean registrar and automatically register components based on
-	 * the same component-scanning path as Spring Boot itself.
-	 */
-	@org.springframework.context.annotation.Configuration
-	@Import({ AutoConfiguredMapperScannerRegistrar.class })
-	@ConditionalOnMissingBean(MapperFactoryBean.class)
-	public static class MapperScannerRegistrarNotFoundConfiguration {
+        @Override
+        public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+            this.beanFactory = beanFactory;
+        }
 
-		@PostConstruct
-		public void afterPropertiesSet() {
-			LOG.debug(String.format("No %s found.", MapperFactoryBean.class.getName()));
-		}
-	}
+        @Override
+        public void setEnvironment(Environment environment) {
+            this.environment = environment;
+        }
 
-	/**
-	 * Support Devtools Restart.
-	 */
-	@org.springframework.context.annotation.Configuration
-	@ConditionalOnProperty(prefix = "spring.devtools.restart", name = "enabled", matchIfMissing = true)
-	static class RestartConfiguration {
+        @Override
+        public void setResourceLoader(ResourceLoader resourceLoader) {
+            this.resourceLoader = resourceLoader;
+        }
+    }
 
-		@Bean
-		public FlagwindCacheDisabler mapperCacheDisabler() {
-			return new FlagwindCacheDisabler();
-		}
+    /**
+     * {@link org.mybatis.spring.annotation.MapperScan} ultimately ends up creating
+     * instances of {@link MapperFactoryBean}. If
+     * {@link org.mybatis.spring.annotation.MapperScan} is used then this
+     * auto-configuration is not needed. If it is _not_ used, however, then this
+     * will bring in a bean registrar and automatically register components based on
+     * the same component-scanning path as Spring Boot itself.
+     */
+    @org.springframework.context.annotation.Configuration
+    @Import({AutoConfiguredMapperScannerRegistrar.class})
+    @ConditionalOnMissingBean(MapperFactoryBean.class)
+    public static class MapperScannerRegistrarNotFoundConfiguration {
 
-	}
+        @PostConstruct
+        public void afterPropertiesSet() {
+            LOG.debug(String.format("No %s found.", MapperFactoryBean.class.getName()));
+        }
+    }
+
+    /**
+     * Support Devtools Restart.
+     */
+    @org.springframework.context.annotation.Configuration
+    @ConditionalOnProperty(prefix = "spring.devtools.restart", name = "enabled", matchIfMissing = true)
+    static class RestartConfiguration {
+
+        @Bean
+        public FlagwindCacheDisabler mapperCacheDisabler() {
+            return new FlagwindCacheDisabler();
+        }
+
+    }
 }

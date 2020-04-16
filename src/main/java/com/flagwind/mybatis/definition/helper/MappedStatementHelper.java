@@ -1,6 +1,6 @@
 package com.flagwind.mybatis.definition.helper;
 
-import com.flagwind.mybatis.definition.interceptor.OffsetLimitInterceptor;
+
 import com.flagwind.mybatis.metadata.EntityColumn;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -59,7 +59,7 @@ public class MappedStatementHelper
                     parameterMappings);
             statementBuilder.parameterMap(inlineParameterMapBuilder.build());
 
-            List<ResultMap> resultMaps = new ArrayList<ResultMap>();
+            List<ResultMap> resultMaps = new ArrayList<>();
             ResultMap.Builder inlineResultMapBuilder = new ResultMap.Builder(
                     configuration,
                     statementBuilder.id() + "-Inline",
@@ -102,7 +102,7 @@ public class MappedStatementHelper
     public static MappedStatement cloneMappedStatement(MappedStatement ms, BoundSql boundSql, String sql,
                                                        List<ParameterMapping> parameterMappings, Object parameter) {
         BoundSql newBoundSql = cloneBoundSql(ms, boundSql, sql, parameterMappings, parameter);
-        return cloneMappedStatement(ms, new OffsetLimitInterceptor.BoundSqlSqlSource(newBoundSql));
+        return cloneMappedStatement(ms, new BoundSqlSqlSource(newBoundSql));
     }
 
     public static BoundSql cloneBoundSql(MappedStatement ms, BoundSql boundSql, String sql,
@@ -153,5 +153,18 @@ public class MappedStatementHelper
         return builder.build();
     }
 
+
+    public static class BoundSqlSqlSource implements SqlSource {
+        BoundSql boundSql;
+
+        public BoundSqlSqlSource(BoundSql boundSql) {
+            this.boundSql = boundSql;
+        }
+
+        @Override
+        public BoundSql getBoundSql(Object parameterObject) {
+            return boundSql;
+        }
+    }
 
 }

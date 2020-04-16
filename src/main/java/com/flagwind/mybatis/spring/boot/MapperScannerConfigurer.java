@@ -1,6 +1,6 @@
 package com.flagwind.mybatis.spring.boot;
 
-import com.flagwind.mybatis.common.TemplateContext;
+import com.flagwind.mybatis.definition.TemplateContext;
 import com.flagwind.persistent.AbstractRepository;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;

@@ -1,7 +1,7 @@
 package com.flagwind.persistent;
 
-import com.flagwind.mybatis.code.DialectType;
-import com.flagwind.mybatis.common.TemplateContext;
+import com.flagwind.mybatis.code.DatabaseType;
+import com.flagwind.mybatis.definition.TemplateContext;
 import com.flagwind.mybatis.metadata.FunctionProcessor;
 import com.flagwind.mybatis.metadata.processors.DateFormatFunctionProcessor;
 import com.flagwind.mybatis.metadata.processors.DateFunctionProcessor;
@@ -28,7 +28,7 @@ public class Functions {
 	private static String FUNCTION_PATTERN = "(?<method>(?<=@)(\\S+)(?=\\())|(?<argument>(?<=\\()(\\S*)(?=\\)))|(?<alias>(?<= ?as )(\\S+))";
 
 	private static final Map<String, FunctionProcessor> CACHE_FUNCTION_PROCESSOR = Collections
-			.synchronizedMap(new WeakHashMap<String, FunctionProcessor>());
+			.synchronizedMap(new WeakHashMap<>());
 
 	static {
 		// @now()
@@ -93,7 +93,7 @@ public class Functions {
 		}
 	}
 
-	private static String parseAtomFunction(DialectType dialectType, String express) {
+	private static String parseAtomFunction(DatabaseType databaseType, String express) {
 		String[] attr = express.split("@|\\(|\\)|as");
 		String method = attr[1].trim();
 		String argument = attr[2].trim();
@@ -101,7 +101,7 @@ public class Functions {
 		if (attr.length == 5) {
 			alias = attr[4];
 		}
-		String sql = CACHE_FUNCTION_PROCESSOR.get(method).process(argument, alias, dialectType);
+		String sql = CACHE_FUNCTION_PROCESSOR.get(method).process(argument, alias, databaseType);
 		sql = sql.replace("(", "&{").replace(")", "}&");
 		return sql;
 	}
@@ -127,8 +127,8 @@ public class Functions {
 			return parseNestFunction(express);
 		}
 
-		DialectType dialectType = DialectType.parse(TemplateContext.config().getDialect());
-		return parseAtomFunction(dialectType, express);
+		DatabaseType databaseType = DatabaseType.parse(TemplateContext.config().getDatabase());
+		return parseAtomFunction(databaseType, express);
 	}
 
 	public static String invoke(String express) {

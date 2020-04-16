@@ -1,6 +1,6 @@
 package com.flagwind.mybatis.metadata;
 
-import com.flagwind.mybatis.common.Config;
+import com.flagwind.mybatis.definition.Config;
 
 public interface TableProcessor
 {

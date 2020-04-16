@@ -1,6 +1,6 @@
 package com.flagwind.mybatis.definition.template;
 
-import com.flagwind.mybatis.common.TemplateContext;
+import com.flagwind.mybatis.definition.TemplateContext;
 
 public class EmptyTemplate extends MapperTemplate {
 

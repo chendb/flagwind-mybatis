@@ -13,10 +13,10 @@ import java.util.Set;
 public class AggregateSqlHelper {
 
     public static String selectAllColumns(Class<?> entityClass) {
-        return "SELECT " + getAllColumns(entityClass) + " ";
+        return "SELECT " + columns(entityClass) + " ";
     }
 
-    public static String getAllColumns(Class<?> entityClass) {
+    public static String columns(Class<?> entityClass) {
         Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
         StringBuilder sql = new StringBuilder();
         for (EntityColumn entityColumn : columnList) {

@@ -7,8 +7,7 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.mapping.MappedStatement;
 
 
-public class MapperClassUtils
-{
+public class MapperClassUtils {
 
     public static final Cache CLASS_CACHE = new SoftCache(new PerpetualCache("MAPPER_CLASS_CACHE"));
 
@@ -25,7 +24,7 @@ public class MapperClassUtils
         String mapperClassStr = msId.substring(0, msId.lastIndexOf("."));
         //由于一个接口中的每个方法都会进行下面的操作，因此缓存
         Class<?> mapperClass = (Class<?>) CLASS_CACHE.getObject(mapperClassStr);
-        if(mapperClass != null){
+        if (mapperClass != null) {
             return mapperClass;
         }
         ClassLoader[] classLoader = getClassLoaders();

@@ -2,21 +2,19 @@ package com.flagwind.mybatis.metadata;
 
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.reflect.entities.EntityField;
-
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.mapping.ResultFlag;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.type.TypeException;
+import org.apache.ibatis.type.TypeHandler;
+
+import javax.persistence.Table;
 import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.persistence.Table;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.type.TypeException;
-import org.apache.ibatis.type.TypeHandler;
 
 public class EntityTable {
 	private static final Pattern DELIMITER = Pattern.compile("^[`\\[\"]?(.*?)[`\\]\"]?$");
@@ -207,7 +205,7 @@ public class EntityTable {
 		if (entityClassColumns == null || entityClassColumns.size() == 0) {
 			return null;
 		}
-		List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
+		List<ResultMapping> resultMappings = new ArrayList<>();
 		for (EntityColumn entityColumn : entityClassColumns) {
 			String column = entityColumn.getColumn();
 			//去掉可能存在的分隔符
@@ -231,7 +229,7 @@ public class EntityTable {
 					builder.typeHandler(typeHandler);
 				}
 			}
-			List<ResultFlag> flags = new ArrayList<ResultFlag>();
+			List<ResultFlag> flags = new ArrayList<>();
 			if (entityColumn.isId()) {
 				flags.add(ResultFlag.ID);
 			}

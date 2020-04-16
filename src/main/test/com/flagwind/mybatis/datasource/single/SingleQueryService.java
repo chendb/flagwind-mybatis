@@ -5,10 +5,7 @@ import com.flagwind.mybatis.datasource.single.domain.RoleRepository;
 import com.flagwind.mybatis.entity.Role;
 import com.flagwind.persistent.AggregateType;
 import com.flagwind.persistent.QueryField;
-import com.flagwind.persistent.model.ClauseOperator;
-import com.flagwind.persistent.model.ParameterType;
-import com.flagwind.persistent.model.SingleClause;
-import com.flagwind.persistent.model.Sorting;
+import com.flagwind.persistent.model.*;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,9 +14,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SingleBootstrap.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -31,6 +30,26 @@ public class SingleQueryService
 	@Autowired
 	private RoleRepository roleRepository;
 
+
+
+
+	@Test
+	public void testInsert() {
+		Role role = new Role();
+		role.setId("test_tenant_" + UUID.randomUUID().toString().substring(0, 10));
+		role.setName("租房新增");
+		role.setCreateTime(new Timestamp(System.currentTimeMillis()));
+		roleRepository.insert(role);
+	}
+
+
+	@Test
+	public void testPage()
+	{
+		Paging paging = new Paging(1L,10L);
+		List<Role> menuList = roleRepository.page(SingleClause.equal("disabled",0),paging,null);
+		TestCase.assertTrue("查询总数量为：" + menuList.size(), menuList.size() > 0);
+	}
 
 	@Test
 	public void testGetAll()
@@ -50,8 +69,8 @@ public class SingleQueryService
 			setAlias("xid");
 			setType(AggregateType.Max);
 		}});
-		Sorting[] sortings = new Sorting[]{Sorting.ascending("xid")};
-		List<Map<String,Object>> menuList1 = roleRepository.querySelective("com_role",fields,s,-1,-1,sortings);
+		Sorting[] sorts = new Sorting[]{Sorting.ascending("xid")};
+		List<Map<String,Object>> menuList1 = roleRepository.querySelective("com_role",fields,s,-1,-1,sorts);
 
 		TestCase.assertTrue("查询总数量为：" + menuList1.size(), menuList1.size() > 0);
 	}

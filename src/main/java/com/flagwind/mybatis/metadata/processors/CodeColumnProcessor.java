@@ -4,7 +4,7 @@ import com.flagwind.lang.CodeType;
 import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.metadata.ColumnProcessor;
 import com.flagwind.mybatis.metadata.EntityColumn;
-import com.flagwind.mybatis.type.CodeTypeHandler;
+import com.flagwind.mybatis.handlers.CodeTypeHandler;
 import com.flagwind.mybatis.utils.TypeUtils;
 import com.flagwind.reflect.entities.EntityField;
 import org.apache.ibatis.type.JdbcType;

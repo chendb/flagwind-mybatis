@@ -1,6 +1,6 @@
 package com.flagwind.mybatis.spring.boot;
 
-import com.flagwind.mybatis.common.TemplateContext;
+import com.flagwind.mybatis.definition.TemplateContext;
 
 public class MapperFactoryBean<T> extends org.mybatis.spring.mapper.MapperFactoryBean<T> {
 

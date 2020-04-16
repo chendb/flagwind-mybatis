@@ -1,7 +1,7 @@
 package com.flagwind.mybatis.spring.boot;
 
-import com.flagwind.mybatis.common.Config;
-import com.flagwind.mybatis.common.TemplateContext;
+import com.flagwind.mybatis.definition.Config;
+import com.flagwind.mybatis.definition.TemplateContext;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
@@ -248,12 +248,12 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 	 *
 	 * @param environment
 	 */
-	public void setMapperProperties(String perfix,Environment environment)
+	public void setMapperProperties(String prefix,Environment environment)
 	{
 //		if(StringUtils.isEmpty(perfix)){
 //			perfix = Config.PREFIX;
 //		}
-		Config config = SpringBootBindUtil.bind(environment, Config.class, perfix);
+		Config config = SpringBootBindUtils.bind(environment, Config.class, prefix);
 		if(config == null)
 		{
 			config = new Config();

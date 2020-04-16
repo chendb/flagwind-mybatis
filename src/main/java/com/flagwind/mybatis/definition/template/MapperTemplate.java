@@ -1,12 +1,11 @@
 package com.flagwind.mybatis.definition.template;
 
-import com.flagwind.commons.StringUtils;
-import com.flagwind.mybatis.code.DialectType;
-import com.flagwind.mybatis.common.Config;
-import com.flagwind.mybatis.common.TemplateContext;
+import com.flagwind.mybatis.code.DatabaseType;
+import com.flagwind.mybatis.definition.Config;
+import com.flagwind.mybatis.definition.TemplateContext;
 import com.flagwind.mybatis.definition.helper.AssociationSqlHelper;
-import com.flagwind.mybatis.definition.result.swapper.ResultMapSwapper;
-import com.flagwind.mybatis.definition.result.swapper.ResultMapSwapperHolder;
+import com.flagwind.mybatis.definition.result.ResultMapSwapper;
+import com.flagwind.mybatis.definition.result.ResultMapSwapperHolder;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.metadata.EntityColumn;
 import com.flagwind.mybatis.metadata.EntityTable;
@@ -55,10 +54,9 @@ public abstract class MapperTemplate {
         return "dynamicSQL";
     }
 
- 
-    public DialectType getDialectType()
-    {
-        return DialectType.parse(context.getConfig().getDialect());
+
+    public DatabaseType getDatabaseType() {
+        return DatabaseType.parse(context.getConfig().getDatabase());
     }
 
     /**
@@ -71,7 +69,7 @@ public abstract class MapperTemplate {
         methodMap.put(methodName, method);
     }
 
-    public Config getConfig(){
+    public Config getConfig() {
         return context.getConfig();
     }
 
@@ -83,7 +81,7 @@ public abstract class MapperTemplate {
     public String getIdentity(EntityColumn column) {
         return MessageFormat.format(getConfig().getIdentity(), column.getSequenceName(), column.getColumn(), column.getProperty(), column.getTable().getName());
     }
- 
+
 
     /**
      * 是否支持该通用方法
@@ -102,7 +100,7 @@ public abstract class MapperTemplate {
     /**
      * 设置返回值类型 - 为了让typeHandler在select时有效，改为设置resultMap
      *
-     * @param ms 映射申明
+     * @param ms          映射申明
      * @param entityClass
      */
     protected void setResultType(MappedStatement ms, Class<?> entityClass) {
@@ -126,7 +124,7 @@ public abstract class MapperTemplate {
     /**
      * 重新设置SqlSource
      *
-     * @param ms 映射申明
+     * @param ms        映射申明
      * @param sqlSource
      */
     protected void setSqlSource(MappedStatement ms, SqlSource sqlSource) {
@@ -139,8 +137,7 @@ public abstract class MapperTemplate {
      *
      * @param ms 映射申明
      */
-    public void setSqlSource(MappedStatement ms)
-    {
+    public void setSqlSource(MappedStatement ms) {
         if (this.mapperClass == getMapperClass(ms.getId())) {
             throw new MapperException("请不要配置或扫描通用Mapper接口类：" + this.mapperClass);
         }
@@ -175,7 +172,7 @@ public abstract class MapperTemplate {
     /**
      * 通过xmlSql创建sqlSource
      *
-     * @param ms 映射申明
+     * @param ms     映射申明
      * @param xmlSql
      */
     public SqlSource createSqlSource(MappedStatement ms, String xmlSql) {
@@ -187,22 +184,17 @@ public abstract class MapperTemplate {
      *
      * @param ms 映射申明
      */
-    public Class<?> getEntityClass(MappedStatement ms)
-    {
+    public Class<?> getEntityClass(MappedStatement ms) {
         String msId = ms.getId();
-        if(entityClassMap.containsKey(msId))
-        {
+        if (entityClassMap.containsKey(msId)) {
             return entityClassMap.get(msId);
         }
         Class<?> mapperClass = getMapperClass(msId);
         Type[] types = mapperClass.getGenericInterfaces();
-        for(Type type : types)
-        {
-            if(type instanceof ParameterizedType)
-            {
+        for (Type type : types) {
+            if (type instanceof ParameterizedType) {
                 ParameterizedType t = (ParameterizedType) type;
-                if(t.getRawType() == this.mapperClass || this.mapperClass.isAssignableFrom((Class<?>) t.getRawType()))
-                {
+                if (t.getRawType() == this.mapperClass || this.mapperClass.isAssignableFrom((Class<?>) t.getRawType())) {
                     Class<?> returnType = (Class<?>) t.getActualTypeArguments()[0];
                     //获取该类型后，第一次对该类型进行初始化
                     EntityTableFactory.register(returnType, context.getConfig());
@@ -225,46 +217,46 @@ public abstract class MapperTemplate {
         return MessageFormat.format(context.getConfig().getSequenceFormat(), column.getSequenceName(), column.getColumn(), column.getProperty(), column.getTable().getName());
     }
 
-    /**
-     * 获取实体类的表名
-     *
-     * @param entityClass
-     */
-    private String getTableName(Class<?> entityClass) {
-        EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
-        String prefix = entityTable.getPrefix();
-        if (StringUtils.isEmpty(prefix)) {
-            //使用全局配置
-            prefix = context.getConfig().getPrefix();
-        }
-        if (StringUtils.isNotEmpty(prefix)) {
-            return prefix + "." + entityTable.getName();
-        }
-        return entityTable.getName();
-    }
+//    /**
+//     * 获取实体类的表名
+//     *
+//     * @param entityClass
+//     */
+//    private String getTableName(Class<?> entityClass) {
+//        EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
+//        String prefix = entityTable.getPrefix();
+//        if (StringUtils.isEmpty(prefix)) {
+//            //使用全局配置
+//            prefix = context.getConfig().getPrefix();
+//        }
+//        if (StringUtils.isNotEmpty(prefix)) {
+//            return prefix + "." + entityTable.getName();
+//        }
+//        return entityTable.getName();
+//    }
 
-    /**
-     * 获取实体的表名
-     * @param entityClass
-     */
-    protected String tableName(Class<?> entityClass) {
-       return tableName(entityClass,false);
-    }
-
-    /**
-     * 获取实体的表名
-     * @param entityClass 实体类型
-     * @param addDefultAlias 是否增加默认别名
-     */
-    protected String tableName(Class<?> entityClass,boolean addDefultAlias) {
-        StringBuilder sb = new StringBuilder();
-        String table = getTableName(entityClass);
-        sb.append(table);
-        if (addDefultAlias) {
-            sb.append(" ").append(entityClass.getSimpleName());
-        }
-        return sb.toString();
-    }
-
-
+//    /**
+//     * 获取实体的表名
+//     *
+//     * @param entityClass
+//     */
+//    protected String tableName(Class<?> entityClass) {
+//        return tableName(entityClass, false);
+//    }
+//
+//    /**
+//     * 获取实体的表名
+//     *
+//     * @param entityClass     实体类型
+//     * @param addDefaultAlias 是否增加默认别名
+//     */
+//    protected String tableName(Class<?> entityClass, boolean addDefaultAlias) {
+//        StringBuilder sb = new StringBuilder();
+//        String table = getTableName(entityClass);
+//        sb.append(table);
+//        if (addDefaultAlias) {
+//            sb.append(" ").append(TemplateSqlHelper.tableAlias(entityClass));
+//        }
+//        return sb.toString();
+//    }
 }

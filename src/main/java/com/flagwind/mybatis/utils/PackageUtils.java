@@ -17,7 +17,7 @@ public class PackageUtils
 	/**
 	 * 别名通配符设置
 	 *
-	 * @param convertTypePackage 类别名包路径
+	 * @param typePackage 类别名包路径
 	 */
 	public static String[] convertTypePackage(String typePackage) {
 		ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();

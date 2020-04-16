@@ -1,6 +1,6 @@
 package com.flagwind.mybatis.definition.template;
 
-import com.flagwind.mybatis.common.TemplateContext;
+import com.flagwind.mybatis.definition.TemplateContext;
 import com.flagwind.mybatis.metadata.EntityColumn;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.metadata.EntityTableFactory;
@@ -26,7 +26,7 @@ public class MultipleIdsTemplate extends MapperTemplate {
     public String deleteByIds(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
         StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.deleteFromTable(entityClass, tableName(entityClass)));
+        sql.append(TemplateSqlHelper.deleteFromTable(context.getConfig(), entityClass));
         Set<EntityColumn> columnList = EntityTableFactory.getPKColumns(entityClass);
         if (columnList.size() == 1) {
             EntityColumn column = columnList.iterator().next();
@@ -49,8 +49,10 @@ public class MultipleIdsTemplate extends MapperTemplate {
         //将返回值修改为实体类型
         setResultType(ms, entityClass);
         StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.selectAllColumns(entityClass));
-        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass)));
+        sql.append(TemplateSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass));
+
+//        sql.append(TemplateSqlHelper.selectAllColumns(entityClass));
+//        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass)));
         Set<EntityColumn> columnList = EntityTableFactory.getPKColumns(entityClass);
         if (columnList.size() == 1) {
             EntityColumn column = columnList.iterator().next();

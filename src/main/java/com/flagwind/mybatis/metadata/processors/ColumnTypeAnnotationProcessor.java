@@ -8,8 +8,6 @@ import com.flagwind.mybatis.metadata.EntityTableUtils;
 import com.flagwind.persistent.ColumnTypeEntry;
 import com.flagwind.persistent.annotation.ColumnType;
 import com.flagwind.reflect.entities.EntityField;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.UnknownTypeHandler;
 
 ;
 
@@ -21,22 +19,7 @@ public class ColumnTypeAnnotationProcessor implements ColumnProcessor
 	{
 		if (field.isAnnotationPresent(ColumnType.class)) {
 
-			ColumnTypeEntry columnTypeEntry = new ColumnTypeEntry();
-			if (field.isAnnotationPresent(ColumnType.class)) {
-				ColumnType columnType = field.getAnnotation(ColumnType.class);
-
-				if (columnType.jdbcType() != JdbcType.UNDEFINED) {
-					columnTypeEntry.setJdbcType(columnType.jdbcType());
-				}
-				if (columnType.typeHandler() != UnknownTypeHandler.class) {
-					columnTypeEntry.setTypeHandler(columnType.typeHandler());
-				}
-
-			}
-			if (columnTypeEntry.getJdbcType() == JdbcType.UNDEFINED ||columnTypeEntry.getJdbcType() == null) {
-				columnTypeEntry.setJdbcType(EntityTableUtils.formJavaType(field.getJavaType()));
-			}
-
+			ColumnTypeEntry columnTypeEntry = EntityTableUtils.getColumnTypeEntry(field);
 
 			if (columnTypeEntry.getJdbcType() != null) {
 				entityColumn.setJdbcType(columnTypeEntry.getJdbcType());

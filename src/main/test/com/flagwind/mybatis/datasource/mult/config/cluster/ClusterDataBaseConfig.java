@@ -1,9 +1,9 @@
 package com.flagwind.mybatis.datasource.mult.config.cluster;
 
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
+import com.flagwind.mybatis.definition.interceptor.PaginationInterceptor;
 import com.flagwind.mybatis.spring.autoconfigure.AbstractAutoConfiguration;
 import com.flagwind.mybatis.spring.autoconfigure.ConfigurationCustomizer;
-import com.flagwind.mybatis.spring.autoconfigure.DiscoveryAutoConfiguration;
 import com.flagwind.mybatis.spring.autoconfigure.FlagwindProperties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,7 +21,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -33,7 +32,6 @@ import java.util.List;
 	@Configuration
 	@EnableConfigurationProperties({ClusterMybatisProperties.class, FlagwindProperties.class})
 	@AutoConfigureAfter(DataSourceAutoConfiguration.class)
-	@Import({DiscoveryAutoConfiguration.class})
 	@AutoConfigureBefore(name = "org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration")
 	@com.flagwind.mybatis.spring.annotation.MapperScan(
 			basePackages = ClusterDataBaseConfig.PACKAGE,
@@ -73,7 +71,7 @@ import java.util.List;
 
 
 		@Bean(name = "clusterSqlSessionFactory")
-		public SqlSessionFactory sqlSessionFactory(@Qualifier("clusterDataSource") DataSource dataSource) throws Exception
+		public SqlSessionFactory sqlSessionFactory(@Qualifier("clusterDataSource") DataSource dataSource, PaginationInterceptor paginationInterceptor) throws Exception
 		{
 			return super.sqlSessionFactory(dataSource);
 		}

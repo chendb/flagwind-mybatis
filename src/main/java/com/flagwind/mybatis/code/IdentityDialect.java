@@ -8,28 +8,24 @@ public enum IdentityDialect {
     DERBY("VALUES IDENTITY_VAL_LOCAL()"),
     HSQLDB("CALL IDENTITY()"),
     SYBASE("SELECT @@IDENTITY"),
-    DB2_MF("SELECT IDENTITY_VAL_LOCAL() FROM SYSIBM.SYSDUMMY1"),
     INFORMIX("select dbinfo('sqlca.sqlerrd1') from systables where tabid=1");
 
     private String identityRetrievalStatement;
 
-    private IdentityDialect(String identityRetrievalStatement) {
+    IdentityDialect(String identityRetrievalStatement) {
         this.identityRetrievalStatement = identityRetrievalStatement;
     }
 
     public static IdentityDialect parse(String database)
     {
         IdentityDialect returnValue ;
-        DialectType dialectType = DialectType.parse(database);
-        switch(dialectType)
+        DatabaseType databaseType = DatabaseType.parse(database);
+        switch(databaseType)
         {
             case DB2:
                 returnValue = DB2;
                 break;
-            case MySQL:
-                returnValue = MYSQL;
-                break;
-            case SQLServer:
+            case SqlServer:
                 returnValue = SQLSERVER;
                 break;
             case Cloudscape:
@@ -44,9 +40,7 @@ public enum IdentityDialect {
             case Sybase:
                 returnValue = SYBASE;
                 break;
-            case DB2_MF:
-                returnValue = DB2_MF;
-                break;
+
             case Informix:
                 returnValue = INFORMIX;
                 break;
