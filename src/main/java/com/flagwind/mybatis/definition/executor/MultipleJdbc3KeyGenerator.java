@@ -79,7 +79,7 @@ public class MultipleJdbc3KeyGenerator extends Jdbc3KeyGenerator {
             }
         }
         if (parameters == null) {
-            parameters = new ArrayList<Object>();
+            parameters = new ArrayList<>();
             parameters.add(parameter);
         }
         return parameters;
