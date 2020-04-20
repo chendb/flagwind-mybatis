@@ -31,8 +31,8 @@ public class LeftFunctionProcessor implements FunctionProcessor
 
 	public static void main(String[] args1) {
 		String arguments = "id,2";
-		System.out.println((new LeftFunctionProcessor()).process(arguments,null,DatabaseType.MySQL));;
-		System.out.println((new LeftFunctionProcessor()).process(arguments,null,DatabaseType.Oracle));;
-	}
+		System.out.println((new LeftFunctionProcessor()).process(arguments,null,DatabaseType.MySQL));
+        System.out.println((new LeftFunctionProcessor()).process(arguments,null,DatabaseType.Oracle));
+    }
 
 }

@@ -31,8 +31,8 @@ public class DateFormatFunctionProcessor implements FunctionProcessor {
 
 	
 	public static void main(String[] args1) {
-		String arguments = "timestramp,'yyyy-MM-dd'";
-		System.out.println("MySQL:"+(new DateFormatFunctionProcessor()).process(arguments,null,DatabaseType.MySQL));;
-		System.out.println("Oracle:"+(new DateFormatFunctionProcessor()).process(arguments,null,DatabaseType.Oracle));;
+		String arguments = "timestamp,'yyyy-MM-dd'";
+		System.out.println("MySQL:"+(new DateFormatFunctionProcessor()).process(arguments,null,DatabaseType.MySQL));
+		System.out.println("Oracle:"+(new DateFormatFunctionProcessor()).process(arguments,null,DatabaseType.Oracle));
 	}
 }

@@ -73,10 +73,9 @@ public class BaseSelectTemplate extends MapperTemplate {
         Class<?> entityClass = getEntityClass(ms);
         //修改返回值类型为实体类型
         setResultType(ms, entityClass);
-        StringBuilder sql = new StringBuilder();
-        sql.append(selectColumnsFromTable(entityClass));
-        sql.append(ObjectSqlHelper.getWhereSql("_clause", 5));
-        return sql.toString();
+        String sql = selectColumnsFromTable(entityClass) +
+                ObjectSqlHelper.getWhereSql("_clause", 5);
+        return sql;
     }
 
     /**
@@ -89,15 +88,14 @@ public class BaseSelectTemplate extends MapperTemplate {
         //修改返回值类型为实体类型
         setResultType(ms, entityClass);
 
-        StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.selectColumnsFromTable(context.getConfig(),entityClass));
+        String sql = TemplateSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass) +
 
 //        sql.append(TemplateSqlHelper.selectAllColumns(entityClass));
 //        boolean hasTableAlias = sql.toString().contains(".");
 //        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass, hasTableAlias)));
-        sql.append(ObjectSqlHelper.getWhereSql("_clause", 5));
-        sql.append(TemplateSqlHelper.orderByDefault(entityClass));
-        return sql.toString();
+                ObjectSqlHelper.getWhereSql("_clause", 5) +
+                TemplateSqlHelper.orderByDefault(entityClass);
+        return sql;
     }
 
     /**
@@ -123,14 +121,14 @@ public class BaseSelectTemplate extends MapperTemplate {
         final Class<?> entityClass = getEntityClass(ms);
         //将返回值修改为实体类型
         setResultType(ms, entityClass);
-        StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.selectColumnsFromTable(context.getConfig(),entityClass));
+
+        String sql = TemplateSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass) +
 //        sql.append(TemplateSqlHelper.selectAllColumns(entityClass));
 //        boolean hasTableAlias = sql.toString().contains(".");
 //        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass, hasTableAlias)));
 
-        sql.append(TemplateSqlHelper.wherePKColumn(entityClass, "_key"));
-        return sql.toString();
+                TemplateSqlHelper.wherePKColumn(entityClass, "_key");
+        return sql;
     }
 
     /**
@@ -141,12 +139,11 @@ public class BaseSelectTemplate extends MapperTemplate {
      */
     public String count(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.selectCountFromTable(context.getConfig(),entityClass));
+        String sql = TemplateSqlHelper.selectCountFromTable(context.getConfig(), entityClass) +
 //        boolean hasTableAlias = sql.toString().contains(".");
 //        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass, hasTableAlias)));
-        sql.append(ObjectSqlHelper.getWhereSql("_clause", 5));
-        return sql.toString();
+                ObjectSqlHelper.getWhereSql("_clause", 5);
+        return sql;
     }
 
     /**
@@ -157,19 +154,17 @@ public class BaseSelectTemplate extends MapperTemplate {
      */
     public String existsById(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.selectCountExistsFromTable(context.getConfig(), entityClass));
+        String sql = TemplateSqlHelper.selectCountExistsFromTable(context.getConfig(), entityClass) +
 //        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass)));
-        sql.append(TemplateSqlHelper.wherePKColumns(entityClass, null));
-        return sql.toString();
+                TemplateSqlHelper.wherePKColumns(entityClass, null);
+        return sql;
     }
 
     public String exists(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.selectCountExistsFromTable(context.getConfig(), entityClass));
-        sql.append(ObjectSqlHelper.getWhereSql("_clause", 5));
-        return sql.toString();
+        String sql = TemplateSqlHelper.selectCountExistsFromTable(context.getConfig(), entityClass) +
+                ObjectSqlHelper.getWhereSql("_clause", 5);
+        return sql;
     }
 
     /**
@@ -181,13 +176,12 @@ public class BaseSelectTemplate extends MapperTemplate {
         final Class<?> entityClass = getEntityClass(ms);
         //修改返回值类型为实体类型
         setResultType(ms, entityClass);
-        StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass));
+        String sql = TemplateSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass) +
 //        sql.append(TemplateSqlHelper.selectAllColumns(entityClass));
 //        boolean hasTableAlias = sql.toString().contains(".");
 //        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass, hasTableAlias)));
-        sql.append(TemplateSqlHelper.orderByDefault(entityClass));
-        return sql.toString();
+                TemplateSqlHelper.orderByDefault(entityClass);
+        return sql;
     }
 
 
@@ -198,15 +192,14 @@ public class BaseSelectTemplate extends MapperTemplate {
      */
     public String querySelective(MappedStatement ms) {
 
-        StringBuilder sql = new StringBuilder();
-        sql.append("select ");
-        sql.append(ObjectSqlHelper.getQueryFieldColumnSql());
-        sql.append(" from ${_table} ");
-        sql.append(ObjectSqlHelper.getWhereSql("_clause", 5));
-        sql.append(" ");
-        sql.append(ObjectSqlHelper.getQueryFieldGroupBySql());
-        sql.append(" ");
         // sql.append(ObjectSqlHelper.getSortingSql());
-        return sql.toString();
+        String sql = "select " +
+                ObjectSqlHelper.getQueryFieldColumnSql() +
+                " from ${_table} " +
+                ObjectSqlHelper.getWhereSql("_clause", 5) +
+                " " +
+                ObjectSqlHelper.getQueryFieldGroupBySql() +
+                " ";
+        return sql;
     }
 }

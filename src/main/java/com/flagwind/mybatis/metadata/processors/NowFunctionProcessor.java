@@ -25,7 +25,7 @@ public class NowFunctionProcessor implements FunctionProcessor {
 
 	public static void main(String[] args1) {
 		String arguments = "";
-		System.out.println("MySQL:"+(new NowFunctionProcessor()).process(arguments,null,DatabaseType.MySQL));;
-		System.out.println("Oracle:"+(new NowFunctionProcessor()).process(arguments,null,DatabaseType.Oracle));;
-	}
+		System.out.println("MySQL:"+(new NowFunctionProcessor()).process(arguments,null,DatabaseType.MySQL));
+        System.out.println("Oracle:"+(new NowFunctionProcessor()).process(arguments,null,DatabaseType.Oracle));
+    }
 }

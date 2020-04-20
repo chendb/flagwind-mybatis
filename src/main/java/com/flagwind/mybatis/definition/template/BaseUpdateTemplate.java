@@ -18,27 +18,23 @@ public class BaseUpdateTemplate extends MapperTemplate {
      */
     public String update(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.updateTable(context.getConfig(), entityClass));
-        sql.append(TemplateSqlHelper.updateSetColumns(entityClass, null, false, false));
-        sql.append(TemplateSqlHelper.wherePKColumns(entityClass,null));
-        return sql.toString();
+        String sql = TemplateSqlHelper.updateTable(context.getConfig(), entityClass) +
+                TemplateSqlHelper.updateSetColumns(entityClass, null, false, false) +
+                TemplateSqlHelper.wherePKColumns(entityClass, null);
+        return sql;
     }
 
 
     public String updateList(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
         //开始拼sql
-        StringBuilder sql = new StringBuilder();
 
-        sql.append("<foreach collection=\"_list\" item=\"record\" separator=\";\" >");
-
-        sql.append(TemplateSqlHelper.updateTable(context.getConfig(), entityClass));
-        sql.append(TemplateSqlHelper.updateSetColumns(entityClass, "record", false, false));
-        sql.append(TemplateSqlHelper.wherePKColumns(entityClass,"record"));
-
-        sql.append("</foreach>");
-        return sql.toString();
+        String sql = "<foreach collection=\"_list\" item=\"record\" separator=\";\" >" +
+                TemplateSqlHelper.updateTable(context.getConfig(), entityClass) +
+                TemplateSqlHelper.updateSetColumns(entityClass, "record", false, false) +
+                TemplateSqlHelper.wherePKColumns(entityClass, "record") +
+                "</foreach>";
+        return sql;
     }
 
     /**
@@ -49,11 +45,10 @@ public class BaseUpdateTemplate extends MapperTemplate {
      */
     public String modify(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.updateTable(context.getConfig(), entityClass));
-        sql.append(ObjectSqlHelper.getUpdatePartSetSql("_map"));
-        sql.append(ObjectSqlHelper.getWhereSql("_clause", 5));
-        return sql.toString();
+        String sql = TemplateSqlHelper.updateTable(context.getConfig(), entityClass) +
+                ObjectSqlHelper.getUpdatePartSetSql("_map") +
+                ObjectSqlHelper.getWhereSql("_clause", 5);
+        return sql;
     }
 
     /**
@@ -64,11 +59,10 @@ public class BaseUpdateTemplate extends MapperTemplate {
      */
     public String updateSelective(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.updateTable(context.getConfig(), entityClass));
-        sql.append(TemplateSqlHelper.updateSetColumns(entityClass, null, true, getConfig().isNotEmpty()));
-        sql.append(TemplateSqlHelper.wherePKColumns(entityClass,null));
-        return sql.toString();
+        String sql = TemplateSqlHelper.updateTable(context.getConfig(), entityClass) +
+                TemplateSqlHelper.updateSetColumns(entityClass, null, true, getConfig().isNotEmpty()) +
+                TemplateSqlHelper.wherePKColumns(entityClass, null);
+        return sql;
     }
 
 

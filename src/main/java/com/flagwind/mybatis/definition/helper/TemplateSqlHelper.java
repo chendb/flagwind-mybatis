@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class TemplateSqlHelper {
 
-    private static String getTableName(Config config,Class<?> entityClass) {
+    public static String getTableName(Config config,Class<?> entityClass) {
         EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
         String prefix = entityTable.getPrefix();
         if (StringUtils.isEmpty(prefix)) {
@@ -95,11 +95,10 @@ public class TemplateSqlHelper {
      * @param column 列
      */
     public static String getBindCache(EntityColumn column) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("<bind name=\"");
-        sql.append(column.getProperty()).append("_cache\" ");
-        sql.append("value=\"").append(column.getProperty()).append("\"/>");
-        return sql.toString();
+        String sql = "<bind name=\"" +
+                column.getProperty() + "_cache\" " +
+                "value=\"" + column.getProperty() + "\"/>";
+        return sql;
     }
 
     /**
@@ -108,11 +107,10 @@ public class TemplateSqlHelper {
      * @param column 列
      */
     public static String getBindValue(EntityColumn column, String value) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("<bind name=\"");
-        sql.append(column.getProperty()).append("_bind\" ");
-        sql.append("value='").append(value).append("'/>");
-        return sql.toString();
+        String sql = "<bind name=\"" +
+                column.getProperty() + "_bind\" " +
+                "value='" + value + "'/>";
+        return sql;
     }
 
     /**
@@ -121,11 +119,10 @@ public class TemplateSqlHelper {
      * @param column 列
      */
     public static String getIfCacheNotNull(EntityColumn column, String contents) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("<if test=\"").append(column.getProperty()).append("_cache != null\">");
-        sql.append(contents);
-        sql.append("</if>");
-        return sql.toString();
+        String sql = "<if test=\"" + column.getProperty() + "_cache != null\">" +
+                contents +
+                "</if>";
+        return sql;
     }
 
     /**
@@ -134,11 +131,10 @@ public class TemplateSqlHelper {
      * @param column 列
      */
     public static String getIfCacheIsNull(EntityColumn column, String contents) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("<if test=\"").append(column.getProperty()).append("_cache == null\">");
-        sql.append(contents);
-        sql.append("</if>");
-        return sql.toString();
+        String sql = "<if test=\"" + column.getProperty() + "_cache == null\">" +
+                contents +
+                "</if>";
+        return sql;
     }
 
     /**
@@ -302,11 +298,10 @@ public class TemplateSqlHelper {
      * @param config 默认表名
      */
     public static String updateTable(Config config,Class<?> entityClass) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("UPDATE ");
-        sql.append(tableName(config,entityClass, false));
-        sql.append(" ");
-        return sql.toString();
+        String sql = "UPDATE " +
+                tableName(config, entityClass, false) +
+                " ";
+        return sql;
     }
 
 
@@ -317,11 +312,10 @@ public class TemplateSqlHelper {
      * @param config
      */
     public static String deleteFromTable(Config config, Class<?> entityClass) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("DELETE FROM ");
-        sql.append(tableName(config,entityClass,false));
-        sql.append(" ");
-        return sql.toString();
+        String sql = "DELETE FROM " +
+                tableName(config, entityClass, false) +
+                " ";
+        return sql;
     }
 
     /**
@@ -331,11 +325,10 @@ public class TemplateSqlHelper {
      * @param config
      */
     public static String insertIntoTable(Config config, Class<?> entityClass) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("INSERT INTO ");
-        sql.append( tableName(config,entityClass,false));
-        sql.append(" ");
-        return sql.toString();
+        String sql = "INSERT INTO " +
+                tableName(config, entityClass, false) +
+                " ";
+        return sql;
     }
 
     /**
@@ -362,7 +355,7 @@ public class TemplateSqlHelper {
             if (notNull) {
                 sql.append(TemplateSqlHelper.getIfNotNull(column, column.getColumn() + ",", notEmpty));
             } else {
-                sql.append(column.getColumn() + ",");
+                sql.append(column.getColumn()).append(",");
             }
         }
         sql.append("</trim>");
@@ -393,7 +386,7 @@ public class TemplateSqlHelper {
             if (notNull) {
                 sql.append(TemplateSqlHelper.getIfNotNull(column, column.getColumnHolder() + ",", notEmpty));
             } else {
-                sql.append(column.getColumnHolder() + ",");
+                sql.append(column.getColumnHolder()).append(",");
             }
         }
         sql.append("</trim>");
@@ -419,7 +412,7 @@ public class TemplateSqlHelper {
                 if (notNull) {
                     sql.append(TemplateSqlHelper.getIfNotNull(entityName, column, column.getColumnEqualsHolder(entityName) + ",", notEmpty));
                 } else {
-                    sql.append(column.getColumnEqualsHolder(entityName) + ",");
+                    sql.append(column.getColumnEqualsHolder(entityName)).append(",");
                 }
             }
         }
@@ -460,7 +453,7 @@ public class TemplateSqlHelper {
         Set<EntityColumn> columnList = EntityTableFactory.getPKColumns(entityClass);
         //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
         for (EntityColumn column : columnList) {
-            sql.append(" AND " + column.getColumnEqualsHolder(entityName));
+            sql.append(" AND ").append(column.getColumnEqualsHolder(entityName));
         }
         sql.append("</where>");
         return sql.toString();

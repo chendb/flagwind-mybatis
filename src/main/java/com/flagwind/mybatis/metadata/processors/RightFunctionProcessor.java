@@ -31,8 +31,8 @@ public class RightFunctionProcessor implements FunctionProcessor
 
 	public static void main(String[] args1) {
 		String arguments = "id,2";
-		System.out.println("MySQL:"+(new RightFunctionProcessor()).process(arguments,null,DatabaseType.MySQL));;
-		System.out.println("Oracle:"+(new RightFunctionProcessor()).process(arguments,null,DatabaseType.Oracle));;
-	}
+		System.out.println("MySQL:"+(new RightFunctionProcessor()).process(arguments,null,DatabaseType.MySQL));
+        System.out.println("Oracle:"+(new RightFunctionProcessor()).process(arguments,null,DatabaseType.Oracle));
+    }
 
 }

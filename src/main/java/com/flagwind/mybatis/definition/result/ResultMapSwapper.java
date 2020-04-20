@@ -35,7 +35,7 @@ public class ResultMapSwapper {
     /**
      * Result Maps collection,key : id
      */
-    private ConcurrentHashMap<String, ResultMap> resultMaps = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, ResultMap> resultMaps = new ConcurrentHashMap<>();
 
     public ResultMapSwapper(Configuration configuration) {
         this.configuration = configuration;
@@ -111,8 +111,7 @@ public class ResultMapSwapper {
             column = joinColumn.name();
         }
 
-        String col = (StringUtils.isEmpty(columnPrefix) ? "" : columnPrefix) + column;
-        return col;
+        return (StringUtils.isEmpty(columnPrefix) ? "" : columnPrefix) + column;
     }
 
 
@@ -281,7 +280,7 @@ public class ResultMapSwapper {
     }
 
     private List<ResultMapping> parseCompositeColumnName(String columnName) {
-        List<ResultMapping> composites = new ArrayList();
+        List<ResultMapping> composites = new ArrayList<>();
         if (columnName != null && (columnName.indexOf(61) > -1 || columnName.indexOf(44) > -1)) {
             StringTokenizer parser = new StringTokenizer(columnName, "{}=, ", false);
 

@@ -26,7 +26,7 @@ public class LengthFunctionProcessor implements FunctionProcessor
 
 	public static void main(String[] args1) {
 		String arguments = "name";
-		System.out.println("MySQL:"+(new LengthFunctionProcessor()).process(arguments,null,DatabaseType.MySQL));;
-		System.out.println("Oracle:"+(new LengthFunctionProcessor()).process(arguments,null,DatabaseType.Oracle));;
-	}
+		System.out.println("MySQL:"+(new LengthFunctionProcessor()).process(arguments,null,DatabaseType.MySQL));
+        System.out.println("Oracle:"+(new LengthFunctionProcessor()).process(arguments,null,DatabaseType.Oracle));
+    }
 }

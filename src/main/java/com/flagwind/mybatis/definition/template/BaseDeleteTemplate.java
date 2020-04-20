@@ -21,10 +21,9 @@ public class BaseDeleteTemplate extends MapperTemplate {
      */
     public String delete(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.deleteFromTable(context.getConfig(), entityClass));
-        sql.append(ObjectSqlHelper.getWhereSql("_clause", 5));
-        return sql.toString();
+        String sql = TemplateSqlHelper.deleteFromTable(context.getConfig(), entityClass) +
+                ObjectSqlHelper.getWhereSql("_clause", 5);
+        return sql;
     }
 
     /**
@@ -34,9 +33,8 @@ public class BaseDeleteTemplate extends MapperTemplate {
      */
     public String deleteById(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
-        StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.deleteFromTable(context.getConfig(),entityClass));
-        sql.append(TemplateSqlHelper.wherePKColumn(entityClass, "_key"));
-        return sql.toString();
+        String sql = TemplateSqlHelper.deleteFromTable(context.getConfig(), entityClass) +
+                TemplateSqlHelper.wherePKColumn(entityClass, "_key");
+        return sql;
     }
 }

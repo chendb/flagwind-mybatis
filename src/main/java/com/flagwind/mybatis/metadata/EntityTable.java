@@ -44,7 +44,7 @@ public class EntityTable {
 	/**
 	 * 类
 	 */
-	private Class<?> entityClass;
+	private final Class<?> entityClass;
 
 	public boolean isAssociationRegisted() {
 		return associationRegisted;

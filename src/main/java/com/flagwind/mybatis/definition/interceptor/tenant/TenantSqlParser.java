@@ -23,9 +23,8 @@ import net.sf.jsqlparser.statement.update.Update;
 import java.util.List;
 
 /**
- * @description: 租户Sql解析器
- *
  * @author chendb
+ * @description: 租户Sql解析器
  * @date 2020-04-15 20:12:02
  */
 @Data

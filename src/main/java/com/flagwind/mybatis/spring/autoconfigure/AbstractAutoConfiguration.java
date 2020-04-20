@@ -27,17 +27,17 @@ import java.util.List;
 public class AbstractAutoConfiguration {
 
 
-    protected final MybatisProperties properties;
+    private final MybatisProperties properties;
 
-    protected final FlagwindProperties flagwindProperties;
+    private final FlagwindProperties flagwindProperties;
 
-    protected final Interceptor[] interceptors;
+    private final Interceptor[] interceptors;
 
-    protected final ResourceLoader resourceLoader;
+    private final ResourceLoader resourceLoader;
 
-    protected final DatabaseIdProvider databaseIdProvider;
+    private final DatabaseIdProvider databaseIdProvider;
 
-    protected final List<ConfigurationCustomizer> configurationCustomizers;
+    private final List<ConfigurationCustomizer> configurationCustomizers;
 
     public AbstractAutoConfiguration(MybatisProperties properties,
                                      FlagwindProperties flagwindProperties,
@@ -54,7 +54,7 @@ public class AbstractAutoConfiguration {
     }
 
 
-    public void checkConfigFileExists() {
+    void checkConfigFileExists() {
         if (this.properties.isCheckConfigLocation() && StringUtils.hasText(this.properties.getConfigLocation())) {
             Resource resource = this.resourceLoader.getResource(this.properties.getConfigLocation());
             Assert.state(resource.exists(), "Cannot find config location: " + resource
@@ -66,7 +66,7 @@ public class AbstractAutoConfiguration {
         return sqlSessionFactoryBean(dataSource).getObject();
     }
 
-    public MybatisSqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) {
+    MybatisSqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) {
         MybatisSqlSessionFactoryBean factory = new MybatisSqlSessionFactoryBean();
         factory.setDataSource(dataSource);
         factory.setVfs(SpringBootVFS.class);
@@ -111,7 +111,7 @@ public class AbstractAutoConfiguration {
         return factory;
     }
 
-    public void configDatabase(DataSource dataSource) {
+    private void configDatabase(DataSource dataSource) {
         try {
             String jdbcURL = dataSource.getConnection().getMetaData().getURL();
             this.flagwindProperties.setDatabase(JdbcUtils.getDbType(jdbcURL).getDb());

@@ -218,7 +218,7 @@ public class BaseInsertTemplate extends MapperTemplate {
         }
     }
 
-    public String insertListFromOracle(MappedStatement ms) {
+    private String insertListFromOracle(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
         //开始拼sql
         StringBuilder sql = new StringBuilder();
@@ -232,7 +232,7 @@ public class BaseInsertTemplate extends MapperTemplate {
         int i = 0;
         for (EntityColumn column : columnList) {
             if (column.isInsertable()) {
-                sql.append((i != 0 ? "," : "") + column.getColumnHolder("record"));
+                sql.append(i != 0 ? "," : "").append(column.getColumnHolder("record"));
                 i++;
             }
         }
@@ -241,7 +241,7 @@ public class BaseInsertTemplate extends MapperTemplate {
         return sql.toString();
     }
 
-    public String insertListFromMySql(MappedStatement ms) {
+    private String insertListFromMySql(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
         //开始拼sql
         StringBuilder sql = new StringBuilder();
@@ -260,7 +260,7 @@ public class BaseInsertTemplate extends MapperTemplate {
         for (EntityColumn column : columnList) {
 
             if (column.isInsertable()) {
-                sql.append((i != 0 ? "," : "") + column.getColumnHolder("record"));
+                sql.append(i != 0 ? "," : "").append(column.getColumnHolder("record"));
                 i++;
             }
         }
@@ -276,10 +276,9 @@ public class BaseInsertTemplate extends MapperTemplate {
      */
     public String insertUseGeneratedKeys(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
-        StringBuilder sql = new StringBuilder();
-        sql.append(TemplateSqlHelper.insertIntoTable(context.getConfig(), entityClass));
-        sql.append(TemplateSqlHelper.insertColumns(entityClass, true, false, false));
-        sql.append(TemplateSqlHelper.insertValuesColumns(entityClass, true, false, false));
-        return sql.toString();
+        String sql = TemplateSqlHelper.insertIntoTable(context.getConfig(), entityClass) +
+                TemplateSqlHelper.insertColumns(entityClass, true, false, false) +
+                TemplateSqlHelper.insertValuesColumns(entityClass, true, false, false);
+        return sql;
     }
 }

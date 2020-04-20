@@ -9,8 +9,6 @@ import com.flagwind.persistent.ColumnTypeEntry;
 import com.flagwind.persistent.annotation.ColumnType;
 import com.flagwind.reflect.entities.EntityField;
 
-;
-
 public class ColumnTypeAnnotationProcessor implements ColumnProcessor
 {
 

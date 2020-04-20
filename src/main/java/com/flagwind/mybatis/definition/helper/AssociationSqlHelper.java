@@ -42,7 +42,7 @@ public class AssociationSqlHelper {
      * @param entityClass
      * @param keyName
      */
-    public static String wherePKColumn( Class<?> entityClass, String keyName) {
+    public static String wherePKColumn(Class<?> entityClass, String keyName) {
 
         String columnPrefix = TemplateSqlHelper.tableAlias(entityClass);
         StringBuilder sql = new StringBuilder();
@@ -55,7 +55,7 @@ public class AssociationSqlHelper {
                 sql.append(columnPrefix).append(".");
             }
             sql.append(column.getColumn());
-            sql.append(" = #{" + keyName + "}");
+            sql.append(" = #{").append(keyName).append("}");
         } else {
             throw new MapperException("实体类[" + entityClass.getCanonicalName() + "]中必须只有一个带有 @Id 注解的字段");
         }
@@ -90,18 +90,18 @@ public class AssociationSqlHelper {
 //        return sql.toString();
 //    }
 
-    private static String getTableName(Class<?> entityClass, Config config) {
-        EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
-        String prefix = entityTable.getPrefix();
-        if (StringUtils.isEmpty(prefix)) {
-            // 使用全局配置
-            prefix = config.getPrefix();
-        }
-        if (StringUtils.isNotEmpty(prefix)) {
-            return prefix + "." + entityTable.getName();
-        }
-        return entityTable.getName();
-    }
+//    private static String getTableName(Class<?> entityClass, Config config) {
+//        EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
+//        String prefix = entityTable.getPrefix();
+//        if (StringUtils.isEmpty(prefix)) {
+//            // 使用全局配置
+//            prefix = config.getPrefix();
+//        }
+//        if (StringUtils.isNotEmpty(prefix)) {
+//            return prefix + "." + entityTable.getName();
+//        }
+//        return entityTable.getName();
+//    }
 
     /**
      * 获取实体的表名以及关联表名
@@ -111,7 +111,7 @@ public class AssociationSqlHelper {
     public static String tableName(Class<?> entityClass, Config config) {
         EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
         StringBuilder sb = new StringBuilder();
-        String table = getTableName(entityClass, config);
+        String table = TemplateSqlHelper.getTableName(config,entityClass);
         sb.append(table).append(" ").append(TemplateSqlHelper.tableAlias(entityClass));
         List<EntityField> fields = entityTable.getAssociationFields();
         for (EntityField field : fields) {
@@ -127,12 +127,12 @@ public class AssociationSqlHelper {
         if (field.isAnnotationPresent(OneToOne.class)) {
             OneToOne oneToOne = field.getAnnotation(OneToOne.class);
             JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
-            sb.append("left join ").append(getTableName(field.getJavaType(), config)).append("  ").append("_" + field.getName()).append(" on ").append(masterTableName).append(".").append(joinColumn.name()).append("=").append("_" + field.getName()).append(".").append(oneToOne.mappedBy());
+            sb.append("left join ").append(TemplateSqlHelper.getTableName(config,field.getJavaType())).append("  ").append("_").append(field.getName()).append(" on ").append(masterTableName).append(".").append(joinColumn.name()).append("=").append("_").append(field.getName()).append(".").append(oneToOne.mappedBy());
         }
         if (field.isAnnotationPresent(OneToMany.class)) {
             OneToMany oneToMany = field.getAnnotation(OneToMany.class);
             JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
-            sb.append("left join ").append(getTableName(oneToMany.targetEntity(), config)).append("  ").append("_" + field.getName()).append(" on ").append(masterTableName + "." + joinColumn.name()).append("=").append("_" + field.getName()).append(".").append(oneToMany.mappedBy());
+            sb.append("left join ").append(TemplateSqlHelper.getTableName(config,oneToMany.targetEntity())).append("  ").append("_").append(field.getName()).append(" on ").append(masterTableName).append(".").append(joinColumn.name()).append("=").append("_").append(field.getName()).append(".").append(oneToMany.mappedBy());
         }
         return sb.toString();
     }
@@ -154,14 +154,13 @@ public class AssociationSqlHelper {
 //        return sql.toString();
 //    }
 
-    public static String selectColumnsFromTable(Config config,Class<?> entityClass) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("select ");
-        sql.append(AssociationSqlHelper.columns(entityClass));
-        sql.append(" FROM ");
-        sql.append(AssociationSqlHelper.tableName(entityClass, config));
-        sql.append(" ");
-        return sql.toString();
+    public static String selectColumnsFromTable(Config config, Class<?> entityClass) {
+        String sql = "select " +
+                AssociationSqlHelper.columns(entityClass) +
+                " FROM " +
+                AssociationSqlHelper.tableName(entityClass, config) +
+                " ";
+        return sql;
     }
 
     public static String columns(Class<?> entityClass) {

@@ -25,8 +25,8 @@ public class DateFunctionProcessor implements FunctionProcessor {
 
 	
 	public static void main(String[] args1) {
-		String arguments = "timestramp";
-		System.out.println("MySQL:"+(new DateFunctionProcessor()).process(arguments,null,DatabaseType.MySQL));;
-		System.out.println("Oracle:"+(new DateFunctionProcessor()).process(arguments,null,DatabaseType.Oracle));;
+		String arguments = "timestamp";
+		System.out.println("MySQL:"+(new DateFunctionProcessor()).process(arguments,null,DatabaseType.MySQL));
+		System.out.println("Oracle:"+(new DateFunctionProcessor()).process(arguments,null,DatabaseType.Oracle));
 	}
 }

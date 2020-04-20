@@ -1,7 +1,6 @@
 package com.flagwind.mybatis.datasource.single.config;
 
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +14,6 @@ public class DatabaseConfig
 	@Bean
 	public DataSource dataSource()
 	{
-		DruidDataSource ds = DruidDataSourceBuilder.create().build();
-		return ds;
+		return DruidDataSourceBuilder.create().build();
 	}
 }

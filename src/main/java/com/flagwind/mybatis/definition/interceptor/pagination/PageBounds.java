@@ -15,7 +15,9 @@ import java.util.List;
  *  @author chendb
  */
 public class PageBounds extends RowBounds implements Serializable {
+
     private static final long serialVersionUID = -6414350656252331011L;
+
     private final static int NO_PAGE = 1;
     /** 页号 */
     private int pageIndex = NO_PAGE;
@@ -136,12 +138,11 @@ public class PageBounds extends RowBounds implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("PageBounds{");
-        sb.append("pageIndex=").append(pageIndex);
-        sb.append(", pageSize=").append(pageSize);
-        sb.append(", orders=").append(orders);
-        sb.append(", containsTotalCount=").append(containsTotalCount);
-        sb.append('}');
-        return sb.toString();
+        String sb = "PageBounds{" + "pageIndex=" + pageIndex +
+                ", pageSize=" + pageSize +
+                ", orders=" + orders +
+                ", containsTotalCount=" + containsTotalCount +
+                '}';
+        return sb;
     }
 }

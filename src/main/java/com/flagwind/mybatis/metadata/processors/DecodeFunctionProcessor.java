@@ -51,8 +51,8 @@ public class DecodeFunctionProcessor implements FunctionProcessor
  
 	public static void main(String[] args1) {
 		String arguments = "status,1:'在线',2:'离线','未知'";
-		System.out.println("MySQL:"+(new DecodeFunctionProcessor()).process(arguments,null,DatabaseType.MySQL));;
-		System.out.println("Oracle:"+(new DecodeFunctionProcessor()).process(arguments,null,DatabaseType.Oracle));;
+		System.out.println("MySQL:"+(new DecodeFunctionProcessor()).process(arguments,null,DatabaseType.MySQL));
+        System.out.println("Oracle:"+(new DecodeFunctionProcessor()).process(arguments,null,DatabaseType.Oracle));
 	}
 
 }
