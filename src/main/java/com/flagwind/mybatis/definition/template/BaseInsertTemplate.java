@@ -21,7 +21,7 @@ public class BaseInsertTemplate extends MapperTemplate {
 
     private MutablePair<String, Boolean> getSequenceKeyMapping(Set<EntityColumn> columnList, Class<?> entityClass,
                                                                MappedStatement ms) {
-        Boolean hasIdentityKey = false;
+        boolean hasIdentityKey = false;
         StringBuilder sql = new StringBuilder();
         for (EntityColumn column : columnList) {
             if (!column.isInsertable()) {

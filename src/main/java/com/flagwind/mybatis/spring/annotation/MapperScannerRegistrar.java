@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MapperScannerRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware, EnvironmentAware {
 	public static final Log LOGGER = LogFactory.getLog(MapperScannerRegistrar.class);
@@ -39,7 +40,7 @@ public class MapperScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
 			scanner.setResourceLoader(resourceLoader);
 		}
 
-		Class<? extends Annotation> annotationClass = annoAttrs.getClass("annotationClass");
+		Class<? extends Annotation> annotationClass = Objects.requireNonNull(annoAttrs).getClass("annotationClass");
 		if (!Annotation.class.equals(annotationClass)) {
 			scanner.setAnnotationClass(annotationClass);
 		}

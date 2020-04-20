@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ResultMapSwapperHolder {
-    public static Map<String, ResultMapSwapper> CACHE = new HashMap<>();
+    public static final Map<String, ResultMapSwapper> CACHE = new HashMap<>();
 
    public static ResultMapSwapper getSwapper(Configuration configuration) {
         String id = configuration.getEnvironment().getId();

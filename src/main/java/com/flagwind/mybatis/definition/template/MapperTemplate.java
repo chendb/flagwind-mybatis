@@ -35,10 +35,10 @@ import static com.flagwind.mybatis.utils.MapperClassUtils.getMethodName;
 
 public abstract class MapperTemplate {
     private static final XMLLanguageDriver languageDriver = new XMLLanguageDriver();
-    private Map<String, Method> methodMap = new ConcurrentHashMap<>();
-    private Map<String, Class<?>> entityClassMap = new ConcurrentHashMap<>();
-    protected Class<?> mapperClass;
-    protected TemplateContext context;
+    private final Map<String, Method> methodMap = new ConcurrentHashMap<>();
+    private final Map<String, Class<?>> entityClassMap = new ConcurrentHashMap<>();
+    protected final Class<?> mapperClass;
+    protected final TemplateContext context;
 
     public MapperTemplate(Class<?> mapperClass, TemplateContext context) {
         this.mapperClass = mapperClass;

@@ -53,7 +53,7 @@ public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProces
 
 	private BeanNameGenerator nameGenerator;
 
-	private TemplateContext mapperResolver= new TemplateContext();
+	private final TemplateContext mapperResolver= new TemplateContext();
 
 
 

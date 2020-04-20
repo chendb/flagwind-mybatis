@@ -155,7 +155,7 @@ public class MappedStatementHelper
 
 
     public static class BoundSqlSqlSource implements SqlSource {
-        BoundSql boundSql;
+        final BoundSql boundSql;
 
         public BoundSqlSqlSource(BoundSql boundSql) {
             this.boundSql = boundSql;

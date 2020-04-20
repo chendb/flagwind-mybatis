@@ -55,7 +55,7 @@ public class CodeTypeHandler<E extends CodeType> extends BaseTypeHandler<E> {
     public E getNullableResult(String s) {
         E e = null;
         if (StringUtils.isEmpty(s)) {
-            return e;
+            return null;
         }
         try {
             e = type.getConstructor(String.class).newInstance(s);

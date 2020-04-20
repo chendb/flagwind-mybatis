@@ -10,7 +10,7 @@ public enum IdentityDialect {
     SYBASE("SELECT @@IDENTITY"),
     INFORMIX("select dbinfo('sqlca.sqlerrd1') from systables where tabid=1");
 
-    private String identityRetrievalStatement;
+    private final String identityRetrievalStatement;
 
     IdentityDialect(String identityRetrievalStatement) {
         this.identityRetrievalStatement = identityRetrievalStatement;

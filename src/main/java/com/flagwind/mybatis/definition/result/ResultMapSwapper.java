@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ResultMapSwapper {
 
-    private Configuration configuration;
+    private final Configuration configuration;
 
     /**
      * Result Maps collection,key : id
@@ -300,7 +300,7 @@ public class ResultMapSwapper {
             try {
                 MetaClass metaResultType = MetaClass.forClass(resultType, this.configuration.getReflectorFactory());
                 javaType = metaResultType.getSetterType(property);
-            } catch (Exception var5) {
+            } catch (Exception ignored) {
             }
         }
 

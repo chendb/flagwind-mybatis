@@ -163,6 +163,7 @@ public class PaginationInterceptor extends AbstractSqlParserHandler implements I
         if (pageBounds.isContainsTotalCount()) {
             SqlInfo sqlInfo = SqlParserUtils.getOptimizeCountSql(false, null, originalSql);
             this.queryTotal(sqlInfo.getSql(), mappedStatement, boundSql, paging, connection);
+            assert paging != null;
             if (paging.getTotalCount() <= 0) {
                 return null;
             }

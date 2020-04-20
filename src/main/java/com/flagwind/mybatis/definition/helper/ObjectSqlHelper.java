@@ -9,7 +9,7 @@ public class ObjectSqlHelper
 
     private static final  int MAX_LEVEL=5;
 
-    private static HashMap<String,String> TEMPLATE_SQL=new HashMap<>();
+    private static final HashMap<String,String> TEMPLATE_SQL=new HashMap<>();
     
     // region 公共方法
     public static String getSortingSql() {
