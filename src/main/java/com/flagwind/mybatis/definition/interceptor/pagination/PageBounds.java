@@ -8,12 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- *  分页查询对象
- *  @author badqiu
- *  @author hunhun
- *  @author chendb
- */
+
 public class PageBounds extends RowBounds implements Serializable {
 
     private static final long serialVersionUID = -6414350656252331011L;
