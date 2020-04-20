@@ -15,16 +15,16 @@ public class MinuteFunctionProcessor implements FunctionProcessor {
 		String suffix = (StringUtils.isEmpty(alias) ? "" : (" as " + alias));
 		switch (databaseType) {
 		case Oracle:
-			return "to_char(" + arguments + ",'hh24')" + suffix;
+			return "to_char(" + arguments + ",'MI')" + suffix;
 		case MySQL:
-			return "date_format(" + arguments + ",'%H')" + suffix;
+			return "date_format(" + arguments + ",'%i')" + suffix;
 		default:
 			throw new MapperException("该函数没有针对" + databaseType + "类型数据库实现");
 		}
 	}
 
 	public static void main(String[] args1) {
-		String arguments = "timestramp";
+		String arguments = "timestamp";
 		System.out.println("MySQL:"+(new MinuteFunctionProcessor()).process(arguments,null,DatabaseType.MySQL));
         System.out.println("Oracle:"+(new MinuteFunctionProcessor()).process(arguments,null,DatabaseType.Oracle));
     }
