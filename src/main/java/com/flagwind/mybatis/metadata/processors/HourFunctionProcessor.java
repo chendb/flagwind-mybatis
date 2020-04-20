@@ -24,7 +24,7 @@ public class HourFunctionProcessor implements FunctionProcessor {
 	}
 
 	public static void main(String[] args1) {
-		String arguments = "timestramp";
+		String arguments = "timestamp";
 		System.out.println("MySQL:"+(new HourFunctionProcessor()).process(arguments,null,DatabaseType.MySQL));
         System.out.println("Oracle:"+(new HourFunctionProcessor()).process(arguments,null,DatabaseType.Oracle));
     }
