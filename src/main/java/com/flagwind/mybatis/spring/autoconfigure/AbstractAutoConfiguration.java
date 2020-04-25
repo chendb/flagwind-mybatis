@@ -54,7 +54,7 @@ public class AbstractAutoConfiguration {
     }
 
 
-    void checkConfigFileExists() {
+    protected void checkConfigFileExists() {
         if (this.properties.isCheckConfigLocation() && StringUtils.hasText(this.properties.getConfigLocation())) {
             Resource resource = this.resourceLoader.getResource(this.properties.getConfigLocation());
             Assert.state(resource.exists(), "Cannot find config location: " + resource
@@ -66,7 +66,7 @@ public class AbstractAutoConfiguration {
         return sqlSessionFactoryBean(dataSource).getObject();
     }
 
-    MybatisSqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) {
+    protected MybatisSqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) {
         MybatisSqlSessionFactoryBean factory = new MybatisSqlSessionFactoryBean();
         factory.setDataSource(dataSource);
         factory.setVfs(SpringBootVFS.class);

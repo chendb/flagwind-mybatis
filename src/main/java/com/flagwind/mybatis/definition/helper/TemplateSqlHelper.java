@@ -61,7 +61,7 @@ public class TemplateSqlHelper {
         } else {
             sql.append("COUNT(*) ");
         }
-
+        sql.append(" FROM ");
         boolean hasTableAlias = sql.toString().contains(".");
         sql.append(tableName(config,entityClass, hasTableAlias));
 
