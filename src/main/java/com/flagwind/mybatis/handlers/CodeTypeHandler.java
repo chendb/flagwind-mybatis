@@ -9,6 +9,7 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public class CodeTypeHandler<E extends CodeType> extends BaseTypeHandler<E> {
 
@@ -58,10 +59,36 @@ public class CodeTypeHandler<E extends CodeType> extends BaseTypeHandler<E> {
             return null;
         }
         try {
+            if (Enum.class.isAssignableFrom(type)) {
+                return valueOf(type, s);
+            }
             e = type.getConstructor(String.class).newInstance(s);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return e;
+    }
+
+    private static <E> E valueOf(Class<E> type, String s) {
+        E[] enumValues = type.getEnumConstants();
+
+        if (Enum.class.isAssignableFrom(type)) {
+            E e = Arrays.stream(enumValues).filter(g -> ((CodeType) g).getValue().equalsIgnoreCase(s) || ((CodeType) g).getText().equalsIgnoreCase(s)).findFirst().orElse(null);
+            if (e != null) {
+                return e;
+            }
+        }
+
+        for (E e : enumValues) {
+            Enum en = (Enum) e;
+            if (en.name().equalsIgnoreCase(s)) {
+                return e;
+            }
+            if (Integer.toString(en.ordinal()).equals(s)) {
+                return e;
+            }
+        }
+
+        return null;
     }
 }

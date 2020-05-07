@@ -91,6 +91,15 @@ public class EntityTableFactory
 		return entityTable != null;
 	}
 
+	public static EntityTable getEntityTable(String tableName){
+		 for(Map.Entry<Class<?>, EntityTable> entry:CACHE.entrySet()) {
+		 	if(entry.getValue().getName().equalsIgnoreCase(tableName)){
+		 		return entry.getValue();
+			}
+		 }
+		 return null;
+	}
+
 
 	/**
 	 * 获取表对象

@@ -1,6 +1,7 @@
 package com.flagwind.mybatis.datasource.single;
 
 
+import com.flagwind.mybatis.datasource.single.domain.DynamicRepository;
 import com.flagwind.mybatis.datasource.single.domain.RoleRepository;
 import com.flagwind.mybatis.entity.Role;
 import com.flagwind.persistent.AggregateType;
@@ -30,7 +31,8 @@ public class SingleQueryService
 	@Autowired
 	private RoleRepository roleRepository;
 
-
+	@Autowired
+	private DynamicRepository dynamicRepository;
 
 
 	@Test
@@ -70,7 +72,7 @@ public class SingleQueryService
 			setType(AggregateType.Max);
 		}});
 		Sorting[] sorts = new Sorting[]{Sorting.ascending("xid")};
-		List<Map<String,Object>> menuList1 = roleRepository.querySelective("com_role",fields,s,-1,-1,sorts);
+		List<Map<String,Object>> menuList1 = dynamicRepository.dynamicQuery("com_role",fields,s,-1,-1,sorts);
 
 		TestCase.assertTrue("查询总数量为：" + menuList1.size(), menuList1.size() > 0);
 	}

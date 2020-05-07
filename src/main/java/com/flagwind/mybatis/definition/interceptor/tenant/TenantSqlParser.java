@@ -19,6 +19,7 @@ import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.update.Update;
+import org.apache.ibatis.reflection.MetaObject;
 
 import java.util.List;
 
@@ -285,5 +286,10 @@ public class TenantSqlParser extends AbstractJsqlParser {
         column.append(".");
         column.append(tenantHandler.getTenantIdColumn());
         return new Column(column.toString());
+    }
+
+    @Override
+    public boolean allowProcess(MetaObject metaObject) {
+        return super.allowProcess(metaObject);
     }
 }

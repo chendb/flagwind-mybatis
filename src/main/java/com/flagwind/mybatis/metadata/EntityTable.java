@@ -251,8 +251,18 @@ public class EntityTable {
 		}
 	}
 
-	public Map<String, EntityColumn> getPropertyMap() {
-		return propertyMap;
+//	private Map<String, EntityColumn> getPropertyMap() {
+//		return propertyMap;
+//	}
+
+
+	public EntityColumn getColumn(String name){
+		for(Map.Entry<String,EntityColumn> kv:propertyMap.entrySet()){
+			if(StringUtils.containsIgnoreCase(name,kv.getKey())){
+				return kv.getValue();
+			}
+		}
+		return null;
 	}
 
 	/**

@@ -32,4 +32,5 @@ public interface TenantHandler {
      * @return 是否进行过滤, true:表示忽略，false:需要解析多租户字段
      */
     boolean doTableFilter(String tableName);
+
 }

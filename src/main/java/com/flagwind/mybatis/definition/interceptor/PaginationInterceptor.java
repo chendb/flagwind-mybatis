@@ -1,14 +1,14 @@
 package com.flagwind.mybatis.definition.interceptor;
 
 import com.flagwind.mybatis.code.DatabaseType;
+import com.flagwind.mybatis.definition.MybatisDefaultParameterHandler;
 import com.flagwind.mybatis.definition.interceptor.pagination.DialectFactory;
 import com.flagwind.mybatis.definition.interceptor.pagination.DialectModel;
-import com.flagwind.mybatis.definition.interceptor.pagination.dialects.IDialect;
 import com.flagwind.mybatis.definition.interceptor.pagination.PageBounds;
-import com.flagwind.mybatis.exceptions.MapperException;
+import com.flagwind.mybatis.definition.interceptor.pagination.dialects.IDialect;
 import com.flagwind.mybatis.definition.parser.AbstractSqlParserHandler;
-import com.flagwind.mybatis.definition.MybatisDefaultParameterHandler;
 import com.flagwind.mybatis.definition.parser.SqlInfo;
+import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.utils.CollectionUtils;
 import com.flagwind.mybatis.utils.JdbcUtils;
 import com.flagwind.mybatis.utils.PluginUtils;
@@ -48,6 +48,8 @@ import java.util.*;
 public class PaginationInterceptor extends AbstractSqlParserHandler implements Interceptor {
 
     protected static final Log logger = LogFactory.getLog(PaginationInterceptor.class);
+
+
 
     /**
      * 数据库类型
@@ -125,12 +127,17 @@ public class PaginationInterceptor extends AbstractSqlParserHandler implements I
         StatementHandler statementHandler = PluginUtils.realTarget(invocation.getTarget());
         MetaObject metaObject = SystemMetaObject.forObject(statementHandler);
 
+
         // SQL 解析
         this.sqlParser(metaObject);
 
 
         // 先判断是不是SELECT操作  (2019-04-10 00:37:31 跳过存储过程)
         MappedStatement mappedStatement = (MappedStatement) metaObject.getValue("delegate.mappedStatement");
+
+
+//     MapperTemplate mapperTemplate = templateContext.getMapperTemplateByMsid(mappedStatement.getId());
+
         if (SqlCommandType.SELECT != mappedStatement.getSqlCommandType()
                 || StatementType.CALLABLE == mappedStatement.getStatementType()) {
             return invocation.proceed();
@@ -163,10 +170,10 @@ public class PaginationInterceptor extends AbstractSqlParserHandler implements I
         if (pageBounds.isContainsTotalCount()) {
             SqlInfo sqlInfo = SqlParserUtils.getOptimizeCountSql(false, null, originalSql);
             this.queryTotal(sqlInfo.getSql(), mappedStatement, boundSql, paging, connection);
-            assert paging != null;
-            if (paging.getTotalCount() <= 0) {
-                return null;
-            }
+//            assert paging != null;
+//            if (paging.getTotalCount() <= 0) {
+//                return null;
+//            }
         }
         DatabaseType dbType = Optional.ofNullable(this.dbType).orElse(JdbcUtils.getDbType(connection.getMetaData().getURL()));
         IDialect dialect = Optional.ofNullable(this.dialect).orElse(DialectFactory.getDialect(dbType));

@@ -185,21 +185,21 @@ public class BaseSelectTemplate extends MapperTemplate {
     }
 
 
-    /**
-     * 聚合多条件查询
-     *
-     * @param ms 映射申明
-     */
-    public String querySelective(MappedStatement ms) {
-
-        // sql.append(ObjectSqlHelper.getSortingSql());
-        String sql = "select " +
-                ObjectSqlHelper.getQueryFieldColumnSql() +
-                " from ${_table} " +
-                ObjectSqlHelper.getWhereSql("_clause", 5) +
-                " " +
-                ObjectSqlHelper.getQueryFieldGroupBySql() +
-                " ";
-        return sql;
-    }
+//    /**
+//     * 聚合多条件查询
+//     *
+//     * @param ms 映射申明
+//     */
+//    public String querySelective(MappedStatement ms) {
+//
+//        // sql.append(ObjectSqlHelper.getSortingSql());
+//        String sql = "select " +
+//                ObjectSqlHelper.getQueryFieldColumnSql() +
+//                " from ${_table} " +
+//                ObjectSqlHelper.getWhereSql("_clause", 5) +
+//                " " +
+//                ObjectSqlHelper.getQueryFieldGroupBySql() +
+//                " ";
+//        return sql;
+//    }
 }

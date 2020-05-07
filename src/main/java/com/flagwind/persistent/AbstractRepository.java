@@ -1,9 +1,6 @@
 package com.flagwind.persistent;
 
-import com.flagwind.persistent.base.BaseDeleteRepository;
-import com.flagwind.persistent.base.BaseInsertRepository;
-import com.flagwind.persistent.base.BaseSelectRepository;
-import com.flagwind.persistent.base.BaseUpdateRepository;
+import com.flagwind.persistent.base.*;
 
 import java.io.Serializable;
 
@@ -12,6 +9,7 @@ import java.io.Serializable;
  */
 
 public interface AbstractRepository<E, ID extends Serializable> extends
+		BaseDynamicRepository,
 		BaseInsertRepository<E,ID>,
 		BaseUpdateRepository<E>,
 		BaseDeleteRepository<ID>,

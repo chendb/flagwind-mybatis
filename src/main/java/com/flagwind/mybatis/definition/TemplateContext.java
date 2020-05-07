@@ -104,7 +104,7 @@ public class TemplateContext
         Method[] methods = mapperClass.getDeclaredMethods();
         Class<?> templateClass = null;
         Class<?> tempClass = null;
-        Set<String> methodSet = new HashSet<String>();
+        Set<String> methodSet = new HashSet<>();
         for (Method method : methods) {
             if (method.isAnnotationPresent(SelectProvider.class)) {
                 SelectProvider provider = method.getAnnotation(SelectProvider.class);
@@ -132,7 +132,7 @@ public class TemplateContext
         if (templateClass == null || !MapperTemplate.class.isAssignableFrom(templateClass)) {
             templateClass = EmptyTemplate.class;
         }
-        MapperTemplate mapperTemplate = null;
+        MapperTemplate mapperTemplate;
         try {
             mapperTemplate = (MapperTemplate) templateClass.getConstructor(Class.class, TemplateContext.class).newInstance(mapperClass, this);
         } catch (Exception e) {
@@ -179,6 +179,13 @@ public class TemplateContext
         } catch (ClassNotFoundException e) {
             throw new MapperException("注册Mapper[" + mapperClass + "]失败，找不到该Mapper!");
         }
+    }
+
+    public MapperTemplate getMapperTemplateByMsid(String msid){
+        if(isMapperMethod(msid)){
+            return msIdCache.get(msid);
+        }
+        return null;
     }
 
     /**
