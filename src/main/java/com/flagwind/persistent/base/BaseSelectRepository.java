@@ -22,16 +22,16 @@ public interface BaseSelectRepository<E, ID extends Serializable> {
     E seekById(@Param("_key") ID id);
 
     @SelectProvider(type = BaseSelectTemplate.class, method = "dynamicSQL")
-    List<E> seek(@Param("_clause") Clause clause);
+    List<E> seek(@Param("_clause") Clause clause, @Param("_paging") Paging page, @Param("_sorts") Sorting[] sorts);
 
     @SelectProvider(type = BaseSelectTemplate.class, method = "dynamicSQL")
     long count(@Param("_clause") Clause clause);
 
-    @SelectProvider(type = BaseSelectTemplate.class, method = "dynamicSQL")
-    List<E> query(@Param("_clause") Clause clause);
+//    @SelectProvider(type = BaseSelectTemplate.class, method = "dynamicSQL")
+//    List<E> query(@Param("_clause") Clause clause);
 
     @SelectProvider(type = BaseSelectTemplate.class, method = "dynamicSQL")
-    List<E> page(@Param("_clause") Clause clause, @Param("_paging") Paging page, @Param("_sorts") Sorting[] sorts);
+    List<E> query(@Param("_clause") Clause clause, @Param("_paging") Paging page, @Param("_sorts") Sorting[] sorts);
 
     @SelectProvider(type = BaseSelectTemplate.class, method = "dynamicSQL")
     List<E> take(@Param("_clause") Clause clause, @Param("_startIndex") int startIndex,

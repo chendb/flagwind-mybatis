@@ -23,11 +23,11 @@ public class SingleSeekService {
 	private FocusItemRepository focusItemRepository;
 
 
-	@Test
-	public void testSeek() {
-		List<FocusItem> menuList = focusItemRepository.seek(null);
-		TestCase.assertTrue("查询总数量为：" + menuList.size(), menuList.size() > 0);
-	}
+//	@Test
+//	public void testSeek() {
+//		List<FocusItem> menuList = focusItemRepository.seek(null);
+//		TestCase.assertTrue("查询总数量为：" + menuList.size(), menuList.size() > 0);
+//	}
 
 	@Test
 	public void  testSeekById(){

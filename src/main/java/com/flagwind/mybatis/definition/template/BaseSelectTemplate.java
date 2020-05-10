@@ -108,9 +108,9 @@ public class BaseSelectTemplate extends MapperTemplate {
         return query(ms);
     }
 
-    public String page(MappedStatement ms) {
-        return query(ms);
-    }
+//    public String page(MappedStatement ms) {
+//        return query(ms);
+//    }
 
     /**
      * 根据主键进行查询
