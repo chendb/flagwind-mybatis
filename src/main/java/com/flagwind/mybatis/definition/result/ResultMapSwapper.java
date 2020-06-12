@@ -3,8 +3,8 @@ package com.flagwind.mybatis.definition.result;
 import com.flagwind.commons.StringUtils;
 import com.flagwind.lang.CodeType;
 import com.flagwind.mybatis.code.Style;
-import com.flagwind.mybatis.metadata.EntityTableUtils;
 import com.flagwind.mybatis.handlers.CodeTypeHandler;
+import com.flagwind.mybatis.metadata.EntityTableUtils;
 import com.flagwind.mybatis.utils.AssociationUtils;
 import com.flagwind.persistent.ColumnTypeEntry;
 import com.flagwind.reflect.EntityTypeHolder;
@@ -22,7 +22,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -252,11 +254,16 @@ public class ResultMapSwapper {
         TypeHandler<?> typeHandler;
 
         if (columnTypeEntry.getTypeHandler() == null) {
-            typeHandler = configuration.getTypeHandlerRegistry().getTypeHandler(javaType, columnTypeEntry.getJdbcType());
 
-            if (typeHandler == null && CodeType.class.isAssignableFrom(javaType)) {
+            if (CodeType.class.isAssignableFrom(javaType)) {
                 typeHandler = new CodeTypeHandler(field.getJavaType());
+            } else {
+                typeHandler = configuration.getTypeHandlerRegistry().getTypeHandler(javaType, columnTypeEntry.getJdbcType());
             }
+
+//            if (typeHandler == null && CodeType.class.isAssignableFrom(javaType)) {
+//                typeHandler = new CodeTypeHandler(field.getJavaType());
+//            }
 
         } else {
             typeHandler = this.resolveTypeHandler(javaType, columnTypeEntry.getTypeHandler());

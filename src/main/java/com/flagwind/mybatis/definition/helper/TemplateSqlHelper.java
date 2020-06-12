@@ -237,7 +237,8 @@ public class TemplateSqlHelper {
      * @return
      */
     public static String tableAlias(Class<?> entityClass) {
-        return "_" + entityClass.getSimpleName();
+        String name = entityClass.getSimpleName();
+        return "_" + name.substring(0, 1).toLowerCase() + name.substring(1);
     }
 
 
