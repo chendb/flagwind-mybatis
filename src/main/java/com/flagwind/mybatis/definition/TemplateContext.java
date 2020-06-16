@@ -4,6 +4,7 @@ import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.definition.template.EmptyTemplate;
 import com.flagwind.mybatis.definition.template.MapperTemplate;
 import com.flagwind.persistent.AbstractRepository;
+import com.flagwind.persistent.base.BaseDynamicRepository;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.SelectProvider;
@@ -257,6 +258,7 @@ public class TemplateContext
     public void ifEmptyRegisterDefaultInterface() {
         if (registerClass.size() == 0) {
             registerMapper(AbstractRepository.class);
+            registerMapper(BaseDynamicRepository.class);
         }
     }
 

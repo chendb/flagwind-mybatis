@@ -68,8 +68,16 @@ public class SingleQueryService {
             setType(AggregateType.Max);
         }});
         Sorting[] sorts = new Sorting[]{Sorting.ascending("xid")};
-        List<Map<String, Object>> menuList1 = dynamicRepository.dynamicQuery("com_role", fields, s, -1, -1, sorts);
+        List<Map<String, Object>> menuList1 = dynamicRepository.dynamicSelective("com_role", fields, s, -1, -1, sorts);
 
+        TestCase.assertTrue("查询总数量为：" + menuList1.size(), menuList1.size() > 0);
+    }
+
+    @Test
+    public void dynamicQuery() {
+        SingleClause s = new SingleClause("id", ClauseOperator.LessThanEqual, "length(id)");
+        s.setParameterType(ParameterType.Column);
+        List<Map<String, Object>> menuList1 = dynamicRepository.dynamicQuery(s,null,null);
         TestCase.assertTrue("查询总数量为：" + menuList1.size(), menuList1.size() > 0);
     }
 }

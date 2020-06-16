@@ -14,6 +14,7 @@ import java.util.List;
  */
 public abstract class OGNL {
 
+
     public static String clauseName(Object _clause) {
         if (_clause instanceof ChildClause) {
             return Functions.invoke(((ChildClause) _clause).getName());

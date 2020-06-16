@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 
 public interface AbstractRepository<E, ID extends Serializable> extends
-		BaseDynamicRepository,
+//		BaseDynamicRepository,
 		BaseInsertRepository<E,ID>,
 		BaseUpdateRepository<E>,
 		BaseDeleteRepository<ID>,
