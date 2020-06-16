@@ -3,7 +3,6 @@ package com.flagwind.persistent.base;
 import com.flagwind.mybatis.definition.template.BaseDynamicTemplate;
 import com.flagwind.persistent.QueryField;
 import com.flagwind.persistent.model.Clause;
-import com.flagwind.persistent.model.Paging;
 import com.flagwind.persistent.model.Sorting;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
@@ -32,7 +31,7 @@ public interface BaseDynamicRepository {
 //    @SelectProvider(type = BaseDynamicTemplate.class, method = "dynamicSQL")
 //    <T> List<T> dynamicSeek(@Param("_clause") Clause clause, @Param("_paging") Paging page, @Param("_sorts") Sorting[] sorts);
 
-    @SelectProvider(type = BaseDynamicTemplate.class, method = "dynamicSQL")
-    <T> List<T> dynamicQuery(@Param("_clause") Clause clause, @Param("_paging") Paging page, @Param("_sorts") Sorting[] sorts);
+//    @SelectProvider(type = BaseDynamicTemplate.class, method = "dynamicSQL")
+//    <T> List<T> dynamicQuery(@Param("_clause") Clause clause, @Param("_paging") Paging page, @Param("_sorts") Sorting[] sorts);
 
 }
