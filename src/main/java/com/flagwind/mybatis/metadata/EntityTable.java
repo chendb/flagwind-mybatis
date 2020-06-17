@@ -296,7 +296,7 @@ public class EntityTable {
 
     public EntityColumn getColumn(String name) {
         for (Map.Entry<String, EntityColumn> kv : propertyMap.entrySet()) {
-            if (StringUtils.containsIgnoreCase(name, kv.getKey())) {
+            if (StringUtils.equalsIgnoreCase(name, kv.getKey())) {
                 return kv.getValue();
             }
         }
