@@ -36,7 +36,7 @@ public class SingleBootstrap {
         tenantSqlParser.setTenantHandler(new TenantHandler() {
 
             @Override
-            public Expression getTenantId(boolean where) {
+            public Expression getTenantId(boolean where,String tableName) {
                 // 设置当前租户ID，实际情况你可以从cookie、或者缓存中拿都行
                 return new StringValue("2");
             }
