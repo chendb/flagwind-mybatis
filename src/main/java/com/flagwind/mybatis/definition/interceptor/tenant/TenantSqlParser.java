@@ -1,7 +1,7 @@
 package com.flagwind.mybatis.definition.interceptor.tenant;
 
-import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.definition.parser.AbstractJsqlParser;
+import com.flagwind.mybatis.exceptions.MapperException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -73,9 +73,9 @@ public class TenantSqlParser extends AbstractJsqlParser {
             // fixed github pull/295
             ItemsList itemsList = insert.getItemsList();
             if (itemsList instanceof MultiExpressionList) {
-                ((MultiExpressionList) itemsList).getExprList().forEach(el -> el.getExpressions().add(tenantHandler.getTenantId(false)));
+                ((MultiExpressionList) itemsList).getExprList().forEach(el -> el.getExpressions().add(tenantHandler.getTenantId(false, insert.getTable().getName())));
             } else {
-                ((ExpressionList) insert.getItemsList()).getExpressions().add(tenantHandler.getTenantId(false));
+                ((ExpressionList) insert.getItemsList()).getExpressions().add(tenantHandler.getTenantId(false, insert.getTable().getName()));
             }
         } else {
             throw new MapperException("Failed to process multiple-table update, please exclude the tableName or statementId");
@@ -114,7 +114,7 @@ public class TenantSqlParser extends AbstractJsqlParser {
         //获得where条件表达式
         EqualsTo equalsTo = new EqualsTo();
         equalsTo.setLeftExpression(this.getAliasColumn(table));
-        equalsTo.setRightExpression(tenantHandler.getTenantId(true));
+        equalsTo.setRightExpression(tenantHandler.getTenantId(true, table.getName()));
         if (null != where) {
             if (where instanceof OrExpression) {
                 return new AndExpression(equalsTo, new Parenthesis(where));
@@ -211,7 +211,7 @@ public class TenantSqlParser extends AbstractJsqlParser {
      * 默认tenantId的表达式： LongValue(1)这种依旧支持
      */
     protected Expression builderExpression(Expression currentExpression, Table table) {
-        final Expression tenantExpression = tenantHandler.getTenantId(false);
+        final Expression tenantExpression = tenantHandler.getTenantId(false, table.getName());
         Expression appendExpression;
         if (!(tenantExpression instanceof SupportsOldOracleJoinSyntax)) {
             appendExpression = new EqualsTo();

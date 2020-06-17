@@ -16,7 +16,7 @@ public interface TenantHandler {
      * @param where 参数 true 表示为 where 条件 false 表示为 insert 或者 select 条件
      * @return 租户 ID 值表达式
      */
-    Expression getTenantId(boolean where);
+    Expression getTenantId(boolean where,String tableName);
 
     /**
      * 获取租户字段名
