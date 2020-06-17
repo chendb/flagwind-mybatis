@@ -10,7 +10,7 @@ public class ObjectSqlHelper
     private static final  int MAX_LEVEL=5;
 
     private static final HashMap<String,String> TEMPLATE_SQL=new HashMap<>();
-    
+
     // region 公共方法
     public static String getSortingSql() {
         String templateId="query_sorting";
@@ -115,7 +115,7 @@ public class ObjectSqlHelper
         TEMPLATE_SQL.put(templateId,sql.toString());
         return sql.toString();
     }
-    
+
     // endregion
 
     // region 私有方法
@@ -126,14 +126,27 @@ public class ObjectSqlHelper
         "<if test=\"@com.flagwind.mybatis.utils.OGNL@isSingleValue("+clauseName+")\">  " +
                 "<bind name=\"__name\" value=\"@com.flagwind.mybatis.utils.OGNL@clauseName("+clauseName+")\" />"+
                 //"${__name} ${"+clauseName+".operator.alias} #{"+clauseName+".value}" +
-                "${__name} ${"+clauseName+".operator.alias} " +getValueSql(clauseName,"value")+
+                "${__name} ${"+clauseName+".operator.alias} " + getValueSql(clauseName,"value") +
         "</if>" ;
         return sql;
     }
 
     private static String getValueSql(String clauseName,String valueName){
         String sql=
-                "<choose> <when test=\"@com.flagwind.mybatis.utils.OGNL@isColumn("+clauseName+")\"> ${"+clauseName+"."+valueName+"} </when>  <otherwise> #{"+clauseName+"."+valueName+"} </otherwise> </choose>";
+                "<choose> " +
+                        "<when test=\"@com.flagwind.mybatis.utils.OGNL@isColumn(" + clauseName + ")\"> ${" + clauseName + "." + valueName + "} </when>  " +
+                        "<when test=\"@com.flagwind.mybatis.utils.OGNL@isCodeType(" + clauseName + ")\"> #{" + clauseName + "." + valueName + ".value} </when>  " +
+                        "<otherwise> #{" + clauseName + "." + valueName + "} </otherwise> " +
+                "</choose>";
+        return sql;
+    }
+
+    private static String getFormatValueSql(String valueName){
+        String sql=
+                "<choose> " +
+                        "<when test=\"@com.flagwind.mybatis.utils.OGNL@isCodeType(" + valueName + ")\"> #{" +  valueName + ".value} </when>  " +
+                        "<otherwise> #{" + valueName + "} </otherwise> " +
+                "</choose>";
         return sql;
     }
 
@@ -187,12 +200,12 @@ public class ObjectSqlHelper
     }
 
     private static String getSingleClauseSql(String clauseName,boolean isWrapByWhen){
-        String sql=(isWrapByWhen ?"<when test=\"@com.flagwind.mybatis.utils.OGNL@isSingleClause("+clauseName+")\">":"") 
-        +getIfSingleValueSql(clauseName)
-        +getIfListValueSql(clauseName)
-        +getIfBetweenValueSql(clauseName)
-        +getIfNullValueSql(clauseName)
-        +(isWrapByWhen ?"</when>":"");
+        String sql=(isWrapByWhen ? "<when test=\"@com.flagwind.mybatis.utils.OGNL@isSingleClause("+clauseName+")\">":"")
+        + getIfSingleValueSql(clauseName)
+        + getIfListValueSql(clauseName)
+        + getIfBetweenValueSql(clauseName)
+        + getIfNullValueSql(clauseName)
+        + (isWrapByWhen ?"</when>":"");
         return sql;
     }
 
@@ -262,11 +275,11 @@ public class ObjectSqlHelper
     private static String getSingleClauseSqlWithCombine(String clauseName,String childClauseName){
 
         return " <when test=\"@com.flagwind.mybatis.utils.OGNL@isSingleClause(" + childClauseName + ")\">" +
-               
+
                 "  <if test=\"idx!=0\">${" + clauseName + ".combine.name()}</if> " +
-            
+
                    getSingleClauseSql(childClauseName,false)+
-                
+
 
               "</when>";
     }

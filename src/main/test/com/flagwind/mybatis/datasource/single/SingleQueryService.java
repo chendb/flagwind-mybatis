@@ -73,11 +73,4 @@ public class SingleQueryService {
         TestCase.assertTrue("查询总数量为：" + menuList1.size(), menuList1.size() > 0);
     }
 
-    @Test
-    public void dynamicQuery() {
-        SingleClause s = new SingleClause("id", ClauseOperator.LessThanEqual, "length(id)");
-        s.setParameterType(ParameterType.Column);
-        List<Map<String, Object>> menuList1 = dynamicRepository.dynamicQuery(s,null,null);
-        TestCase.assertTrue("查询总数量为：" + menuList1.size(), menuList1.size() > 0);
-    }
 }

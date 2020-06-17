@@ -1,5 +1,6 @@
 package com.flagwind.mybatis.utils;
 
+import com.flagwind.lang.CodeType;
 import com.flagwind.persistent.Functions;
 import com.flagwind.persistent.QueryField;
 import com.flagwind.persistent.model.*;
@@ -53,7 +54,7 @@ public abstract class OGNL {
 
     /**
      * 是否为升序
-     * 
+     *
      * @param parameter
      */
     public static boolean isAscending(Object parameter) {
@@ -77,7 +78,7 @@ public abstract class OGNL {
 
     /**
      * 是否为单条件
-     * 
+     *
      * @param parameter 条件短语
      */
     public static boolean isSingleClause(Object parameter) {
@@ -89,7 +90,7 @@ public abstract class OGNL {
 
     /**
      * 是否为多条件
-     * 
+     *
      * @param parameter 条件短语
      */
     public static boolean isCombineClause(Object parameter) {
@@ -102,7 +103,7 @@ public abstract class OGNL {
 
     /**
      * 是否为子查询条件
-     * 
+     *
      * @param parameter 条件短语
      */
     public static boolean isChildClause(Object parameter) {
@@ -113,11 +114,11 @@ public abstract class OGNL {
         if (parameter != null && parameter instanceof SingleClause) {
             SingleClause clause = (SingleClause) parameter;
             switch (clause.getOperator()) {
-            case Null:
-            case NotNull:
-                return true;
-            default:
-                return false;
+                case Null:
+                case NotNull:
+                    return true;
+                default:
+                    return false;
             }
         }
         return false;
@@ -127,15 +128,15 @@ public abstract class OGNL {
         if (parameter != null && parameter instanceof SingleClause) {
             SingleClause clause = (SingleClause) parameter;
             switch (clause.getOperator()) {
-            case In:
-            case NotIn:
-            case Null:
-            case NotNull:
-            case Between:
-            case Child:
-                return false;
-            default:
-                return true;
+                case In:
+                case NotIn:
+                case Null:
+                case NotNull:
+                case Between:
+                case Child:
+                    return false;
+                default:
+                    return true;
             }
         }
         return false;
@@ -203,12 +204,25 @@ public abstract class OGNL {
 
     /**
      * 判断参数是否为列 （用于组织 createTime != modifyTime 条件）
+     *
      * @param parameter
      * @return
      */
     public static boolean isColumn(Object parameter) {
         SingleClause clause = (SingleClause) parameter;
-        if (clause!=null && clause.getParameterType()==ParameterType.Column) {
+        if (clause != null && clause.getParameterType() == ParameterType.Column) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isCodeType(Object parameter) {
+        if (parameter instanceof SingleClause) {
+            SingleClause clause = (SingleClause) parameter;
+            if (clause != null && clause.getValue() instanceof CodeType) {
+                return true;
+            }
+        } else if (parameter instanceof CodeType) {
             return true;
         }
         return false;
@@ -216,6 +230,7 @@ public abstract class OGNL {
 
     /**
      * 判断参数是否为值（用于组织 code > 123 条件）
+     *
      * @param parameter
      * @return
      */

@@ -3,6 +3,8 @@ package com.flagwind.mybatis.datasource.single;
 
 import com.flagwind.mybatis.datasource.single.domain.FocusItemRepository;
 import com.flagwind.mybatis.entity.FocusItem;
+import com.flagwind.mybatis.entity.codes.FocusType;
+import com.flagwind.persistent.model.SingleClause;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SingleBootstrap.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -37,6 +41,14 @@ public class SingleSeekService {
 	public void  testGetById(){
 		FocusItem focusItem = focusItemRepository.getById("3532680e-9fe7-4c18-adbd-35bfe86b1eb7");
 		TestCase.assertTrue("查询总数量为：" , focusItem!=null);
+
+	}
+
+	@Test
+	public void  testQuery(){
+		FocusType focusType = new FocusType("1");
+		List<FocusItem> focusItems = focusItemRepository.query(SingleClause.equal("id",focusType),null,null);
+		TestCase.assertTrue("查询总数量为：" , focusItems!=null);
 
 	}
 
