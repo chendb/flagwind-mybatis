@@ -84,8 +84,10 @@ public class ObjectSqlHelper
         String sql =
                 "<foreach collection=\"" + mapName + "\" index=\"key\" item=\"itemValue\"  open=\"set\"  close=\"\"  separator=\",\">\n" +
                     "<if test=\"itemValue!=null\">" +
-                        "<when test=\"@com.flagwind.mybatis.utils.OGNL@isCodeType(itemValue)\"> ${key}=#{itemValue.value} </when>  " +
-                        "<otherwise> ${key}=#{itemValue} </otherwise> " +
+                        "<choose> " +
+                            "<when test=\"@com.flagwind.mybatis.utils.OGNL@isCodeType(itemValue)\"> ${key}=#{itemValue.value} </when>  " +
+                            "<otherwise> ${key}=#{itemValue} </otherwise> " +
+                        "</choose>"+
                     "</if>" +
                     "<if test=\"itemValue==null\">" +
                         "${key}=#{itemValue,jdbcType=VARCHAR}" +
