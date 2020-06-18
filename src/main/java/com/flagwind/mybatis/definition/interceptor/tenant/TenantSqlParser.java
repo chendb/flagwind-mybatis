@@ -10,6 +10,7 @@ import lombok.experimental.Accessors;
 import net.sf.jsqlparser.expression.BinaryExpression;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.Parenthesis;
+import net.sf.jsqlparser.expression.ValueListExpression;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
 import net.sf.jsqlparser.expression.operators.relational.*;
@@ -211,12 +212,26 @@ public class TenantSqlParser extends AbstractJsqlParser {
      * 默认tenantId的表达式： LongValue(1)这种依旧支持
      */
     protected Expression builderExpression(Expression currentExpression, Table table) {
-        final Expression tenantExpression = tenantHandler.getTenantId(false, table.getName());
+        final Expression tenantExpression = tenantHandler.getTenantId(true, table.getName());
         Expression appendExpression;
         if (!(tenantExpression instanceof SupportsOldOracleJoinSyntax)) {
-            appendExpression = new EqualsTo();
-            ((EqualsTo) appendExpression).setLeftExpression(this.getAliasColumn(table));
-            ((EqualsTo) appendExpression).setRightExpression(tenantExpression);
+            Parenthesis parenthesis = new Parenthesis();
+            IsNullExpression isNullExpression = new IsNullExpression();
+            isNullExpression.setLeftExpression(this.getAliasColumn(table));
+            if (tenantExpression instanceof ValueListExpression) {
+                InExpression inExpression = new InExpression();
+                inExpression.setLeftExpression(this.getAliasColumn(table));
+                inExpression.setRightItemsList(((ValueListExpression) tenantExpression).getExpressionList());
+                parenthesis.setExpression(new OrExpression(isNullExpression, inExpression));
+                appendExpression = parenthesis;
+            } else {
+                EqualsTo equalsTo = new EqualsTo();
+                equalsTo.setLeftExpression(this.getAliasColumn(table));
+                equalsTo.setRightExpression(tenantExpression);
+                parenthesis.setExpression(new OrExpression(isNullExpression, equalsTo));
+                appendExpression = parenthesis;
+            }
+
         } else {
             appendExpression = processTableAlias4CustomizedTenantIdExpression(tenantExpression, table);
         }
