@@ -7,10 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import net.sf.jsqlparser.expression.BinaryExpression;
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.Parenthesis;
-import net.sf.jsqlparser.expression.ValueListExpression;
+import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
 import net.sf.jsqlparser.expression.operators.relational.*;
@@ -113,34 +110,17 @@ public class TenantSqlParser extends AbstractJsqlParser {
      */
     protected Expression andExpression(Table table, Expression where) {
         //获得where条件表达式
-//        EqualsTo equalsTo = new EqualsTo();
-//        equalsTo.setLeftExpression(this.getAliasColumn(table));
-//        equalsTo.setRightExpression(tenantHandler.getTenantId(true, table.getName()));
         Expression tenantExpression = tenantHandler.getTenantId(true, table.getName());
-        Parenthesis parenthesis = new Parenthesis();
-        IsNullExpression isNullExpression = new IsNullExpression();
-        isNullExpression.setLeftExpression(this.getAliasColumn(table));
-        if (tenantExpression instanceof ValueListExpression) {
-            InExpression inExpression = new InExpression();
-            inExpression.setLeftExpression(this.getAliasColumn(table));
-            inExpression.setRightItemsList(((ValueListExpression) tenantExpression).getExpressionList());
-            parenthesis.setExpression(new OrExpression(isNullExpression, inExpression));
-
-        } else {
-            EqualsTo equalsTo = new EqualsTo();
-            equalsTo.setLeftExpression(this.getAliasColumn(table));
-            equalsTo.setRightExpression(tenantExpression);
-            parenthesis.setExpression(new OrExpression(isNullExpression, equalsTo));
-        }
+        Expression expression = getTenantExpression(table, tenantExpression);
 
         if (null != where) {
             if (where instanceof OrExpression) {
-                return new AndExpression(parenthesis, new Parenthesis(where));
+                return new AndExpression(expression, new Parenthesis(where));
             } else {
-                return new AndExpression(parenthesis, where);
+                return new AndExpression(expression, where);
             }
         }
-        return parenthesis;
+        return expression;
     }
 
     /**
@@ -232,22 +212,8 @@ public class TenantSqlParser extends AbstractJsqlParser {
         final Expression tenantExpression = tenantHandler.getTenantId(true, table.getName());
         Expression appendExpression;
         if (!(tenantExpression instanceof SupportsOldOracleJoinSyntax)) {
-            Parenthesis parenthesis = new Parenthesis();
-            IsNullExpression isNullExpression = new IsNullExpression();
-            isNullExpression.setLeftExpression(this.getAliasColumn(table));
-            if (tenantExpression instanceof ValueListExpression) {
-                InExpression inExpression = new InExpression();
-                inExpression.setLeftExpression(this.getAliasColumn(table));
-                inExpression.setRightItemsList(((ValueListExpression) tenantExpression).getExpressionList());
-                parenthesis.setExpression(new OrExpression(isNullExpression, inExpression));
-                appendExpression = parenthesis;
-            } else {
-                EqualsTo equalsTo = new EqualsTo();
-                equalsTo.setLeftExpression(this.getAliasColumn(table));
-                equalsTo.setRightExpression(tenantExpression);
-                parenthesis.setExpression(new OrExpression(isNullExpression, equalsTo));
-                appendExpression = parenthesis;
-            }
+
+            appendExpression = getTenantExpression(table, tenantExpression);
 
         } else {
             appendExpression = processTableAlias4CustomizedTenantIdExpression(tenantExpression, table);
@@ -271,6 +237,30 @@ public class TenantSqlParser extends AbstractJsqlParser {
         } else {
             return new AndExpression(currentExpression, appendExpression);
         }
+    }
+
+    private Expression getTenantExpression(Table table, Expression tenantExpression) {
+        Expression appendExpression;
+        IsNullExpression isNullExpression = new IsNullExpression();
+        isNullExpression.setLeftExpression(this.getAliasColumn(table));
+        if (tenantExpression instanceof ValueListExpression) {
+            InExpression inExpression = new InExpression();
+            inExpression.setLeftExpression(this.getAliasColumn(table));
+            inExpression.setRightItemsList(((ValueListExpression) tenantExpression).getExpressionList());
+            Parenthesis parenthesis = new Parenthesis();
+            parenthesis.setExpression(new OrExpression(isNullExpression, inExpression));
+            appendExpression = parenthesis;
+        } else if (tenantExpression instanceof NullValue) {
+            appendExpression = isNullExpression;
+        } else {
+            EqualsTo equalsTo = new EqualsTo();
+            equalsTo.setLeftExpression(this.getAliasColumn(table));
+            equalsTo.setRightExpression(tenantExpression);
+            Parenthesis parenthesis = new Parenthesis();
+            parenthesis.setExpression(new OrExpression(isNullExpression, equalsTo));
+            appendExpression = parenthesis;
+        }
+        return appendExpression;
     }
 
     protected void doExpression(Expression expression) {
