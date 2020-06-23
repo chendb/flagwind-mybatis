@@ -111,19 +111,36 @@ public class TenantSqlParser extends AbstractJsqlParser {
     /**
      * delete update 语句 where 处理
      */
-    protected BinaryExpression andExpression(Table table, Expression where) {
+    protected Expression andExpression(Table table, Expression where) {
         //获得where条件表达式
-        EqualsTo equalsTo = new EqualsTo();
-        equalsTo.setLeftExpression(this.getAliasColumn(table));
-        equalsTo.setRightExpression(tenantHandler.getTenantId(true, table.getName()));
+//        EqualsTo equalsTo = new EqualsTo();
+//        equalsTo.setLeftExpression(this.getAliasColumn(table));
+//        equalsTo.setRightExpression(tenantHandler.getTenantId(true, table.getName()));
+        Expression tenantExpression = tenantHandler.getTenantId(true, table.getName());
+        Parenthesis parenthesis = new Parenthesis();
+        IsNullExpression isNullExpression = new IsNullExpression();
+        isNullExpression.setLeftExpression(this.getAliasColumn(table));
+        if (tenantExpression instanceof ValueListExpression) {
+            InExpression inExpression = new InExpression();
+            inExpression.setLeftExpression(this.getAliasColumn(table));
+            inExpression.setRightItemsList(((ValueListExpression) tenantExpression).getExpressionList());
+            parenthesis.setExpression(new OrExpression(isNullExpression, inExpression));
+
+        } else {
+            EqualsTo equalsTo = new EqualsTo();
+            equalsTo.setLeftExpression(this.getAliasColumn(table));
+            equalsTo.setRightExpression(tenantExpression);
+            parenthesis.setExpression(new OrExpression(isNullExpression, equalsTo));
+        }
+
         if (null != where) {
             if (where instanceof OrExpression) {
-                return new AndExpression(equalsTo, new Parenthesis(where));
+                return new AndExpression(parenthesis, new Parenthesis(where));
             } else {
-                return new AndExpression(equalsTo, where);
+                return new AndExpression(parenthesis, where);
             }
         }
-        return equalsTo;
+        return parenthesis;
     }
 
     /**
