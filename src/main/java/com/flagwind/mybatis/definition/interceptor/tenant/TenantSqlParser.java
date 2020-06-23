@@ -243,15 +243,15 @@ public class TenantSqlParser extends AbstractJsqlParser {
         Expression appendExpression;
         IsNullExpression isNullExpression = new IsNullExpression();
         isNullExpression.setLeftExpression(this.getAliasColumn(table));
-        if (tenantExpression instanceof ValueListExpression) {
+        if (tenantExpression instanceof NullValue) {
+            appendExpression = isNullExpression;
+        } else if (tenantExpression instanceof ValueListExpression) {
             InExpression inExpression = new InExpression();
             inExpression.setLeftExpression(this.getAliasColumn(table));
             inExpression.setRightItemsList(((ValueListExpression) tenantExpression).getExpressionList());
             Parenthesis parenthesis = new Parenthesis();
             parenthesis.setExpression(new OrExpression(isNullExpression, inExpression));
             appendExpression = parenthesis;
-        } else if (tenantExpression instanceof NullValue) {
-            appendExpression = isNullExpression;
         } else {
             EqualsTo equalsTo = new EqualsTo();
             equalsTo.setLeftExpression(this.getAliasColumn(table));
