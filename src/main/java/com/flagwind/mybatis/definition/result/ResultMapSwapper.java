@@ -261,9 +261,6 @@ public class ResultMapSwapper {
                 typeHandler = configuration.getTypeHandlerRegistry().getTypeHandler(javaType, columnTypeEntry.getJdbcType());
             }
 
-//            if (typeHandler == null && CodeType.class.isAssignableFrom(javaType)) {
-//                typeHandler = new CodeTypeHandler(field.getJavaType());
-//            }
 
         } else {
             typeHandler = this.resolveTypeHandler(javaType, columnTypeEntry.getTypeHandler());

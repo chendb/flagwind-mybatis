@@ -243,55 +243,6 @@ public class TemplateSqlHelper {
 
 
 
-
-//    /**
-//     * select xxx,xxx...
-//     *
-//     * @param entityClass
-//     */
-//    public static String selectAllColumns(Class<?> entityClass) {
-//        StringBuilder sql = new StringBuilder();
-//        sql.append("SELECT ");
-//        sql.append(columns(entityClass));
-//        sql.append(" ");
-//        return sql.toString();
-//    }
-
-    /**
-     * select count(x)
-     *
-     * @param entityClass
-     */
-//    public static String selectCount(Class<?> entityClass) {
-//        StringBuilder sql = new StringBuilder();
-//        sql.append("SELECT ");
-//        Set<EntityColumn> pkColumns = EntityTableFactory.getPKColumns(entityClass);
-//        if (pkColumns.size() == 1) {
-//            sql.append("COUNT(").append(pkColumns.iterator().next().getColumn()).append(") ");
-//        } else {
-//            sql.append("COUNT(*) ");
-//        }
-//        return sql.toString();
-//    }
-
-
-
-
-//    /**
-//     * from tableName - 动态表名
-//     *
-//     * @param entityClass
-//     * @param defaultTableName
-//     */
-//    public static String fromTable(Class<?> entityClass, String defaultTableName) {
-//        StringBuilder sql = new StringBuilder();
-//        sql.append(" FROM ");
-//        sql.append(tableName(entityClass, defaultTableName));
-//        sql.append(" ");
-//        return sql.toString();
-//    }
-
-
     /**
      * update tableName - 动态表名
      *

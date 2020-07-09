@@ -51,8 +51,6 @@ public class MultipleIdsTemplate extends MapperTemplate {
         StringBuilder sql = new StringBuilder();
         sql.append(TemplateSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass));
 
-//        sql.append(TemplateSqlHelper.selectAllColumns(entityClass));
-//        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass)));
         Set<EntityColumn> columnList = EntityTableFactory.getPKColumns(entityClass);
         if (columnList.size() == 1) {
             EntityColumn column = columnList.iterator().next();
