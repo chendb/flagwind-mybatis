@@ -74,7 +74,8 @@ public class BaseSelectTemplate extends MapperTemplate {
         //修改返回值类型为实体类型
         setResultType(ms, entityClass);
         String sql = selectColumnsFromTable(entityClass) +
-                ObjectSqlHelper.getWhereSql("_clause", 5);
+                ObjectSqlHelper.getWhereSql("_clause", 5)+
+                ObjectSqlHelper.getSortingSql();
         return sql;
     }
 
@@ -94,7 +95,7 @@ public class BaseSelectTemplate extends MapperTemplate {
 //        boolean hasTableAlias = sql.toString().contains(".");
 //        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass, hasTableAlias)));
                 ObjectSqlHelper.getWhereSql("_clause", 5) +
-                TemplateSqlHelper.orderByDefault(entityClass);
+                ObjectSqlHelper.getSortingSql();
         return sql;
     }
 
@@ -177,10 +178,11 @@ public class BaseSelectTemplate extends MapperTemplate {
         //修改返回值类型为实体类型
         setResultType(ms, entityClass);
         String sql = TemplateSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass) +
+               ObjectSqlHelper.getSortingSql();
 //        sql.append(TemplateSqlHelper.selectAllColumns(entityClass));
 //        boolean hasTableAlias = sql.toString().contains(".");
 //        sql.append(TemplateSqlHelper.fromTable(entityClass, tableName(entityClass, hasTableAlias)));
-                TemplateSqlHelper.orderByDefault(entityClass);
+//                TemplateSqlHelper.orderByDefault(entityClass);
         return sql;
     }
 
