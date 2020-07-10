@@ -47,7 +47,21 @@ public class SingleQueryService {
     @Test
     public void testPage() {
         Paging paging = new Paging(1L, 10L);
-        List<Role> menuList = roleRepository.seek(SingleClause.equal("disabled", 0), null, null);
+
+        List<Role> menuList = roleRepository.query(SingleClause.equal("disabled", 0), paging, new Sorting[]{Sorting.ascending("createTime")});
+        TestCase.assertTrue("查询总数量为：" + menuList.size(), menuList.size() > 0);
+    }
+
+    @Test
+    public void testSeek() {
+        List<Role> menuList = roleRepository.seek(SingleClause.equal("disabled", 0), null, new Sorting[]{Sorting.ascending("createTime")});
+        TestCase.assertTrue("查询总数量为：" + menuList.size(), menuList.size() > 0);
+    }
+
+
+    @Test
+    public void testQuery() {
+        List<Role> menuList = roleRepository.query(SingleClause.equal("disabled", 0), null, new Sorting[]{Sorting.ascending("createTime")});
         TestCase.assertTrue("查询总数量为：" + menuList.size(), menuList.size() > 0);
     }
 

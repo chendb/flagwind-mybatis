@@ -19,8 +19,8 @@ public class ObjectSqlHelper
         }
         String sql =
                 "<if test=\" _sorts!= null\">" +
-                        " order by " +
-                        "<foreach collection=\"_sorts\" index=\"key\" item=\"sorting\"  open=\"\"  close=\"\"  separator=\",\">" +
+                        //" order by " +
+                        "<foreach collection=\"_sorts\" index=\"key\" item=\"sorting\"  open=\" order by \"  close=\"\"  separator=\",\">" +
                             "<foreach collection=\"sorting.fields\" index=\"key\" item=\"field\"  open=\"\"  close=\"\"  separator=\",\">" +
                                 "${field}" +
                                 "<if  test=\"@com.flagwind.mybatis.utils.OGNL@isAscending(sorting)\">" +
