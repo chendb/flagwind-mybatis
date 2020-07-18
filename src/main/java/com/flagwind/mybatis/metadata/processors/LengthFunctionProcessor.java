@@ -16,8 +16,8 @@ public class LengthFunctionProcessor implements FunctionProcessor
 		String suffix = (StringUtils.isEmpty(alias) ? "" : (" as " + alias));
 		switch (databaseType) {
 			case Oracle:
-				return "length("+arguments+")" + suffix;
 			case MySQL:
+			case DM:
 				return "length("+arguments+")" + suffix;
 			default:
 				throw new MapperException("该函数没有针对" + databaseType + "类型数据库实现");

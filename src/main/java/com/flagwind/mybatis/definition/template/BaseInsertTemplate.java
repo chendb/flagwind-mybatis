@@ -211,7 +211,7 @@ public class BaseInsertTemplate extends MapperTemplate {
      * @param ms 映射申明
      */
     public String insertList(MappedStatement ms) {
-        if (DatabaseType.MySQL == this.getDatabaseType()) {
+        if (DatabaseType.MySQL == this.getDatabaseType() || DatabaseType.DM == this.getDatabaseType()) {
             return insertListFromMySql(ms);
         } else {
             return insertListFromOracle(ms);

@@ -15,6 +15,7 @@ public class SecondFunctionProcessor implements FunctionProcessor {
 		String suffix = (StringUtils.isEmpty(alias) ? "" : (" as " + alias));
 		switch (databaseType) {
 		case Oracle:
+		case DM:
 			return "to_char(" + arguments + ",'ss')" + suffix;
 		case MySQL:
 			return "date_format(" + arguments + ",'%s')" + suffix;

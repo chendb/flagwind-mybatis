@@ -15,6 +15,7 @@ public class NowFunctionProcessor implements FunctionProcessor {
 		String suffix = (StringUtils.isEmpty(alias) ? "" : (" as " + alias));
 		switch (databaseType) {
 			case Oracle:
+			case DM:
 				return "sysdate()" + suffix;
 			case MySQL:
 				return "now()" + suffix;

@@ -15,6 +15,7 @@ public class MonthFunctionProcessor implements FunctionProcessor {
 		String suffix = (StringUtils.isEmpty(alias) ? "" : (" as " + alias));
 		switch (databaseType) {
 			case Oracle:
+			case DM:
 				return "to_char("+arguments+",'mm')" + suffix;
 			case MySQL:
 				return "month("+arguments+")" + suffix;

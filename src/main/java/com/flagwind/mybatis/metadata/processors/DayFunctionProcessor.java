@@ -17,6 +17,7 @@ public class DayFunctionProcessor implements FunctionProcessor {
 			case Oracle:
 				return "to_char("+arguments+",'dd')" + suffix;
 			case MySQL:
+			case DM:
 				return "day("+arguments+")" + suffix;
 			default:
 				throw new MapperException("该函数没有针对" + databaseType + "类型数据库实现");
