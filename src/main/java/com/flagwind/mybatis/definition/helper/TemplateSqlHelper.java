@@ -15,7 +15,7 @@ public class TemplateSqlHelper {
         EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
         String prefix = entityTable.getPrefix();
         if (StringUtils.isEmpty(prefix)) {
-            //使用全局配置
+            // 使用全局配置
             prefix = config.getPrefix();
         }
         if (StringUtils.isNotEmpty(prefix)) {
@@ -29,65 +29,30 @@ public class TemplateSqlHelper {
         String table = getTableName(config,entityClass);
         sb.append(table);
         if (addDefaultAlias) {
-            sb.append(" ").append(TemplateSqlHelper.tableAlias(entityClass));
+            sb.append(" ").append(tableAlias(entityClass));
         }
         return sb.toString();
     }
 
 
-    public static String tableName(Class<?> entityClass, String defaultTableName) {
-        return defaultTableName;
-    }
-
     public static String selectColumnsFromTable(Config config,Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
 
         sql.append("select ");
-        sql.append(TemplateSqlHelper.columns(entityClass));
+        sql.append(TemplateSqlHelper.columns(entityClass, tableAlias(entityClass), null));
         sql.append(" FROM ");
-        boolean hasTableAlias = sql.toString().contains(".");
-        sql.append(tableName(config, entityClass, hasTableAlias));
-
+        sql.append(tableName(config, entityClass, true));
         return sql.toString();
-
     }
 
     public static String selectCountFromTable(Config config,Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT ");
-        Set<EntityColumn> pkColumns = EntityTableFactory.getPKColumns(entityClass);
-        if (pkColumns.size() == 1) {
-            sql.append("COUNT(").append(pkColumns.iterator().next().getColumn()).append(") ");
-        } else {
-            sql.append("COUNT(*) ");
-        }
-        sql.append(" FROM ");
-        boolean hasTableAlias = sql.toString().contains(".");
-        sql.append(tableName(config,entityClass, hasTableAlias));
-
+        sql.append("SELECT COUNT(0) FROM ");
+        sql.append(tableName(config,entityClass, false));
         return sql.toString();
     }
 
-    /**
-     * select case when count(x) > 0 then 1 else 0 end
-     *
-     * @param entityClass
-     */
-    public static String selectCountExistsFromTable(Config config,Class<?> entityClass) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT CASE WHEN ");
-        Set<EntityColumn> pkColumns = EntityTableFactory.getPKColumns(entityClass);
-        if (pkColumns.size() == 1) {
-            sql.append("COUNT(").append(pkColumns.iterator().next().getColumn()).append(") ");
-        } else {
-            sql.append("COUNT(*) ");
-        }
-        sql.append(" > 0 THEN 1 ELSE 0 END AS result ");
 
-        boolean hasTableAlias = sql.toString().contains(".");
-        sql.append(tableName(config,entityClass, hasTableAlias));
-        return sql.toString();
-    }
 
     /**
      * <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
@@ -216,18 +181,38 @@ public class TemplateSqlHelper {
     }
 
     /**
-     * 获取所有查询列，如id,name,code...
-     *
-     * @param entityClass
+     * 生成选择的列SQL，格式如下：_user.name as user_name,_user.id as user_id
+     * @param entityClass 业务实体
+     * @param columnPrefix 列前缀
+     * @param aliasPrefix 别名前缀
+     * @return
      */
-    public static String columns(Class<?> entityClass) {
-        Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
-        StringBuilder sql = new StringBuilder();
-        for (EntityColumn entityColumn : columnList) {
-            sql.append(entityColumn.getColumn()).append(",");
+    public static String columns(Class<?> entityClass, String columnPrefix, String aliasPrefix) {
+        EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
+        if (entityTable.getBaseSelect() != null) {
+            return entityTable.getBaseSelect();
         }
-        return sql.substring(0, sql.length() - 1);
+        Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
+        StringBuilder selectBuilder = new StringBuilder();
+
+        if (StringUtils.isNotEmpty(aliasPrefix)) {
+            aliasPrefix += "_";
+        }
+
+        for (EntityColumn entityColumn : columnList) {
+            if (StringUtils.isNotEmpty(columnPrefix) && !entityColumn.getColumn().contains(".")) {
+                selectBuilder.append(columnPrefix).append(".");
+            }
+            selectBuilder.append(entityColumn.getColumn()).append(" as ");
+            if (StringUtils.isNotEmpty(aliasPrefix)) {
+                selectBuilder.append(aliasPrefix);
+            }
+            selectBuilder.append(entityColumn.getProperty()).append(",");
+        }
+        entityTable.setBaseSelect(selectBuilder.substring(0, selectBuilder.length() - 1));
+        return entityTable.getBaseSelect();
     }
+
 
 
     /**

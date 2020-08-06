@@ -33,15 +33,14 @@ public class SingleSeekService {
 
 	@Test
 	public void  testSeekById(){
-		FocusItem focusItem = focusItemRepository.seekById("3532680e-9fe7-4c18-adbd-35bfe86b1eb7");
+		FocusItem focusItem = focusItemRepository.seekById("01a79f2f-6c5b-48b9-86ff-051ac5421c3a");
 		TestCase.assertTrue("查询总数量为：" , focusItem!=null);
 	}
 
 	@Test
 	public void  testGetById(){
-		FocusItem focusItem = focusItemRepository.getById("3532680e-9fe7-4c18-adbd-35bfe86b1eb7");
+		FocusItem focusItem = focusItemRepository.getById("01a79f2f-6c5b-48b9-86ff-051ac5421c3a");
 		TestCase.assertTrue("查询总数量为：" , focusItem!=null);
-
 	}
 
 	@Test

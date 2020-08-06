@@ -26,7 +26,7 @@ public class FocusItem {
 
 
         @Column(name = "groupId")
-        private String groupId;
+        private String focusGroupId;
 
 
         @Column(name = "instanceId")

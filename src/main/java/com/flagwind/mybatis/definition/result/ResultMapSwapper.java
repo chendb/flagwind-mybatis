@@ -19,7 +19,6 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.TypeHandler;
 
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public class ResultMapSwapper {
         ResultMapping.Builder builder = new ResultMapping.Builder(configuration, field.getName());
 
 
-        builder.column(getColumn(field, style, columnPrefix));
+        builder.column(getColumnAlias(field, columnPrefix));
 
 
         ColumnTypeEntry columnTypeEntry = EntityTableUtils.getColumnTypeEntry(field);
@@ -105,15 +104,20 @@ public class ResultMapSwapper {
         return builder.build();
     }
 
-    private String getColumn(EntityField field, Style style, String columnPrefix) {
-        String column = EntityTableUtils.getColumnName(field, style);
+//    private String getColumn(EntityField field, Style style, String columnPrefix) {
+//        String column = EntityTableUtils.getColumnName(field, style);
+//
+//        if (field.isAnnotationPresent(JoinColumn.class)) {
+//            JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
+//            column = joinColumn.name();
+//        }
+//
+//        return (StringUtils.isEmpty(columnPrefix) ? "" : columnPrefix) + column;
+//    }
 
-        if (field.isAnnotationPresent(JoinColumn.class)) {
-            JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
-            column = joinColumn.name();
-        }
-
-        return (StringUtils.isEmpty(columnPrefix) ? "" : columnPrefix) + column;
+    private String getColumnAlias(EntityField field, String columnPrefix) {
+//        String column = NameUtils.convertByStyle(field.getName(), style);
+        return (StringUtils.isEmpty(columnPrefix) ? "" : columnPrefix) + field.getName();
     }
 
 
@@ -128,7 +132,7 @@ public class ResultMapSwapper {
 
         ResultMapping.Builder builder = new ResultMapping.Builder(configuration, field.getName());
 
-        builder.column(getColumn(field, style, columnPrefix));
+        builder.column(getColumnAlias(field, columnPrefix));
 
         ColumnTypeEntry columnTypeEntry = EntityTableUtils.getColumnTypeEntry(field);
 
@@ -208,7 +212,7 @@ public class ResultMapSwapper {
             ResultMapping.Builder builder = new ResultMapping.Builder(configuration, field.getName());
 
 
-            String col = getColumn(field, style, columnPrefix);
+            String col = getColumnAlias(field, columnPrefix);
             builder.column(col);
 
 

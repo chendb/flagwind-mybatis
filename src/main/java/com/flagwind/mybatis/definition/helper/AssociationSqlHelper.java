@@ -135,7 +135,7 @@ public class AssociationSqlHelper {
     public static String columns(Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
 
-        sql.append(getSelectColumnsFromMasterTable(entityClass, TemplateSqlHelper.tableAlias(entityClass), null));
+        sql.append(TemplateSqlHelper.columns(entityClass, TemplateSqlHelper.tableAlias(entityClass), null));
 
         List<EntityField> fields = EntityTableFactory.getEntityTable(entityClass).getAssociationFields();
         for (EntityField field : fields) {
@@ -153,6 +153,13 @@ public class AssociationSqlHelper {
         return sql.toString();
     }
 
+    /**
+     * 生成选择的列SQL，格式如下：_user.name as user_name,_user.id as user_id
+     * @param field 列字段
+     * @param columnPrefix 列前缀
+     * @param aliasPrefix 别名前缀
+     * @return
+     */
     public static String getSelectColumnsFromAssociationTable(EntityField field, String columnPrefix, String aliasPrefix) {
         Class<?> entityClass = getAssociationEntityClass(field);
         if (StringUtils.isNotEmpty(aliasPrefix)) {
@@ -172,32 +179,6 @@ public class AssociationSqlHelper {
             selectBuilder.append(entityColumn.getProperty()).append(",");
         }
         return selectBuilder.substring(0, selectBuilder.length() - 1);
-    }
-
-    public static String getSelectColumnsFromMasterTable(Class<?> entityClass, String columnPrefix, String aliasPrefix) {
-        EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
-        if (entityTable.getBaseSelect() != null) {
-            return entityTable.getBaseSelect();
-        }
-        Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
-        StringBuilder selectBuilder = new StringBuilder();
-
-        if (StringUtils.isNotEmpty(aliasPrefix)) {
-            aliasPrefix += "_";
-        }
-
-        for (EntityColumn entityColumn : columnList) {
-            if (StringUtils.isNotEmpty(columnPrefix) && !entityColumn.getColumn().contains(".")) {
-                selectBuilder.append(columnPrefix).append(".");
-            }
-            selectBuilder.append(entityColumn.getColumn()).append(" as ");
-            if (StringUtils.isNotEmpty(aliasPrefix)) {
-                selectBuilder.append(aliasPrefix);
-            }
-            selectBuilder.append(entityColumn.getProperty()).append(",");
-        }
-        entityTable.setBaseSelect(selectBuilder.substring(0, selectBuilder.length() - 1));
-        return entityTable.getBaseSelect();
     }
 
 }

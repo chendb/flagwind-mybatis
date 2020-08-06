@@ -123,25 +123,6 @@ public class BaseSelectTemplate extends MapperTemplate {
         return sql;
     }
 
-    /**
-     * 根据主键查询总数
-     *
-     * @param ms 映射申明
-     * @return String
-     */
-    public String existsById(MappedStatement ms) {
-        Class<?> entityClass = getEntityClass(ms);
-        String sql = TemplateSqlHelper.selectCountExistsFromTable(context.getConfig(), entityClass) +
-                TemplateSqlHelper.wherePKColumns(entityClass, null);
-        return sql;
-    }
-
-    public String exists(MappedStatement ms) {
-        Class<?> entityClass = getEntityClass(ms);
-        String sql = TemplateSqlHelper.selectCountExistsFromTable(context.getConfig(), entityClass) +
-                ObjectSqlHelper.getWhereSql("_clause", 5);
-        return sql;
-    }
 
     /**
      * 查询全部结果
