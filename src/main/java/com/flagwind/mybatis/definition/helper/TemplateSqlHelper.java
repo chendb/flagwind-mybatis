@@ -35,13 +35,16 @@ public class TemplateSqlHelper {
     }
 
 
+
+
     public static String selectColumnsFromTable(Config config,Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
-
+        String baseColumns = TemplateSqlHelper.getBaseColumns(entityClass);
+        boolean hasTableAlias = baseColumns.contains(".");
         sql.append("select ");
-        sql.append(TemplateSqlHelper.columns(entityClass, tableAlias(entityClass), null));
+        sql.append(baseColumns);
         sql.append(" FROM ");
-        sql.append(tableName(config, entityClass, true));
+        sql.append(tableName(config, entityClass, hasTableAlias));
         return sql.toString();
     }
 
@@ -188,10 +191,6 @@ public class TemplateSqlHelper {
      * @return
      */
     public static String columns(Class<?> entityClass, String columnPrefix, String aliasPrefix) {
-        EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
-        if (entityTable.getBaseSelect() != null) {
-            return entityTable.getBaseSelect();
-        }
         Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
         StringBuilder selectBuilder = new StringBuilder();
 
@@ -203,14 +202,36 @@ public class TemplateSqlHelper {
             if (StringUtils.isNotEmpty(columnPrefix) && !entityColumn.getColumn().contains(".")) {
                 selectBuilder.append(columnPrefix).append(".");
             }
-            selectBuilder.append(entityColumn.getColumn()).append(" as ");
-            if (StringUtils.isNotEmpty(aliasPrefix)) {
-                selectBuilder.append(aliasPrefix);
+            if (entityColumn.getColumn().equalsIgnoreCase(entityColumn.getProperty())
+                    && StringUtils.isEmpty(aliasPrefix)) {
+                selectBuilder.append(entityColumn.getColumn());
+            } else {
+                selectBuilder.append(entityColumn.getColumn()).append(" as ");
+                if (StringUtils.isNotEmpty(aliasPrefix)) {
+                    selectBuilder.append(aliasPrefix);
+                }
+                selectBuilder.append(entityColumn.getProperty());
             }
-            selectBuilder.append(entityColumn.getProperty()).append(",");
+            selectBuilder.append(",");
         }
-        entityTable.setBaseSelect(selectBuilder.substring(0, selectBuilder.length() - 1));
-        return entityTable.getBaseSelect();
+        String sql = selectBuilder.substring(0, selectBuilder.length() - 1);
+        return sql;
+    }
+
+    public static String getBaseColumns(Class<?> entityClass) {
+        EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
+        if (entityTable.getBaseSelect() != null) {
+            return entityTable.getBaseSelect();
+        }
+
+        Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
+        StringBuilder selectBuilder = new StringBuilder();
+        for (EntityColumn entityColumn : columnList) {
+            selectBuilder.append(entityColumn.getColumn()).append(",");
+        }
+        String sql = selectBuilder.substring(0, selectBuilder.length() - 1);
+        entityTable.setBaseSelect(sql);
+        return sql;
     }
 
 

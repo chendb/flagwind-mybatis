@@ -17,17 +17,13 @@ public class BaseSelectTemplate extends MapperTemplate {
         super(mapperClass, mapperResolver);
     }
 
-    protected String selectColumnsFromTable(Class<?> entityClass) {
+    protected String selectColumnsFromTable(Class<?> entityClass,boolean isAssociationSQL) {
         StringBuilder sql = new StringBuilder();
-        if (AssociationSqlHelper.hasAssociation(entityClass)) {
+        if (isAssociationSQL) {
             AssociationSqlHelper.registerEntityClass(entityClass, context.getConfig());
-
             sql.append(AssociationSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass));
-
         } else {
-
             sql.append(TemplateSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass));
-
 
         }
         return sql.toString();
@@ -41,15 +37,11 @@ public class BaseSelectTemplate extends MapperTemplate {
      */
     public String seekById(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
-        //将返回值修改为实体类型
-        setResultType(ms, entityClass);
+        // 将返回值修改为实体类型
+        setAssociationResultType(ms,entityClass);
         StringBuilder sql = new StringBuilder();
-        sql.append(selectColumnsFromTable(entityClass));
-        if (AssociationSqlHelper.hasAssociation(entityClass)) {
-            sql.append(AssociationSqlHelper.wherePKColumn(entityClass, "_key"));
-        } else {
-            sql.append(TemplateSqlHelper.wherePKColumn(entityClass, "_key"));
-        }
+        sql.append(selectColumnsFromTable(entityClass,true));
+        sql.append(AssociationSqlHelper.wherePKColumn(entityClass, "_key"));
         return sql.toString();
     }
 
@@ -60,9 +52,9 @@ public class BaseSelectTemplate extends MapperTemplate {
      */
     public String seek(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        //修改返回值类型为实体类型
-        setResultType(ms, entityClass);
-        String sql = selectColumnsFromTable(entityClass) +
+        // 修改返回值类型为实体类型
+        setAssociationResultType(ms,entityClass);
+        String sql = selectColumnsFromTable(entityClass,true) +
                 ObjectSqlHelper.getWhereSql("_clause", 5) +
                 ObjectSqlHelper.getSortingSql();
         return sql;
@@ -75,10 +67,10 @@ public class BaseSelectTemplate extends MapperTemplate {
      */
     public String query(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        //修改返回值类型为实体类型
-        setResultType(ms, entityClass);
+        // 修改返回值类型为实体类型
+        setGeneralResultType(ms,entityClass);
 
-        String sql = TemplateSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass) +
+        String sql = selectColumnsFromTable( entityClass,false) +
                 ObjectSqlHelper.getWhereSql("_clause", 5) +
                 ObjectSqlHelper.getSortingSql();
         return sql;
@@ -102,10 +94,10 @@ public class BaseSelectTemplate extends MapperTemplate {
      */
     public String getById(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
-        //将返回值修改为实体类型
-        setResultType(ms, entityClass);
+        // 将返回值修改为实体类型
+        setGeneralResultType(ms,entityClass);
 
-        String sql = TemplateSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass) +
+        String sql = selectColumnsFromTable( entityClass,false) +
                 TemplateSqlHelper.wherePKColumn(entityClass, "_key");
         return sql;
     }
@@ -131,9 +123,9 @@ public class BaseSelectTemplate extends MapperTemplate {
      */
     public String getAll(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
-        //修改返回值类型为实体类型
-        setResultType(ms, entityClass);
-        String sql = TemplateSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass) +
+        // 修改返回值类型为实体类型
+        setGeneralResultType(ms,entityClass);
+        String sql = selectColumnsFromTable( entityClass,false) +
                 ObjectSqlHelper.getSortingSql();
 
         return sql;

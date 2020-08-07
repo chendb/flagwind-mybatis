@@ -104,21 +104,32 @@ public abstract class MapperTemplate {
      * @param entityClass
      */
     protected void setResultType(MappedStatement ms, Class<?> entityClass) {
+        if (AssociationSqlHelper.hasAssociation(entityClass)) {
+            setAssociationResultType(ms,entityClass);
+        } else {
+            setGeneralResultType(ms,entityClass);
+        }
+    }
+
+    protected void setGeneralResultType(MappedStatement ms, Class<?> entityClass) {
 
         EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
-        if (AssociationSqlHelper.hasAssociation(entityClass)) {
-            ResultMapSwapper swapper = ResultMapSwapperHolder.getSwapper(ms.getConfiguration());
-            ResultMap newResultMap = swapper.reloadResultMap(ms.getResource(), entityClass.getSimpleName(), entityTable.getEntityClass(), context.getConfig().getStyle());
-            List<ResultMap> newResultMaps = new ArrayList<>();
-            newResultMaps.add(newResultMap);
-            MetaObject metaObject = SystemMetaObject.forObject(ms);
-            metaObject.setValue("resultMaps", Collections.unmodifiableList(newResultMaps));
-        } else {
-            List<ResultMap> resultMaps = new ArrayList<>();
-            resultMaps.add(entityTable.getResultMap(ms.getConfiguration()));
-            MetaObject metaObject = SystemMetaObject.forObject(ms);
-            metaObject.setValue("resultMaps", Collections.unmodifiableList(resultMaps));
-        }
+
+        List<ResultMap> resultMaps = new ArrayList<>();
+        resultMaps.add(entityTable.getResultMap(ms.getConfiguration()));
+        MetaObject metaObject = SystemMetaObject.forObject(ms);
+        metaObject.setValue("resultMaps", Collections.unmodifiableList(resultMaps));
+
+    }
+
+    protected void setAssociationResultType(MappedStatement ms, Class<?> entityClass) {
+        EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
+        ResultMapSwapper swapper = ResultMapSwapperHolder.getSwapper(ms.getConfiguration());
+        ResultMap newResultMap = swapper.reloadResultMap(ms.getResource(), entityClass.getSimpleName(), entityTable.getEntityClass(), context.getConfig().getStyle());
+        List<ResultMap> newResultMaps = new ArrayList<>();
+        newResultMaps.add(newResultMap);
+        MetaObject metaObject = SystemMetaObject.forObject(ms);
+        metaObject.setValue("resultMaps", Collections.unmodifiableList(newResultMaps));
     }
 
     /**
@@ -217,46 +228,4 @@ public abstract class MapperTemplate {
         return MessageFormat.format(context.getConfig().getSequenceFormat(), column.getSequenceName(), column.getColumn(), column.getProperty(), column.getTable().getName());
     }
 
-//    /**
-//     * 获取实体类的表名
-//     *
-//     * @param entityClass
-//     */
-//    private String getTableName(Class<?> entityClass) {
-//        EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
-//        String prefix = entityTable.getPrefix();
-//        if (StringUtils.isEmpty(prefix)) {
-//            //使用全局配置
-//            prefix = context.getConfig().getPrefix();
-//        }
-//        if (StringUtils.isNotEmpty(prefix)) {
-//            return prefix + "." + entityTable.getName();
-//        }
-//        return entityTable.getName();
-//    }
-
-//    /**
-//     * 获取实体的表名
-//     *
-//     * @param entityClass
-//     */
-//    protected String tableName(Class<?> entityClass) {
-//        return tableName(entityClass, false);
-//    }
-//
-//    /**
-//     * 获取实体的表名
-//     *
-//     * @param entityClass     实体类型
-//     * @param addDefaultAlias 是否增加默认别名
-//     */
-//    protected String tableName(Class<?> entityClass, boolean addDefaultAlias) {
-//        StringBuilder sb = new StringBuilder();
-//        String table = getTableName(entityClass);
-//        sb.append(table);
-//        if (addDefaultAlias) {
-//            sb.append(" ").append(TemplateSqlHelper.tableAlias(entityClass));
-//        }
-//        return sb.toString();
-//    }
 }
