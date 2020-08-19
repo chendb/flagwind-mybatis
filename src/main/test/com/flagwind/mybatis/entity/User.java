@@ -13,8 +13,8 @@ import java.sql.Timestamp;
 @Tenant
 @Data
 @Entity
-@Table(name = "com_role")
-public class Role
+@Table(name = "com_user")
+public class User
 {
 	@Id
 	@Column(name = "Id")
@@ -22,13 +22,15 @@ public class Role
 
 	private String name;
 
-	private String description;
-	private String icon;
+	private String username;
+
+	private String password;
 
 	private String creator;
 	private String modifier;
 	private Timestamp createTime;
 	private Timestamp modifyTime;
+
 	private boolean disabled;
 
 	private String tenantId;

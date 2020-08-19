@@ -222,7 +222,7 @@ public class ObjectSqlHelper
                 " ${__name} <if test=\"" + clauseName + ".included==false\"> not </if>  in  (" +
                 " select ${" + clauseName + ".childField} from ${" + clauseName + ".childTable} " +
                 " <where>" +
-                        getCombineClauseSql(clauseName, false,false,2) +
+                        getCombineClauseSql(clauseName, false,false,3) +
                 " </where>" +
                 ")"+
                 (isWrapByWhen?" </when>":"");

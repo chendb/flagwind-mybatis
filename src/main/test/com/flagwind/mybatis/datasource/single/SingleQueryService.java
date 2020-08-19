@@ -66,6 +66,18 @@ public class SingleQueryService {
     }
 
     @Test
+    public void testCount() {
+        ChildClause childClause = ChildClause.include("instanceId", "id", "insta_case");
+        childClause.add(SingleClause.greaterThanEqual("createTime", "2020-08-08"));
+        childClause.add(CombineClause.and(
+                SingleClause.greaterThanEqual("archiveTime", "2020-08-08"),
+                SingleClause.equal("status", "5")
+        ));
+        long count = roleRepository.count(childClause);
+        TestCase.assertTrue("查询总数量为：" + count, count > 0);
+    }
+
+    @Test
     public void testGetAll() {
         List<Role> menuList = roleRepository.getAll();
         TestCase.assertTrue("查询总数量为：" + menuList.size(), menuList.size() > 0);

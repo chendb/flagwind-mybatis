@@ -20,6 +20,7 @@ import net.sf.jsqlparser.statement.update.Update;
 import org.apache.ibatis.reflection.MetaObject;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author chendb
@@ -64,16 +65,22 @@ public class TenantSqlParser extends AbstractJsqlParser {
             // 过滤退出执行
             return;
         }
-        insert.getColumns().add(new Column(tenantHandler.getTenantIdColumn()));
+        Optional<Column> column = insert.getColumns().stream().filter(g -> g.getColumnName().equalsIgnoreCase(tenantHandler.getTenantIdColumn())).findFirst();
+
+        if (!column.isPresent()) {
+            insert.getColumns().add(new Column(tenantHandler.getTenantIdColumn()));
+        }
         if (insert.getSelect() != null) {
-            processPlainSelect((PlainSelect) insert.getSelect().getSelectBody(), true);
+            processPlainSelect((PlainSelect) insert.getSelect().getSelectBody(), !column.isPresent());
         } else if (insert.getItemsList() != null) {
-            // fixed github pull/295
-            ItemsList itemsList = insert.getItemsList();
-            if (itemsList instanceof MultiExpressionList) {
-                ((MultiExpressionList) itemsList).getExprList().forEach(el -> el.getExpressions().add(tenantHandler.getTenantId(false, insert.getTable().getName())));
-            } else {
-                ((ExpressionList) insert.getItemsList()).getExpressions().add(tenantHandler.getTenantId(false, insert.getTable().getName()));
+            if (!column.isPresent()) {
+                // fixed github pull/295
+                ItemsList itemsList = insert.getItemsList();
+                if (itemsList instanceof MultiExpressionList) {
+                    ((MultiExpressionList) itemsList).getExprList().forEach(el -> el.getExpressions().add(tenantHandler.getTenantId(false, insert.getTable().getName())));
+                } else {
+                    ((ExpressionList) insert.getItemsList()).getExpressions().add(tenantHandler.getTenantId(false, insert.getTable().getName()));
+                }
             }
         } else {
             throw new MapperException("Failed to process multiple-table update, please exclude the tableName or statementId");
@@ -109,6 +116,10 @@ public class TenantSqlParser extends AbstractJsqlParser {
      * delete update 语句 where 处理
      */
     protected Expression andExpression(Table table, Expression where) {
+        // 若有租户和条件则跳过
+        if (hasTenantExpression(where)) {
+            return where;
+        }
         //获得where条件表达式
         Expression tenantExpression = tenantHandler.getTenantId(true, table.getName());
         Expression expression = getTenantExpression(table, tenantExpression);
@@ -209,6 +220,7 @@ public class TenantSqlParser extends AbstractJsqlParser {
      * 默认tenantId的表达式： LongValue(1)这种依旧支持
      */
     protected Expression builderExpression(Expression currentExpression, Table table) {
+
         final Expression tenantExpression = tenantHandler.getTenantId(true, table.getName());
         Expression appendExpression;
         if (!(tenantExpression instanceof SupportsOldOracleJoinSyntax)) {
@@ -221,6 +233,8 @@ public class TenantSqlParser extends AbstractJsqlParser {
         if (currentExpression == null) {
             return appendExpression;
         }
+
+
         if (currentExpression instanceof BinaryExpression) {
             BinaryExpression binaryExpression = (BinaryExpression) currentExpression;
             doExpression(binaryExpression.getLeftExpression());
@@ -232,11 +246,25 @@ public class TenantSqlParser extends AbstractJsqlParser {
                 processSelectBody(((SubSelect) rightItems).getSelectBody());
             }
         }
+
+        // 若条件中已经包括租户的条件，则跳过
+        if (hasTenantExpression(currentExpression)) {
+            return currentExpression;
+        }
+
         if (currentExpression instanceof OrExpression) {
             return new AndExpression(new Parenthesis(currentExpression), appendExpression);
         } else {
             return new AndExpression(currentExpression, appendExpression);
         }
+    }
+
+    private boolean hasTenantExpression(Expression where) {
+        if (where == null) {
+            return false;
+        }
+        String tenantIdColumn = tenantHandler.getTenantIdColumn().toLowerCase() + " ";
+        return where.toString().toLowerCase().indexOf(tenantIdColumn) >= 0;
     }
 
     private Expression getTenantExpression(Table table, Expression tenantExpression) {
