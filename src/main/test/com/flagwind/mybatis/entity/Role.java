@@ -1,6 +1,5 @@
 package com.flagwind.mybatis.entity;
 
-import com.flagwind.mybatis.tenant.Tenant;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -10,7 +9,7 @@ import javax.persistence.Table;
 import java.sql.Timestamp;
 
 
-@Tenant
+//@Tenant
 @Data
 @Entity
 @Table(name = "com_role")

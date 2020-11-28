@@ -11,6 +11,8 @@ public class ObjectSqlHelper
 
     private static final HashMap<String,String> TEMPLATE_SQL=new HashMap<>();
 
+
+
     // region 公共方法
     public static String getSortingSql() {
         String templateId="query_sorting";
@@ -96,6 +98,10 @@ public class ObjectSqlHelper
 
         TEMPLATE_SQL.put(templateId,sql);
         return sql;
+    }
+
+    public static String getWhereSql() {
+        return getWhereSql("_clause", 5);
     }
 
     public static String getWhereSql(String clauseName,int depth) {

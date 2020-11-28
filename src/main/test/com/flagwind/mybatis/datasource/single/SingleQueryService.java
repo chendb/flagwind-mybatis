@@ -34,6 +34,19 @@ public class SingleQueryService {
     private DynamicRepository dynamicRepository;
 
 
+//    @Test
+//    public void testDynamicQuery1() {
+//        List<Role> roles = dynamicRepository.queryDDFF("com_role",SingleClause.equal("disabled", 0));
+//        TestCase.assertTrue("查询总数量为：" + roles.size(), roles.size() > 0);
+//    }
+
+    @Test
+    public void testDynamicQuery() {
+        List<Map<String, Object>> roles = dynamicRepository.dynamicQuery("com_role", SingleClause.equal("disabled", 0), Paging.build(1L,10L), null);
+        TestCase.assertTrue("查询总数量为：" + roles.size(), roles.size() > 0);
+    }
+
+
     @Test
     public void testInsert() {
         Role role = new Role();
@@ -47,7 +60,6 @@ public class SingleQueryService {
     @Test
     public void testPage() {
         Paging paging = new Paging(1L, 10L);
-
         List<Role> menuList = roleRepository.query(SingleClause.equal("disabled", 0), paging, new Sorting[]{Sorting.ascending("createTime")});
         TestCase.assertTrue("查询总数量为：" + menuList.size(), menuList.size() > 0);
     }

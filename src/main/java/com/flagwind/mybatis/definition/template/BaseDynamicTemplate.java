@@ -46,5 +46,14 @@ public class BaseDynamicTemplate extends MapperTemplate {
         return sql;
     }
 
+
+    public String dynamicQuery(MappedStatement ms) {
+
+        String sql = "select * from ${_table} " +
+                ObjectSqlHelper.getWhereSql("_clause", 5) +
+                ObjectSqlHelper.getSortingSql();
+        return sql;
+    }
+
 }
 

@@ -1,8 +1,8 @@
 package com.flagwind.mybatis.definition;
 
-import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.definition.template.EmptyTemplate;
 import com.flagwind.mybatis.definition.template.MapperTemplate;
+import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.persistent.AbstractRepository;
 import com.flagwind.persistent.base.BaseDynamicRepository;
 import org.apache.ibatis.annotations.DeleteProvider;
@@ -186,6 +186,19 @@ public class TemplateContext
         if(isMapperMethod(msid)){
             return msIdCache.get(msid);
         }
+        return null;
+    }
+
+    public MapperTemplate getMapperTemplate(Class<?> mapperClass) {
+
+        MapperTemplate template = null;
+        for (Map.Entry<String, MapperTemplate> entry : msIdCache.entrySet()) {
+            if (entry.getKey().startsWith(mapperClass.getName())) {
+
+                return entry.getValue();
+            }
+        }
+
         return null;
     }
 
