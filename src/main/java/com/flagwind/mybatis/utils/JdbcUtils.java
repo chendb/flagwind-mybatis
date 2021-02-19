@@ -45,6 +45,8 @@ public class JdbcUtils {
             return DatabaseType.H2;
         } else if (url.contains(":dm:")) {
             return DatabaseType.DM;
+        } else if (url.contains(":oscar:")) {
+            return DatabaseType.Oscar;
         } else if (url.contains(":xugu:")) {
             return DatabaseType.XU_GU;
         } else if (url.contains(":kingbase:") || url.contains(":kingbase8:")) {

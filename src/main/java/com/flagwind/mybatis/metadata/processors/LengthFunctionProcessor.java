@@ -17,6 +17,7 @@ public class LengthFunctionProcessor implements FunctionProcessor
 		switch (databaseType) {
 			case Oracle:
 			case MySQL:
+			case Oscar:
 			case DM:
 				return "length("+arguments+")" + suffix;
 			default:

@@ -21,6 +21,7 @@ public class RightFunctionProcessor implements FunctionProcessor
 				return "substr(" + args[0]+ ",length("+args[0]+")+1-"+args[1]+")" + suffix;
 			}
 			case MySQL:
+			case Oscar:
 			case DM:
 			{
 				return "right(" + args[0]+ ","+args[1]+")" + suffix;

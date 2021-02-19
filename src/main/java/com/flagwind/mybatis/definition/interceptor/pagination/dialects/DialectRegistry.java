@@ -31,6 +31,7 @@ public class DialectRegistry {
         dialect_enum_map.put(DatabaseType.SqlServer2005, new SQLServer2005Dialect());
         dialect_enum_map.put(DatabaseType.SqlServer, new SQLServerDialect());
         dialect_enum_map.put(DatabaseType.DM, new DmDialect());
+        dialect_enum_map.put(DatabaseType.Oscar, new OscarDialect());
         dialect_enum_map.put(DatabaseType.XU_GU, new XuGuDialect());
         dialect_enum_map.put(DatabaseType.KingbaseES, new KingbaseDialect());
         dialect_enum_map.put(DatabaseType.Phoenix, new PhoenixDialect());

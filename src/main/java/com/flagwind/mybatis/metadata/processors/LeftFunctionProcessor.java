@@ -21,6 +21,7 @@ public class LeftFunctionProcessor implements FunctionProcessor
 				return "substr(" + args[0]+ ",1,"+args[1]+")" + suffix;
 			}
 			case MySQL:
+			case Oscar:
 			case DM:
 			{
 				return "left(" + args[0]+ ","+args[1]+")" + suffix;

@@ -102,6 +102,12 @@ public enum DatabaseType {
     Informix("informix","informix 数据库"),
 
     Cloudscape("Cloudscape","cloudscape 数据库"),
+
+    /**
+     * oscar
+     */
+    Oscar("oscar","神舟通用数据库"),
+
     /**
      * UNKONWN DB
      */

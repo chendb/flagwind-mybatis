@@ -17,6 +17,7 @@ public class DateFormatFunctionProcessor implements FunctionProcessor {
 		String format = arguments.split(",")[1];
 		switch (databaseType) {
 		case Oracle:
+		case Oscar:
 		case DM:
 			format = format.replaceAll("MM","mm").replace("mm", "mi");
 			return "to_char(" + column + "," + format + ")" + suffix;

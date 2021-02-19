@@ -17,6 +17,7 @@ public class DayFunctionProcessor implements FunctionProcessor {
 			case Oracle:
 				return "to_char("+arguments+",'dd')" + suffix;
 			case MySQL:
+			case Oscar:
 			case DM:
 				return "day("+arguments+")" + suffix;
 			default:

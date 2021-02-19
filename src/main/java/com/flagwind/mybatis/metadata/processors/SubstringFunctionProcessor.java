@@ -17,6 +17,7 @@ public class SubstringFunctionProcessor implements FunctionProcessor
 		String[] args = arguments.split("[,:]");
 		switch (databaseType) {
 			case Oracle:
+			case Oscar:
 			case DM:
 			{
 				return "substr(" + StringUtils.join(args,",") + ")" + suffix;

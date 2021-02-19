@@ -15,6 +15,7 @@ public class HourFunctionProcessor implements FunctionProcessor {
 		String suffix = (StringUtils.isEmpty(alias) ? "" : (" as " + alias));
 		switch (databaseType) {
 			case Oracle:
+			case Oscar:
 			case DM:
 				return "to_char(" + arguments + ",'hh24')" + suffix;
 			case MySQL:
