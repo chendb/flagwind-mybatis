@@ -1,11 +1,11 @@
 package com.flagwind.mybatis.spring.autoconfigure;
 
 
+import com.flagwind.mybatis.FlagwindConfiguration;
 import com.flagwind.mybatis.spring.MybatisSqlSessionFactoryBean;
 import com.flagwind.mybatis.utils.JdbcUtils;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -74,9 +74,9 @@ public class AbstractAutoConfiguration {
         if (StringUtils.hasText(this.properties.getConfigLocation())) {
             factory.setConfigLocation(this.resourceLoader.getResource(this.properties.getConfigLocation()));
         }
-        Configuration configuration = this.properties.getConfiguration();
+        FlagwindConfiguration configuration = this.properties.getConfiguration();
         if (configuration == null && !StringUtils.hasText(this.properties.getConfigLocation())) {
-            configuration = new Configuration();
+            configuration = new FlagwindConfiguration(this.flagwindProperties);
         }
         if (configuration != null && !CollectionUtils.isEmpty(this.configurationCustomizers)) {
             for (ConfigurationCustomizer customizer : this.configurationCustomizers) {

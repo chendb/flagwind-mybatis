@@ -105,23 +105,39 @@ public class ObjectSqlHelper
     }
 
     public static String getWhereSql(String clauseName,int depth) {
-        depth = 3;
-        String templateId="where_"+clauseName+"_"+depth;
-        if(TEMPLATE_SQL.containsKey(templateId)){
-            return TEMPLATE_SQL.get(templateId);
-        }
 
         StringBuilder sql = new StringBuilder();
         sql.append("<if test=\"").append(clauseName).append(" != null\">");
         sql.append("<where>");
-        sql.append("<choose>");
-        sql.append(getSingleClauseSql(clauseName,true));
-        sql.append(getCombineClauseSql(clauseName, true,true));
-        sql.append(getChildClauseSql(clauseName,true));
-        sql.append("</choose>");
+        sql.append(getClauseSql(clauseName, depth));
         sql.append("</where>");
         sql.append("</if>");
-        TEMPLATE_SQL.put(templateId,sql.toString());
+
+        return sql.toString();
+    }
+
+    public static String getClauseSql(String clauseName) {
+        return getClauseSql(clauseName, 5);
+    }
+
+    public static String getClauseSql(String clauseName,int depth) {
+        depth = 3;
+        String templateId = clauseName + "_" + depth;
+        if (TEMPLATE_SQL.containsKey(templateId)) {
+            return TEMPLATE_SQL.get(templateId);
+        }
+        StringBuilder sql = new StringBuilder();
+        sql.append("<choose>");
+        sql.append("<when test=\"").append(clauseName).append(" != null\">");
+        sql.append("<choose>");
+        sql.append(getSingleClauseSql(clauseName, true));
+        sql.append(getCombineClauseSql(clauseName, true, true));
+        sql.append(getChildClauseSql(clauseName, true));
+        sql.append("</choose>");
+        sql.append("</when>");
+        sql.append("<otherwise>1=1</otherwise>");
+        sql.append("</choose>");
+        TEMPLATE_SQL.put(templateId, sql.toString());
         return sql.toString();
     }
 

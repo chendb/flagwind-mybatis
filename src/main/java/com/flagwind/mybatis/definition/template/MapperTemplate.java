@@ -105,9 +105,9 @@ public abstract class MapperTemplate {
      */
     protected void setResultType(MappedStatement ms, Class<?> entityClass) {
         if (AssociationSqlHelper.hasAssociation(entityClass)) {
-            setAssociationResultType(ms,entityClass);
+            setAssociationResultType(ms, entityClass);
         } else {
-            setGeneralResultType(ms,entityClass);
+            setGeneralResultType(ms, entityClass);
         }
     }
 
@@ -167,6 +167,7 @@ public abstract class MapperTemplate {
             //第三种，返回xml形式的sql字符串
             else if (String.class.equals(method.getReturnType())) {
                 String xmlSql = (String) method.invoke(this, ms);
+
                 SqlSource sqlSource = createSqlSource(ms, xmlSql);
                 //替换原有的SqlSource
                 setSqlSource(ms, sqlSource);
@@ -218,14 +219,5 @@ public abstract class MapperTemplate {
         throw new MapperException("无法获取 " + msId + " 方法的泛型信息!");
     }
 
-
-    /**
-     * 获取序列下个值的表达式
-     *
-     * @param column 列
-     */
-    protected String getSeqNextVal(EntityColumn column) {
-        return MessageFormat.format(context.getConfig().getSequenceFormat(), column.getSequenceName(), column.getColumn(), column.getProperty(), column.getTable().getName());
-    }
 
 }

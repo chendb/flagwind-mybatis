@@ -2,6 +2,7 @@ package com.flagwind.mybatis.definition.template;
 
 import com.flagwind.commons.StringUtils;
 import com.flagwind.mybatis.code.DatabaseType;
+import com.flagwind.mybatis.definition.Config;
 import com.flagwind.mybatis.definition.TemplateContext;
 import com.flagwind.mybatis.definition.helper.MappedStatementHelper;
 import com.flagwind.mybatis.definition.helper.TemplateSqlHelper;
@@ -58,7 +59,7 @@ public class BaseInsertTemplate extends MapperTemplate {
      * 插入全部,这段代码比较复杂，这里举个例子
      * CountryU生成的insert方法结构如下：
      * <pre>
-     * &lt;bind name="countryname_bind" value='@java.util.UUID@randomUUID().toString().replace("-", "")'/&gt;
+     * &lt;bind name="countryname_bind" value='@java.util.UUID@randomUUID().toString().execute("-", "")'/&gt;
      * INSERT INTO country_u(id,countryname,countrycode) VALUES
      * &lt;trim prefix="(" suffix=")" suffixOverrides=","&gt;
      * &lt;if test="id != null"&gt;#{id,javaType=java.lang.Integer},&lt;/if&gt;
@@ -90,120 +91,124 @@ public class BaseInsertTemplate extends MapperTemplate {
         if (StringUtils.isNotEmpty(pair.left)) {
             sql.append(pair.left);
         }
+        Config config = context.getConfig();
 
-        sql.append(TemplateSqlHelper.insertIntoTable(context.getConfig(), entityClass));
+        sql.append(TemplateSqlHelper.insertIntoTable(config, entityClass));
 
-        sql.append(TemplateSqlHelper.insertColumns(entityClass, false, false, false));
-        sql.append("<trim prefix=\"VALUES(\" suffix=\")\" suffixOverrides=\",\">");
-        for (EntityColumn column : columnList) {
-            if (!column.isInsertable()) {
-                continue;
-            }
-            //优先使用传入的属性值,当原属性property!=null时，用原属性
-            //自增的情况下,如果默认有值,就会备份到property_cache中,所以这里需要先判断备份的值是否存在
-            if (column.isIdentity()) {
-                sql.append(TemplateSqlHelper.getIfCacheNotNull(column, column.getColumnHolder(null, "_cache", ",")));
-            } else {
-                //其他情况值仍然存在原property中
-                sql.append(TemplateSqlHelper.getIfNotNull(column, column.getColumnHolder(null, null, ","), getConfig().isNotEmpty()));
-            }
-            //当属性为null时，如果存在主键策略，会自动获取值，如果不存在，则使用null
-            //序列的情况
-            if (StringUtils.isNotEmpty(column.getSequenceName())) {
-                sql.append(TemplateSqlHelper.getIfIsNull(column, getSeqNextVal(column) + " ,", false));
-            } else if (column.isIdentity()) {
-                sql.append(TemplateSqlHelper.getIfCacheIsNull(column, column.getColumnHolder() + ","));
-            } else if (column.isUuid()) {
-                sql.append(TemplateSqlHelper.getIfIsNull(column, column.getColumnHolder(null, "_bind", ","), getConfig().isNotEmpty()));
-            } else {
-                //当null的时候，如果不指定jdbcType，oracle可能会报异常，指定VARCHAR不影响其他
-                sql.append(TemplateSqlHelper.getIfIsNull(column, column.getColumnHolder(null, null, ","), getConfig().isNotEmpty()));
-            }
-        }
-        sql.append("</trim>");
+        sql.append(TemplateSqlHelper.insertColumns(entityClass, false));
+
+        sql.append(TemplateSqlHelper.insertValues(entityClass, config));
+
+//        sql.append("<trim prefix=\"VALUES(\" suffix=\")\" suffixOverrides=\",\">");
+//        for (EntityColumn column : columnList) {
+//            if (!column.isInsertable()) {
+//                continue;
+//            }
+//            // 优先使用传入的属性值,当原属性 property != null时，用原属性
+//            // 自增的情况下,如果默认有值,就会备份到property_cache中,所以这里需要先判断备份的值是否存在
+//            if (column.isIdentity()) {
+//                sql.append(TemplateSqlHelper.getIfCacheNotNull(column, column.getColumnHolder(null, "_cache", ",")));
+//            } else {
+//                //其他情况值仍然存在原property中
+//                sql.append(TemplateSqlHelper.getIfNotNull(column, column.getColumnHolder(null, null, ","), getConfig().isNotEmpty()));
+//            }
+//            //当属性为null时，如果存在主键策略，会自动获取值，如果不存在，则使用null
+//            //序列的情况
+//            if (StringUtils.isNotEmpty(column.getSequenceName())) {
+//                sql.append(TemplateSqlHelper.getIfIsNull(column, getSeqNextVal(column) + " ,", false));
+//            } else if (column.isIdentity()) {
+//                sql.append(TemplateSqlHelper.getIfCacheIsNull(column, column.getColumnHolder() + ","));
+//            } else if (column.isUuid()) {
+//                sql.append(TemplateSqlHelper.getIfIsNull(column, column.getColumnHolder(null, "_bind", ","), getConfig().isNotEmpty()));
+//            } else {
+//                //当null的时候，如果不指定jdbcType，oracle可能会报异常，指定VARCHAR不影响其他
+//                sql.append(TemplateSqlHelper.getIfIsNull(column, column.getColumnHolder(null, null, ","), getConfig().isNotEmpty()));
+//            }
+//        }
+//        sql.append("</trim>");
         return sql.toString();
     }
-
-    /**
-     * 插入不为null的字段,这段代码比较复杂，这里举个例子
-     * CountryU生成的insertSelective方法结构如下：
-     * <pre>
-     * &lt;bind name="countryname_bind" value='@java.util.UUID@randomUUID().toString().replace("-", "")'/&gt;
-     * INSERT INTO country_u
-     * &lt;trim prefix="(" suffix=")" suffixOverrides=","&gt;
-     * &lt;if test="id != null"&gt;id,&lt;/if&gt;
-     * countryname,
-     * &lt;if test="countrycode != null"&gt;countrycode,&lt;/if&gt;
-     * &lt;/trim&gt;
-     * VALUES
-     * &lt;trim prefix="(" suffix=")" suffixOverrides=","&gt;
-     * &lt;if test="id != null"&gt;#{id,javaType=java.lang.Integer},&lt;/if&gt;
-     * &lt;if test="countryname != null"&gt;#{countryname,javaType=java.lang.String},&lt;/if&gt;
-     * &lt;if test="countryname == null"&gt;#{countryname_bind,javaType=java.lang.String},&lt;/if&gt;
-     * &lt;if test="countrycode != null"&gt;#{countrycode,javaType=java.lang.String},&lt;/if&gt;
-     * &lt;/trim&gt;
-     * </pre>
-     * 这段代码可以注意对countryname的处理
-     *
-     * @param ms 映射申明
-     * @return
-     */
-    public String insertSelective(MappedStatement ms) {
-        Class<?> entityClass = getEntityClass(ms);
-        //获取全部列
-        Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
-
-
-        StringBuilder sql = new StringBuilder();
-
-        //先处理cache或bind节点
-        MutablePair<String, Boolean> pair = getSequenceKeyMapping(columnList, entityClass, ms);
-
-        //Identity列只能有一个
-        // Boolean hasIdentityKey = pair.right;
-        if (StringUtils.isNotEmpty(pair.left)) {
-            sql.append(pair.left);
-        }
-
-        sql.append(TemplateSqlHelper.insertIntoTable(context.getConfig(), entityClass));
-        sql.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
-        for (EntityColumn column : columnList) {
-            if (!column.isInsertable()) {
-                continue;
-            }
-            if (StringUtils.isNotEmpty(column.getSequenceName()) || column.isIdentity() || column.isUuid()) {
-                sql.append(column.getColumn()).append(",");
-            } else {
-                sql.append(TemplateSqlHelper.getIfNotNull(column, column.getColumn() + ",", getConfig().isNotEmpty()));
-            }
-        }
-        sql.append("</trim>");
-        sql.append("<trim prefix=\"VALUES(\" suffix=\")\" suffixOverrides=\",\">");
-        for (EntityColumn column : columnList) {
-            if (!column.isInsertable()) {
-                continue;
-            }
-            // 优先使用传入的属性值,当原属性property!=null时，用原属性
-            // 自增的情况下,如果默认有值,就会备份到property_cache中,所以这里需要先判断备份的值是否存在
-            if (column.isIdentity()) {
-                sql.append(TemplateSqlHelper.getIfCacheNotNull(column, column.getColumnHolder(null, "_cache", ",")));
-            } else {
-                //其他情况值仍然存在原property中
-                sql.append(TemplateSqlHelper.getIfNotNull(column, column.getColumnHolder(null, null, ","), getConfig().isNotEmpty()));
-            }
-            //当属性为null时，如果存在主键策略，会自动获取值，如果不存在，则使用null
-            //序列的情况
-            if (StringUtils.isNotEmpty(column.getSequenceName())) {
-                sql.append(TemplateSqlHelper.getIfIsNull(column, getSeqNextVal(column) + " ,", getConfig().isNotEmpty()));
-            } else if (column.isIdentity()) {
-                sql.append(TemplateSqlHelper.getIfCacheIsNull(column, column.getColumnHolder() + ","));
-            } else if (column.isUuid()) {
-                sql.append(TemplateSqlHelper.getIfIsNull(column, column.getColumnHolder(null, "_bind", ","), getConfig().isNotEmpty()));
-            }
-        }
-        sql.append("</trim>");
-        return sql.toString();
-    }
+//
+//    /**
+//     * 插入不为null的字段,这段代码比较复杂，这里举个例子
+//     * CountryU生成的insertSelective方法结构如下：
+//     * <pre>
+//     * &lt;bind name="countryname_bind" value='@java.util.UUID@randomUUID().toString().execute("-", "")'/&gt;
+//     * INSERT INTO country_u
+//     * &lt;trim prefix="(" suffix=")" suffixOverrides=","&gt;
+//     * &lt;if test="id != null"&gt;id,&lt;/if&gt;
+//     * countryname,
+//     * &lt;if test="countrycode != null"&gt;countrycode,&lt;/if&gt;
+//     * &lt;/trim&gt;
+//     * VALUES
+//     * &lt;trim prefix="(" suffix=")" suffixOverrides=","&gt;
+//     * &lt;if test="id != null"&gt;#{id,javaType=java.lang.Integer},&lt;/if&gt;
+//     * &lt;if test="countryname != null"&gt;#{countryname,javaType=java.lang.String},&lt;/if&gt;
+//     * &lt;if test="countryname == null"&gt;#{countryname_bind,javaType=java.lang.String},&lt;/if&gt;
+//     * &lt;if test="countrycode != null"&gt;#{countrycode,javaType=java.lang.String},&lt;/if&gt;
+//     * &lt;/trim&gt;
+//     * </pre>
+//     * 这段代码可以注意对countryname的处理
+//     *
+//     * @param ms 映射申明
+//     * @return
+//     */
+//    public String insertSelective(MappedStatement ms) {
+//        Class<?> entityClass = getEntityClass(ms);
+//        //获取全部列
+//        Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
+//
+//
+//        StringBuilder sql = new StringBuilder();
+//
+//        //先处理cache或bind节点
+//        MutablePair<String, Boolean> pair = getSequenceKeyMapping(columnList, entityClass, ms);
+//
+//        //Identity列只能有一个
+//        // Boolean hasIdentityKey = pair.right;
+//        if (StringUtils.isNotEmpty(pair.left)) {
+//            sql.append(pair.left);
+//        }
+//
+//        sql.append(TemplateSqlHelper.insertIntoTable(context.getConfig(), entityClass));
+//        sql.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
+//        for (EntityColumn column : columnList) {
+//            if (!column.isInsertable()) {
+//                continue;
+//            }
+//            if (StringUtils.isNotEmpty(column.getSequenceName()) || column.isIdentity() || column.isUuid()) {
+//                sql.append(column.getColumn()).append(",");
+//            } else {
+//                sql.append(TemplateSqlHelper.getIfNotNull(column, column.getColumn() + ",", getConfig().isNotEmpty()));
+//            }
+//        }
+//        sql.append("</trim>");
+//        sql.append("<trim prefix=\"VALUES(\" suffix=\")\" suffixOverrides=\",\">");
+//        for (EntityColumn column : columnList) {
+//            if (!column.isInsertable()) {
+//                continue;
+//            }
+//            // 优先使用传入的属性值,当原属性property!=null时，用原属性
+//            // 自增的情况下,如果默认有值,就会备份到property_cache中,所以这里需要先判断备份的值是否存在
+//            if (column.isIdentity()) {
+//                sql.append(TemplateSqlHelper.getIfCacheNotNull(column, column.getColumnHolder(null, "_cache", ",")));
+//            } else {
+//                //其他情况值仍然存在原property中
+//                sql.append(TemplateSqlHelper.getIfNotNull(column, column.getColumnHolder(null, null, ","), getConfig().isNotEmpty()));
+//            }
+//            //当属性为null时，如果存在主键策略，会自动获取值，如果不存在，则使用null
+//            //序列的情况
+//            if (StringUtils.isNotEmpty(column.getSequenceName())) {
+//                sql.append(TemplateSqlHelper.getIfIsNull(column, getSeqNextVal(column) + " ,", getConfig().isNotEmpty()));
+//            } else if (column.isIdentity()) {
+//                sql.append(TemplateSqlHelper.getIfCacheIsNull(column, column.getColumnHolder() + ","));
+//            } else if (column.isUuid()) {
+//                sql.append(TemplateSqlHelper.getIfIsNull(column, column.getColumnHolder(null, "_bind", ","), getConfig().isNotEmpty()));
+//            }
+//        }
+//        sql.append("</trim>");
+//        return sql.toString();
+//    }
 
     /**
      * 批量插入
@@ -223,19 +228,14 @@ public class BaseInsertTemplate extends MapperTemplate {
         //开始拼sql
         StringBuilder sql = new StringBuilder();
         sql.append(TemplateSqlHelper.insertIntoTable(context.getConfig(), entityClass));
-        sql.append(TemplateSqlHelper.insertColumns(entityClass, false, false, false));
+        sql.append(TemplateSqlHelper.insertColumns(entityClass, false));
         sql.append("  ");
         sql.append("<foreach collection=\"_list\" item=\"record\" separator=\"UNION ALL\" >");
         sql.append(" select ");
+
         //获取全部列
-        Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
-        int i = 0;
-        for (EntityColumn column : columnList) {
-            if (column.isInsertable()) {
-                sql.append(i != 0 ? "," : "").append(column.getColumnHolder("record"));
-                i++;
-            }
-        }
+        sql.append(getInsertValueSql(entityClass, "record"));
+
         sql.append(" from dual ");
         sql.append("</foreach>");
         return sql.toString();
@@ -246,7 +246,7 @@ public class BaseInsertTemplate extends MapperTemplate {
         //开始拼sql
         StringBuilder sql = new StringBuilder();
         sql.append(TemplateSqlHelper.insertIntoTable(context.getConfig(), entityClass));
-        sql.append(TemplateSqlHelper.insertColumns(entityClass, false, false, false));
+        sql.append(TemplateSqlHelper.insertColumns(entityClass, false));
         sql.append("  ");
         sql.append(" values ");
         sql.append("<foreach collection=\"_list\" item=\"record\" separator=\",\" >");
@@ -254,20 +254,29 @@ public class BaseInsertTemplate extends MapperTemplate {
 
 
         //获取全部列
+        sql.append(getInsertValueSql(entityClass, "record"));
+
+        sql.append("</trim>");
+        sql.append("</foreach>");
+        return sql.toString();
+    }
+
+    private String getInsertValueSql(Class<?> entityClass, String entityName) {
+        StringBuilder sql = new StringBuilder();
+        //获取全部列
         Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
         //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
         int i = 0;
         for (EntityColumn column : columnList) {
 
             if (column.isInsertable()) {
-                sql.append(i != 0 ? "," : "").append(column.getColumnHolder("record"));
+                sql.append(i != 0 ? "," : "").append(column.getColumnHolder(entityName));
                 i++;
             }
         }
-        sql.append("</trim>");
-        sql.append("</foreach>");
         return sql.toString();
     }
+
 
     /**
      * 插入，主键id，自增
@@ -277,7 +286,7 @@ public class BaseInsertTemplate extends MapperTemplate {
     public String insertUseGeneratedKeys(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
         String sql = TemplateSqlHelper.insertIntoTable(context.getConfig(), entityClass) +
-                TemplateSqlHelper.insertColumns(entityClass, true, false, false) +
+                TemplateSqlHelper.insertColumns(entityClass, true) +
                 TemplateSqlHelper.insertValuesColumns(entityClass, true, false, false);
         return sql;
     }

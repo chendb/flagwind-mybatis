@@ -1,5 +1,6 @@
 package com.flagwind.mybatis.definition;
 
+import com.flagwind.mybatis.FlagwindMapperRegistry;
 import com.flagwind.mybatis.definition.template.EmptyTemplate;
 import com.flagwind.mybatis.definition.template.MapperTemplate;
 import com.flagwind.mybatis.exceptions.MapperException;
@@ -293,7 +294,10 @@ public class TemplateContext
                 MappedStatement ms = (MappedStatement) object;
                 if (ms.getId().startsWith(prefix) && isMapperMethod(ms.getId())) {
                     if (ms.getSqlSource() instanceof ProviderSqlSource) {
+
+                        FlagwindMapperRegistry.setCurrentMapper(mapperInterface);
                         setSqlSource(ms);
+                        FlagwindMapperRegistry.setCurrentMapper(null);
                     }
                 }
             }

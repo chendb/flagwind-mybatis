@@ -1,5 +1,6 @@
 package com.flagwind.mybatis.metadata;
 
+import com.flagwind.commons.StringUtils;
 import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.definition.Config;
 import com.flagwind.mybatis.exceptions.MapperException;
@@ -100,6 +101,12 @@ public class EntityTableFactory
 		 return null;
 	}
 
+	public static EntityTable forName(String entityClassName) {
+		return CACHE.entrySet().stream().filter(s -> StringUtils.equalsIgnoreCase(s.getKey().toString(), entityClassName))
+				.map(s -> s.getValue()).findFirst()
+				.orElseThrow(() -> new MapperException("无法获取实体类" + entityClassName + "对应的表实体注册信息!"));
+
+	}
 
 	/**
 	 * 获取表对象

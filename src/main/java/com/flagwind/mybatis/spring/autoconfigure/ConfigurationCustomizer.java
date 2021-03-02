@@ -1,5 +1,6 @@
 package com.flagwind.mybatis.spring.autoconfigure;
 
+import com.flagwind.mybatis.FlagwindConfiguration;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -15,6 +16,6 @@ public interface ConfigurationCustomizer {
      *
      * @param configuration the configuration object to customize
      */
-    void customize(Configuration configuration);
+    void customize(FlagwindConfiguration configuration);
 
 }

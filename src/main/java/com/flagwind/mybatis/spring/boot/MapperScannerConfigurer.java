@@ -53,7 +53,7 @@ public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProces
 
 	private BeanNameGenerator nameGenerator;
 
-	private final TemplateContext mapperResolver= new TemplateContext();
+	private final TemplateContext templateContext = new TemplateContext();
 
 
 
@@ -98,7 +98,7 @@ public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProces
 		scanner.setBeanNameGenerator(this.nameGenerator);
 		scanner.registerFilters();
 		//设置通用 Mapper
-		scanner.setTemplateContext(this.mapperResolver);
+		scanner.setTemplateContext(this.templateContext);
 		scanner.scan(StringUtils.tokenizeToStringArray(this.basePackage, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS));
 	}
 
@@ -235,7 +235,7 @@ public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProces
 	public void setMarkerInterface(Class<?> superClass) {
 		this.markerInterface = superClass;
 		if (AbstractRepository.class.isAssignableFrom(superClass)) {
-			mapperResolver.registerMapper(superClass);
+			templateContext.registerMapper(superClass);
 		}
 	}
 
@@ -313,7 +313,7 @@ public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProces
 	 * @param properties
 	 */
 	public void setProperties(String prefix,Properties properties) {
-		mapperResolver.setProperties(prefix,properties);
+		templateContext.setProperties(prefix,properties);
 	}
 
 }

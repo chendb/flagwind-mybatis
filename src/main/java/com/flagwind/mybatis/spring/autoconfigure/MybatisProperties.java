@@ -1,6 +1,6 @@
 package com.flagwind.mybatis.spring.autoconfigure;
 
-import org.apache.ibatis.session.Configuration;
+import com.flagwind.mybatis.FlagwindConfiguration;
 import org.apache.ibatis.session.ExecutorType;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -59,7 +59,7 @@ public class MybatisProperties {
      * is specified, this property is not used.
      */
     @NestedConfigurationProperty
-    private Configuration configuration;
+    private FlagwindConfiguration configuration;
 
     /**
      * @since 1.1.0
@@ -139,11 +139,11 @@ public class MybatisProperties {
         this.configurationProperties = configurationProperties;
     }
 
-    public Configuration getConfiguration() {
+    public FlagwindConfiguration getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(Configuration configuration) {
+    public void setConfiguration(FlagwindConfiguration configuration) {
         this.configuration = configuration;
     }
 

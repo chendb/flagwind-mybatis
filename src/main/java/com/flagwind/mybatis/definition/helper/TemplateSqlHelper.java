@@ -7,11 +7,12 @@ import com.flagwind.mybatis.metadata.EntityColumn;
 import com.flagwind.mybatis.metadata.EntityTable;
 import com.flagwind.mybatis.metadata.EntityTableFactory;
 
+import java.text.MessageFormat;
 import java.util.Set;
 
 public class TemplateSqlHelper {
 
-    public static String getTableName(Config config,Class<?> entityClass) {
+    public static String getTableName(Config config, Class<?> entityClass) {
         EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
         String prefix = entityTable.getPrefix();
         if (StringUtils.isEmpty(prefix)) {
@@ -24,9 +25,9 @@ public class TemplateSqlHelper {
         return entityTable.getName();
     }
 
-    public static String tableName(Config config,Class<?> entityClass, boolean addDefaultAlias) {
+    public static String tableName(Config config, Class<?> entityClass, boolean addDefaultAlias) {
         StringBuilder sb = new StringBuilder();
-        String table = getTableName(config,entityClass);
+        String table = getTableName(config, entityClass);
         sb.append(table);
         if (addDefaultAlias) {
             sb.append(" ").append(tableAlias(entityClass));
@@ -35,9 +36,7 @@ public class TemplateSqlHelper {
     }
 
 
-
-
-    public static String selectColumnsFromTable(Config config,Class<?> entityClass) {
+    public static String selectColumnsFromTable(Config config, Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
         String baseColumns = TemplateSqlHelper.getBaseColumns(entityClass);
         boolean hasTableAlias = baseColumns.contains(".");
@@ -48,13 +47,12 @@ public class TemplateSqlHelper {
         return sql.toString();
     }
 
-    public static String selectCountFromTable(Config config,Class<?> entityClass) {
+    public static String selectCountFromTable(Config config, Class<?> entityClass) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT COUNT(0) FROM ");
-        sql.append(tableName(config,entityClass, false));
+        sql.append(tableName(config, entityClass, false));
         return sql.toString();
     }
-
 
 
     /**
@@ -185,9 +183,10 @@ public class TemplateSqlHelper {
 
     /**
      * 生成选择的列SQL，格式如下：_user.name as user_name,_user.id as user_id
-     * @param entityClass 业务实体
+     *
+     * @param entityClass  业务实体
      * @param columnPrefix 列前缀
-     * @param aliasPrefix 别名前缀
+     * @param aliasPrefix  别名前缀
      * @return
      */
     public static String columns(Class<?> entityClass, String columnPrefix, String aliasPrefix) {
@@ -219,6 +218,10 @@ public class TemplateSqlHelper {
     }
 
     public static String getBaseColumns(Class<?> entityClass) {
+        return getBaseColumns(entityClass, null);
+    }
+
+    public static String getBaseColumns(Class<?> entityClass,String alias) {
         EntityTable entityTable = EntityTableFactory.getEntityTable(entityClass);
         if (entityTable.getBaseSelect() != null) {
             return entityTable.getBaseSelect();
@@ -227,6 +230,7 @@ public class TemplateSqlHelper {
         Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
         StringBuilder selectBuilder = new StringBuilder();
         for (EntityColumn entityColumn : columnList) {
+            selectBuilder.append(StringUtils.isNotEmpty(alias) ? alias + "." : "");
             selectBuilder.append(entityColumn.getColumn()).append(",");
         }
         String sql = selectBuilder.substring(0, selectBuilder.length() - 1);
@@ -294,10 +298,8 @@ public class TemplateSqlHelper {
      *
      * @param entityClass
      * @param skipId      是否从列中忽略id类型
-     * @param notNull     是否判断!=null
-     * @param notEmpty    是否判断String类型!=''
      */
-    public static String insertColumns(Class<?> entityClass, boolean skipId, boolean notNull, boolean notEmpty) {
+    public static String insertColumns(Class<?> entityClass, boolean skipId ) {
         StringBuilder sql = new StringBuilder();
         sql.append("<trim prefix=\"(\" suffix=\")\" suffixOverrides=\",\">");
         //获取全部列
@@ -310,15 +312,60 @@ public class TemplateSqlHelper {
             if (skipId && column.isId()) {
                 continue;
             }
-            if (notNull) {
-                sql.append(TemplateSqlHelper.getIfNotNull(column, column.getColumn() + ",", notEmpty));
-            } else {
-                sql.append(column.getColumn()).append(",");
+            sql.append(column.getColumn()).append(",");
+//            if (notNull) {
+//                sql.append(TemplateSqlHelper.getIfNotNull(column, column.getColumn() + ",", config.isNotEmpty()));
+//            } else {
+//                sql.append(column.getColumn()).append(",");
+//            }
+        }
+        sql.append("</trim>");
+        return sql.toString();
+    }
+
+    private static String getSeqNextVal(String sequenceFormat,EntityColumn column) {
+        return MessageFormat.format(sequenceFormat, column.getSequenceName(), column.getColumn(), column.getProperty(), column.getTable().getName());
+    }
+
+    public static String insertValues(Class<?> entityClass,Config config) {
+        StringBuilder sql = new StringBuilder();
+        //获取全部列
+        Set<EntityColumn> columnList = EntityTableFactory.getColumns(entityClass);
+        sql.append("<trim prefix=\"VALUES(\" suffix=\")\" suffixOverrides=\",\">");
+        for (EntityColumn column : columnList) {
+            if (!column.isInsertable()) {
+                continue;
+            }
+            {
+                // 优先使用传入的属性值,当原属性 property!=null 时，用原属性
+                // 自增的情况下,如果默认有值,就会备份到 property_cache 中,所以这里需要先判断备份的值是否存在
+                if (column.isIdentity()) {
+                    sql.append(TemplateSqlHelper.getIfCacheNotNull(column, column.getColumnHolder(null, "_cache", ",")));
+                } else {
+                    //其他情况值仍然存在原property中
+                    sql.append(TemplateSqlHelper.getIfNotNull(column, column.getColumnHolder(null, null, ","), config.isNotEmpty()));
+                }
+            }
+            {
+                // 当属性为null时，如果存在主键策略，会自动获取值，如果不存在，则使用null
+                // 序列的情况
+                if (StringUtils.isNotEmpty(column.getSequenceName())) {
+                    sql.append(TemplateSqlHelper.getIfIsNull(column, getSeqNextVal(config.getSequenceFormat(), column) + " ,", false));
+                } else if (column.isIdentity()) {
+                    sql.append(TemplateSqlHelper.getIfCacheIsNull(column, column.getColumnHolder() + ","));
+                } else if (column.isUuid()) {
+                    sql.append(TemplateSqlHelper.getIfIsNull(column, column.getColumnHolder(null, "_bind", ","), config.isNotEmpty()));
+                } else {
+                    // 当 null 的时候，如果不指定jdbcType，oracle可能会报异常，指定VARCHAR不影响其他
+                    sql.append(TemplateSqlHelper.getIfIsNull(column, column.getColumnHolder(null, null, ","), config.isNotEmpty()));
+                }
             }
         }
         sql.append("</trim>");
         return sql.toString();
     }
+
+
 
     /**
      * insert-values()列

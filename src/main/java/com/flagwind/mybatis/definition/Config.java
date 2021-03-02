@@ -39,6 +39,7 @@ public class Config {
     private boolean notEmpty = false;
 
 
+
     /**
      * 字段转换风格，默认驼峰转下划线
      */
@@ -132,13 +133,13 @@ public class Config {
         if (StringUtils.isNotEmpty(this.uuid)) {
             return this.uuid;
         }
-        return "@java.util.UUID@randomUUID().toString().replace(\"-\", \"\")";
+        return "@java.util.UUID@randomUUID().toString().execute(\"-\", \"\")";
     }
 
     /**
      * 设置UUID生成策略
      * <br>配置UUID生成策略需要使用OGNL表达式
-     * <br>默认值32位长度:@java.util.UUID@randomUUID().toString().replace("-", "")
+     * <br>默认值32位长度:@java.util.UUID@randomUUID().toString().execute("-", "")
      *
      * @param uuid
      */
