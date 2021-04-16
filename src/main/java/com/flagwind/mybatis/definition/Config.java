@@ -133,13 +133,13 @@ public class Config {
         if (StringUtils.isNotEmpty(this.uuid)) {
             return this.uuid;
         }
-        return "@java.util.UUID@randomUUID().toString().execute(\"-\", \"\")";
+        return "@java.util.UUID@randomUUID().toString().replaceAll(\"-\", \"\")";
     }
 
     /**
      * 设置UUID生成策略
      * <br>配置UUID生成策略需要使用OGNL表达式
-     * <br>默认值32位长度:@java.util.UUID@randomUUID().toString().execute("-", "")
+     * <br>默认值32位长度:@java.util.UUID@randomUUID().toString().replaceAll("-", "")
      *
      * @param uuid
      */
