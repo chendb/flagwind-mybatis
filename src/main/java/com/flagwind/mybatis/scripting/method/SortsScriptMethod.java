@@ -1,7 +1,6 @@
 package com.flagwind.mybatis.scripting.method;
 
 import com.flagwind.mybatis.FlagwindConfiguration;
-import com.flagwind.mybatis.definition.helper.ObjectSqlHelper;
 import com.flagwind.mybatis.scripting.XmlScriptMethod;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class SortsScriptMethod implements XmlScriptMethod {
     public String execute(FlagwindConfiguration configuration, String script, List<Class> entityClasses) {
         Matcher matcher = pattern.matcher(script);
         if (matcher.find()) {
-            script = matcher.replaceAll(Matcher.quoteReplacement(ObjectSqlHelper.getSortingSql()));
+            script = matcher.replaceAll(Matcher.quoteReplacement(configuration.getSqlBuilder().getObjectSqlBuilder().getSortingSql()));
         }
         return script;
     }

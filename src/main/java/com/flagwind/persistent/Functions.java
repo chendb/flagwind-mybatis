@@ -25,6 +25,8 @@ import java.util.WeakHashMap;
 
 public class Functions {
 
+
+
 	private static String FUNCTION_PATTERN = "(?<method>(?<=@)(\\S+)(?=\\())|(?<argument>(?<=\\()(\\S*)(?=\\)))|(?<alias>(?<= ?as )(\\S+))";
 
 	private static final Map<String, FunctionProcessor> CACHE_FUNCTION_PROCESSOR = Collections

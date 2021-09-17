@@ -1,32 +1,39 @@
 package com.flagwind.mybatis.utils;
 
 import com.flagwind.mybatis.code.Style;
+import com.flagwind.mybatis.definition.Config;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NameUtils {
 
-//    /**
-//     * 空
-//     *
-//     * @param str
-//     * @return boolean
-//     */
-//    public static boolean isEmpty(String str) {
-//        return str == null || str.length() == 0;
-//    }
-//
-//    /**
-//     * 非空
-//     *
-//     * @param str
-//     * @return boolean
-//     */
-//    public static boolean isNotEmpty(String str) {
-//        return !isEmpty(str);
-//    }
-//
+    public static String SINGLE_QUOTE="\"";
+    public static String DOUBLE_QUOTE="`";
+
+    /**
+     *
+     * @param config
+     * @param name
+     * @return
+     */
+    public static String formatName(Config config, String name) {
+        if (name == null) {
+            return null;
+        }
+        if (name.startsWith(SINGLE_QUOTE) || name.startsWith(DOUBLE_QUOTE)) {
+            return name;
+        }
+        switch (config.getNameQuote()) {
+            case 1:
+                return String.format("`%s`", name);
+            case 2:
+                return String.format("\"%s\"", name);
+            default:
+                return String.format("%s", name);
+        }
+    }
+
 
     /**
      * 根据指定的样式进行转换
@@ -56,7 +63,7 @@ public class NameUtils {
     /**
      * 将驼峰风格替换为下划线风格
      */
-    public static String camelhumpToUnderline(String str) {
+    private static String camelhumpToUnderline(String str) {
         final int size;
         final char[] chars;
         final StringBuilder sb = new StringBuilder(
@@ -76,7 +83,7 @@ public class NameUtils {
     /**
      * 将下划线风格替换为驼峰风格
      */
-    public static String underlineToCamelhump(String str) {
+    private static String underlineToCamelhump(String str) {
         Matcher matcher = Pattern.compile("_[a-z]").matcher(str);
         StringBuilder builder = new StringBuilder(str);
         for (int i = 0; matcher.find(); i++) {
@@ -88,22 +95,22 @@ public class NameUtils {
         return builder.toString();
     }
 
-    public static boolean isUppercaseAlpha(char c) {
+    private static boolean isUppercaseAlpha(char c) {
         return (c >= 'A') && (c <= 'Z');
     }
 
-    public static boolean isLowercaseAlpha(char c) {
+    private static boolean isLowercaseAlpha(char c) {
         return (c >= 'a') && (c <= 'z');
     }
 
-    public static char toUpperAscii(char c) {
+    private static char toUpperAscii(char c) {
         if (isLowercaseAlpha(c)) {
             c -= (char) 0x20;
         }
         return c;
     }
 
-    public static char toLowerAscii(char c) {
+    private static char toLowerAscii(char c) {
         if (isUppercaseAlpha(c)) {
             c += (char) 0x20;
         }

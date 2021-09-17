@@ -1,6 +1,7 @@
 package com.flagwind.mybatis.scripting.method;
 
 import com.flagwind.mybatis.FlagwindConfiguration;
+import com.flagwind.mybatis.definition.builder.BaseSqlBuilder;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.metadata.EntityColumn;
 import com.flagwind.mybatis.metadata.EntityTableFactory;
@@ -45,7 +46,7 @@ public class IdScriptMethod implements XmlScriptMethod {
             Set<EntityColumn> columnList = EntityTableFactory.getEntityTable(entityClasses.get(classIndex)).getEntityClassPKColumns();
             if (columnList.size() == 1) {
                 EntityColumn column = columnList.iterator().next();
-                return column.getColumn();
+                return BaseSqlBuilder.getColumnName(configuration.getProperties(), column);
             } else {
                 throw new MapperException("实体类[" + entityClasses.get(classIndex) + "]中必须只有一个带有 @Id 注解的字段");
             }

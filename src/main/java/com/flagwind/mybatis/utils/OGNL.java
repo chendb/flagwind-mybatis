@@ -5,6 +5,7 @@ import com.flagwind.persistent.Functions;
 import com.flagwind.persistent.QueryField;
 import com.flagwind.persistent.model.*;
 import com.flagwind.persistent.model.Sorting.SortingMode;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -15,19 +16,65 @@ import java.util.List;
  */
 public abstract class OGNL {
 
+    public static String SINGLE_QUOTE="\"";
+    public static String DOUBLE_QUOTE="`";
 
-    public static String clauseName(Object _clause) {
-        if (_clause instanceof ChildClause) {
-            return Functions.invoke(((ChildClause) _clause).getName());
-        } else {
-            return Functions.invoke(((SingleClause) _clause).getName());
+    public static String DOT=".";
+
+    public static String name(Object name) {
+        if (name == null) {
+            return null;
         }
+        String str = name.toString();
+        return str.indexOf("@") >= 0 ? Functions.invoke(str) : str;
     }
 
-    public static String fieldColumn(Object _field) {
-        QueryField field = (QueryField) _field;
-        return Functions.invoke(field.getColumn());
+    public static String name1(Object name) {
+        if (name == null) {
+            return null;
+        }
+        String str = name.toString();
+        if (str.startsWith(SINGLE_QUOTE) || str.startsWith(DOUBLE_QUOTE) ) {
+            return str;
+        }
+        if (str.indexOf(DOT) > 0) {
+            String[] arr = str.split(DOT);
+            if (arr.length == 2 && !StringUtils.containsAny(arr[1], SINGLE_QUOTE, SINGLE_QUOTE)) {
+                return String.format("%s.`%s`", arr[0], arr[1]);
+            }
+        }
+        return str.indexOf("@") >= 0 ? Functions.invoke(str) : String.format("`%s`", str);
     }
+
+    public static String name2(Object name) {
+        if (name == null) {
+            return null;
+        }
+        String str = name.toString();
+        if (str.startsWith(SINGLE_QUOTE) || str.startsWith(DOUBLE_QUOTE)) {
+            return str;
+        }
+        if (str.indexOf(DOT) > 0) {
+            String[] arr = str.split(DOT);
+            if (arr.length == 2 && !StringUtils.containsAny(arr[1], SINGLE_QUOTE, SINGLE_QUOTE)) {
+                return String.format("%s.\"%s\"", arr[0], arr[1]);
+            }
+        }
+        return str.indexOf("@") >= 0 ? Functions.invoke(str) : String.format("\"%s\"", str);
+    }
+//
+//    public static String clauseName(Object _clause) {
+//        if (_clause instanceof ChildClause) {
+//            return Functions.invoke(((ChildClause) _clause).getName());
+//        } else {
+//            return Functions.invoke(((SingleClause) _clause).getName());
+//        }
+//    }
+//
+//    public static String fieldColumn(Object _field) {
+//        QueryField field = (QueryField) _field;
+//        return Functions.invoke(field.getColumn());
+//    }
 
     /**
      * 判断是否有聚合字段

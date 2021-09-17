@@ -1,8 +1,6 @@
 package com.flagwind.mybatis.definition.template;
 
 import com.flagwind.mybatis.definition.TemplateContext;
-import com.flagwind.mybatis.definition.helper.ObjectSqlHelper;
-import com.flagwind.mybatis.definition.helper.TemplateSqlHelper;
 import org.apache.ibatis.mapping.MappedStatement;
 
 public class BaseUpdateTemplate extends MapperTemplate {
@@ -18,23 +16,14 @@ public class BaseUpdateTemplate extends MapperTemplate {
      */
     public String update(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        String sql = TemplateSqlHelper.updateTable(context.getConfig(), entityClass) +
-                TemplateSqlHelper.updateSetColumns(entityClass, null, false, false) +
-                TemplateSqlHelper.wherePKColumns(entityClass, null);
-        return sql;
+        return getSqlBuilder(ms).update(entityClass);
     }
 
 
     public String updateList(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
         //开始拼sql
-
-        String sql = "<foreach collection=\"_list\" item=\"record\" separator=\";\" >" +
-                TemplateSqlHelper.updateTable(context.getConfig(), entityClass) +
-                TemplateSqlHelper.updateSetColumns(entityClass, "record", false, false) +
-                TemplateSqlHelper.wherePKColumns(entityClass, "record") +
-                "</foreach>";
-        return sql;
+        return getSqlBuilder(ms).updateList(entityClass);
     }
 
     /**
@@ -45,10 +34,7 @@ public class BaseUpdateTemplate extends MapperTemplate {
      */
     public String modify(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        String sql = TemplateSqlHelper.updateTable(context.getConfig(), entityClass) +
-                ObjectSqlHelper.getUpdatePartSetSql("_map") +
-                ObjectSqlHelper.getWhereSql("_clause", 5);
-        return sql;
+        return getSqlBuilder(ms).modify(entityClass);
     }
 
     /**
@@ -59,10 +45,7 @@ public class BaseUpdateTemplate extends MapperTemplate {
      */
     public String updateSelective(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        String sql = TemplateSqlHelper.updateTable(context.getConfig(), entityClass) +
-                TemplateSqlHelper.updateSetColumns(entityClass, null, true, getConfig().isNotEmpty()) +
-                TemplateSqlHelper.wherePKColumns(entityClass, null);
-        return sql;
+        return getSqlBuilder(ms).updateSelective(entityClass);
     }
 
 

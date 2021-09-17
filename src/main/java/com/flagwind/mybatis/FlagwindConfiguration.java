@@ -1,6 +1,7 @@
 package com.flagwind.mybatis;
 
 import com.flagwind.mybatis.definition.Config;
+import com.flagwind.mybatis.definition.builder.CompositeSqlBuilder;
 import com.flagwind.mybatis.scripting.RepositoryDriver;
 import lombok.Data;
 import org.apache.ibatis.binding.MapperRegistry;
@@ -17,21 +18,43 @@ public class FlagwindConfiguration extends Configuration {
 
     protected final MapperRegistry mapperRegistry;
 
-
+//    protected final FormulaExecutor formulaExecutor;
     private Config properties;
+
+
+    private CompositeSqlBuilder sqlBuilder;
+
+//    static {
+//        setDefaultScriptPlugin();
+//    }
 
     public FlagwindConfiguration(Config properties) {
         super();
         this.properties = properties;
         this.mapperRegistry = new FlagwindMapperRegistry(this);
         this.mapUnderscoreToCamelCase = true;
+        this.sqlBuilder = new CompositeSqlBuilder(this.properties);
+//        this.formulaExecutor = new FormulaExecutor();
         this.setDefaultScriptingLanguage(RepositoryDriver.class);
+    }
+//
+//    public static void setDefaultScriptPlugin() {
+//        FormulaExecutor.installPlugin(new EntityPlugin());
+//    }
+
+//    public String getXmlScript(String scriptText, Binding binding) {
+//        return formulaExecutor.run(scriptText, binding).toString();
+//    }
+
+    public CompositeSqlBuilder getSqlBuilder() {
+        return sqlBuilder;
     }
 
     @Override
     public MapperRegistry getMapperRegistry() {
         return this.mapperRegistry;
     }
+
     @Override
     public void addMappers(String packageName, Class<?> superType) {
         this.mapperRegistry.addMappers(packageName, superType);
@@ -56,7 +79,6 @@ public class FlagwindConfiguration extends Configuration {
     public boolean hasMapper(Class<?> type) {
         return this.mapperRegistry.hasMapper(type);
     }
-
 
 
 }

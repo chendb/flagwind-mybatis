@@ -1,9 +1,6 @@
 package com.flagwind.mybatis.definition.template;
 
 import com.flagwind.mybatis.definition.TemplateContext;
-import com.flagwind.mybatis.definition.helper.AssociationSqlHelper;
-import com.flagwind.mybatis.definition.helper.ObjectSqlHelper;
-import com.flagwind.mybatis.definition.helper.TemplateSqlHelper;
 import org.apache.ibatis.mapping.MappedStatement;
 
 /**
@@ -17,18 +14,6 @@ public class BaseSelectTemplate extends MapperTemplate {
         super(mapperClass, mapperResolver);
     }
 
-    protected String selectColumnsFromTable(Class<?> entityClass,boolean isAssociationSQL) {
-        StringBuilder sql = new StringBuilder();
-        if (isAssociationSQL) {
-            AssociationSqlHelper.registerEntityClass(entityClass, context.getConfig());
-            sql.append(AssociationSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass));
-        } else {
-            sql.append(TemplateSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass));
-
-        }
-        return sql.toString();
-
-    }
 
     /**
      * 根据主键进行关联查询（当没有关联信息时与getById一样）
@@ -37,12 +22,8 @@ public class BaseSelectTemplate extends MapperTemplate {
      */
     public String seekById(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
-        // 将返回值修改为实体类型
         setAssociationResultType(ms,entityClass);
-        StringBuilder sql = new StringBuilder();
-        sql.append(selectColumnsFromTable(entityClass,true));
-        sql.append(AssociationSqlHelper.wherePKColumn(entityClass, "_key"));
-        return sql.toString();
+        return getSqlBuilder(ms).seekById(entityClass);
     }
 
     /**
@@ -52,12 +33,8 @@ public class BaseSelectTemplate extends MapperTemplate {
      */
     public String seek(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        // 修改返回值类型为实体类型
         setAssociationResultType(ms,entityClass);
-        String sql = selectColumnsFromTable(entityClass,true) +
-                ObjectSqlHelper.getWhereSql("_clause", 5) +
-                ObjectSqlHelper.getSortingSql();
-        return sql;
+        return getSqlBuilder(ms).seek(entityClass);
     }
 
     /**
@@ -67,13 +44,8 @@ public class BaseSelectTemplate extends MapperTemplate {
      */
     public String query(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        // 修改返回值类型为实体类型
         setGeneralResultType(ms,entityClass);
-
-        String sql = selectColumnsFromTable( entityClass,false) +
-                ObjectSqlHelper.getWhereSql("_clause", 5) +
-                ObjectSqlHelper.getSortingSql();
-        return sql;
+        return getSqlBuilder(ms).query(entityClass);
     }
 
     /**
@@ -96,10 +68,7 @@ public class BaseSelectTemplate extends MapperTemplate {
         final Class<?> entityClass = getEntityClass(ms);
         // 将返回值修改为实体类型
         setGeneralResultType(ms,entityClass);
-
-        String sql = selectColumnsFromTable( entityClass,false) +
-                TemplateSqlHelper.wherePKColumn(entityClass, "_key");
-        return sql;
+        return getSqlBuilder(ms).getById(entityClass);
     }
 
     /**
@@ -110,9 +79,7 @@ public class BaseSelectTemplate extends MapperTemplate {
      */
     public String count(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        String sql = TemplateSqlHelper.selectCountFromTable(context.getConfig(), entityClass) +
-                ObjectSqlHelper.getWhereSql("_clause", 5);
-        return sql;
+        return getSqlBuilder(ms).count(entityClass);
     }
 
 
@@ -123,12 +90,8 @@ public class BaseSelectTemplate extends MapperTemplate {
      */
     public String getAll(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
-        // 修改返回值类型为实体类型
         setGeneralResultType(ms,entityClass);
-        String sql = selectColumnsFromTable( entityClass,false) +
-                ObjectSqlHelper.getSortingSql();
-
-        return sql;
+        return getSqlBuilder(ms).getAll(entityClass);
     }
 
 }

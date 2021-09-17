@@ -1,7 +1,6 @@
 package com.flagwind.mybatis.scripting.method;
 
 import com.flagwind.mybatis.FlagwindConfiguration;
-import com.flagwind.mybatis.definition.helper.ObjectSqlHelper;
 import com.flagwind.mybatis.scripting.XmlScriptMethod;
 
 import java.util.List;
@@ -34,7 +33,7 @@ public class ClauseScriptMethod implements XmlScriptMethod {
 
         Matcher matcher = pattern.matcher(script);
         if (matcher.find()) {
-            String clauseSql = ObjectSqlHelper.getClauseSql("_clause");
+            String clauseSql = configuration.getSqlBuilder().getObjectSqlBuilder().getClauseSql("_clause");
 
             script = matcher.replaceAll(Matcher.quoteReplacement(clauseSql));
         }

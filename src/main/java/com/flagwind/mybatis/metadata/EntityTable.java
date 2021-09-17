@@ -1,6 +1,6 @@
 package com.flagwind.mybatis.metadata;
 
-import com.flagwind.mybatis.definition.helper.TemplateSqlHelper;
+import com.flagwind.mybatis.definition.builder.BaseSqlBuilder;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.reflect.entities.EntityField;
 import org.apache.commons.lang3.StringUtils;
@@ -144,7 +144,7 @@ public class EntityTable {
     }
 
     public String tableAlias() {
-       return TemplateSqlHelper.tableAlias(this.entityClass);
+       return BaseSqlBuilder.getTableAlias(this.entityClass);
     }
 
     public String getAliasColumn(String name, String tableAlias) {

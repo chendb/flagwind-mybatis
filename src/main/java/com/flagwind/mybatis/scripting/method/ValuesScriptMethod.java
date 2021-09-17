@@ -1,7 +1,6 @@
 package com.flagwind.mybatis.scripting.method;
 
 import com.flagwind.mybatis.FlagwindConfiguration;
-import com.flagwind.mybatis.definition.helper.TemplateSqlHelper;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.scripting.XmlScriptMethod;
 
@@ -38,8 +37,10 @@ public class ValuesScriptMethod implements XmlScriptMethod {
                 throw new MapperException(entityClasses.stream().findFirst().map(s -> s.toString() + "中存在方法调用实体类型数据出现索引越界")
                         .orElse("存在方法调用实体类型数据出现索引越界"));
             }
-            String columnSql = TemplateSqlHelper.insertColumns(entityClasses.get(classIndex), false);
-            String valueSql = TemplateSqlHelper.insertValues(entityClasses.get(classIndex), configuration.getProperties());
+            String columnSql = configuration.getSqlBuilder().getTemplateSqlBuilder()
+                    .insertColumns(entityClasses.get(classIndex), false);
+            String valueSql = configuration.getSqlBuilder().getTemplateSqlBuilder()
+                    .insertValues(entityClasses.get(classIndex));
             script = matcher.replaceFirst(Matcher.quoteReplacement(columnSql + valueSql));
             matcher = pattern.matcher(script);
         }

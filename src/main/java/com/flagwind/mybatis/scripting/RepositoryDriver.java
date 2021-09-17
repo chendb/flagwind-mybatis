@@ -38,6 +38,7 @@ public class RepositoryDriver extends XMLLanguageDriver implements LanguageDrive
         methods.put(scriptMethod.pattern(),scriptMethod);
     }
 
+
     @Override
     public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
 
@@ -67,6 +68,12 @@ public class RepositoryDriver extends XMLLanguageDriver implements LanguageDrive
                 }
             }
 
+//            Binding binding = new Binding();
+//            if (entityClasses.size() > 0) {
+//                binding.setVariable("type", entityClasses.get(0));
+//            }
+//            binding.setVariable("config", flagwindConfiguration.getProperties());
+//            script = flagwindConfiguration.getXmlScript(script, binding);
         }
 
         return super.createSqlSource(configuration, script, parameterType);

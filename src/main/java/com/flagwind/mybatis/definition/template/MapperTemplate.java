@@ -1,15 +1,17 @@
 package com.flagwind.mybatis.definition.template;
 
+import com.flagwind.mybatis.FlagwindConfiguration;
 import com.flagwind.mybatis.code.DatabaseType;
 import com.flagwind.mybatis.definition.Config;
 import com.flagwind.mybatis.definition.TemplateContext;
-import com.flagwind.mybatis.definition.helper.AssociationSqlHelper;
+import com.flagwind.mybatis.definition.builder.CompositeSqlBuilder;
 import com.flagwind.mybatis.definition.result.ResultMapSwapper;
 import com.flagwind.mybatis.definition.result.ResultMapSwapperHolder;
 import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.mybatis.metadata.EntityColumn;
 import com.flagwind.mybatis.metadata.EntityTable;
 import com.flagwind.mybatis.metadata.EntityTableFactory;
+import com.flagwind.mybatis.scripting.RepositoryDriver;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.SqlSource;
@@ -34,7 +36,7 @@ import static com.flagwind.mybatis.utils.MapperClassUtils.getMapperClass;
 import static com.flagwind.mybatis.utils.MapperClassUtils.getMethodName;
 
 public abstract class MapperTemplate {
-    private static final XMLLanguageDriver languageDriver = new XMLLanguageDriver();
+    private static final XMLLanguageDriver languageDriver = new RepositoryDriver();
     private final Map<String, Method> methodMap = new ConcurrentHashMap<>();
     private final Map<String, Class<?>> entityClassMap = new ConcurrentHashMap<>();
     protected final Class<?> mapperClass;
@@ -43,6 +45,11 @@ public abstract class MapperTemplate {
     public MapperTemplate(Class<?> mapperClass, TemplateContext context) {
         this.mapperClass = mapperClass;
         this.context = context;
+    }
+
+    public CompositeSqlBuilder getSqlBuilder(MappedStatement ms) {
+        FlagwindConfiguration flagwindConfiguration = (FlagwindConfiguration) ms.getConfiguration();
+        return flagwindConfiguration.getSqlBuilder();
     }
 
     /**
@@ -104,7 +111,7 @@ public abstract class MapperTemplate {
      * @param entityClass
      */
     protected void setResultType(MappedStatement ms, Class<?> entityClass) {
-        if (AssociationSqlHelper.hasAssociation(entityClass)) {
+        if (CompositeSqlBuilder.hasAssociation(entityClass)) {
             setAssociationResultType(ms, entityClass);
         } else {
             setGeneralResultType(ms, entityClass);

@@ -27,7 +27,6 @@ public class InScriptMethod implements XmlScriptMethod {
         return pattern.matcher(script).find();
     }
 
-
     @Override
     public String execute(FlagwindConfiguration configuration, String script, List<Class> entityClasses) {
         Matcher matcher = pattern.matcher(script);

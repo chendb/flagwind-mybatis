@@ -25,8 +25,7 @@ public class Config {
     private boolean before;
     private String sequenceFormat;
     private String schema;
-
-
+    private int nameQuote;
     private String[] mappers;
 
 
@@ -38,14 +37,11 @@ public class Config {
      */
     private boolean notEmpty = false;
 
-
-
     /**
      * 字段转换风格，默认驼峰转下划线
      */
     private Style style;
 
-//    private String dialect;
 
     private String database;
 
@@ -66,6 +62,13 @@ public class Config {
         this.before = before;
     }
 
+    public int getNameQuote() {
+        return nameQuote;
+    }
+
+    public void setNameQuote(int nameQuote) {
+        this.nameQuote = nameQuote;
+    }
 
     /**
      * 获取主键自增回写SQL
@@ -198,11 +201,6 @@ public class Config {
             setIdentity(IDENTITY);
         }
 
-//        String dialect = properties.getProperty(prefix + "dialect");
-//        if (StringUtils.isNotEmpty(dialect)) {
-////            setDialect(dialect);
-//            setDatabase(dialect);
-//        }
 
         String database = properties.getProperty(prefix + "database");
         if (StringUtils.isNotEmpty(database)) {
@@ -224,10 +222,11 @@ public class Config {
             String[] mappers = mapper.split(",");
             setMappers(mappers);
         }
-//        else
-//        {
-//            setMappers(new String[]{AbstractRepository.class.getName()});
-//        }
+
+        String nameQuote = properties.getProperty(prefix + "name-quote");
+        if (StringUtils.isNotEmpty(nameQuote)) {
+            setNameQuote(Integer.parseInt(nameQuote));
+        }
 
         String schema = properties.getProperty(prefix + "schema");
         if (StringUtils.isNotEmpty(schema)) {

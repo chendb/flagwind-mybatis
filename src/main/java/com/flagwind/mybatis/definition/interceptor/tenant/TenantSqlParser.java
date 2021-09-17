@@ -97,7 +97,9 @@ public class TenantSqlParser extends AbstractJsqlParser {
             // 过滤退出执行
             return;
         }
-        update.setWhere(this.andExpression(table, update.getWhere()));
+        if (!hasTenantColumn(update)) {
+            update.setWhere(this.andExpression(table, update.getWhere()));
+        }
     }
 
     /**
@@ -122,6 +124,10 @@ public class TenantSqlParser extends AbstractJsqlParser {
         }
         //获得where条件表达式
         Expression tenantExpression = tenantHandler.getTenantId(true, table.getName());
+        if(tenantExpression==null){
+            return where;
+        }
+
         Expression expression = getTenantExpression(table, tenantExpression);
 
         if (null != where) {
@@ -222,18 +228,20 @@ public class TenantSqlParser extends AbstractJsqlParser {
     protected Expression builderExpression(Expression currentExpression, Table table) {
 
         final Expression tenantExpression = tenantHandler.getTenantId(true, table.getName());
+        if (tenantExpression == null) {
+            return null;
+        }
+
         Expression appendExpression;
         if (!(tenantExpression instanceof SupportsOldOracleJoinSyntax)) {
-
             appendExpression = getTenantExpression(table, tenantExpression);
-
         } else {
             appendExpression = processTableAlias4CustomizedTenantIdExpression(tenantExpression, table);
         }
+
         if (currentExpression == null) {
             return appendExpression;
         }
-
 
         if (currentExpression instanceof BinaryExpression) {
             BinaryExpression binaryExpression = (BinaryExpression) currentExpression;
@@ -257,6 +265,11 @@ public class TenantSqlParser extends AbstractJsqlParser {
         } else {
             return new AndExpression(currentExpression, appendExpression);
         }
+    }
+
+    private boolean hasTenantColumn(Update update) {
+        String tenantIdColumn = tenantHandler.getTenantIdColumn().toLowerCase();
+        return update.getColumns().stream().filter(s -> s.getColumnName().equalsIgnoreCase(tenantIdColumn)).count() > 0;
     }
 
     private boolean hasTenantExpression(Expression where) {

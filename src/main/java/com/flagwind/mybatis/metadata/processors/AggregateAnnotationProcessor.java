@@ -15,8 +15,7 @@ public class AggregateAnnotationProcessor implements ColumnProcessor
 	{
 		if (field.isAnnotationPresent(Aggregate.class)) {
 			Aggregate aggregate = field.getAnnotation(Aggregate.class);
-			String column = aggregate.column();
-			column = StringUtils.isEmpty(column) ? field.getName() : column;
+			String column = StringUtils.isEmpty(aggregate.column()) ? field.getName() : aggregate.column();
 			entityColumn.setAggregate(new AggregateEntry(aggregate.type(), field.getName(), column));
 		}
 	}

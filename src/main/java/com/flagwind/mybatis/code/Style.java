@@ -10,4 +10,5 @@ public enum Style {
     lowercase,                  //转换为小写
     camelhumpAndUppercase,      //驼峰转下划线大写形式
     camelhumpAndLowercase,      //驼峰转下划线小写形式
+    doubleQuto,                 // 引号
 }

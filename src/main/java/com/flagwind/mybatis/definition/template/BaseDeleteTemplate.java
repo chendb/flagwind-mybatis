@@ -2,12 +2,12 @@ package com.flagwind.mybatis.definition.template;
 
 
 import com.flagwind.mybatis.definition.TemplateContext;
-import com.flagwind.mybatis.definition.helper.TemplateSqlHelper;
-import com.flagwind.mybatis.definition.helper.ObjectSqlHelper;
-
 import org.apache.ibatis.mapping.MappedStatement;
 
 
+/**
+ * @author chenabao
+ */
 public class BaseDeleteTemplate extends MapperTemplate {
 
     public BaseDeleteTemplate(Class<?> mapperClass, TemplateContext mapperResolver) {
@@ -21,9 +21,7 @@ public class BaseDeleteTemplate extends MapperTemplate {
      */
     public String delete(MappedStatement ms) {
         Class<?> entityClass = getEntityClass(ms);
-        String sql = TemplateSqlHelper.deleteFromTable(context.getConfig(), entityClass) +
-                ObjectSqlHelper.getWhereSql("_clause", 5);
-        return sql;
+        return getSqlBuilder(ms).delete(entityClass);
     }
 
     /**
@@ -33,8 +31,6 @@ public class BaseDeleteTemplate extends MapperTemplate {
      */
     public String deleteById(MappedStatement ms) {
         final Class<?> entityClass = getEntityClass(ms);
-        String sql = TemplateSqlHelper.deleteFromTable(context.getConfig(), entityClass) +
-                TemplateSqlHelper.wherePKColumn(entityClass, "_key");
-        return sql;
+        return getSqlBuilder(ms).deleteById(entityClass);
     }
 }

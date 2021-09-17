@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * 用于在Repository上感知需要联表操作的相关实体类型
  */
-@Target({ElementType.METHOD})
+@Target({ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface KnownEntityType {
     Class[] value() default {};

@@ -1,9 +1,6 @@
 package com.flagwind.mybatis.definition.template;
 
 import com.flagwind.mybatis.definition.TemplateContext;
-import com.flagwind.mybatis.definition.helper.AssociationSqlHelper;
-import com.flagwind.mybatis.definition.helper.ObjectSqlHelper;
-import com.flagwind.mybatis.definition.helper.TemplateSqlHelper;
 import org.apache.ibatis.mapping.MappedStatement;
 
 /**
@@ -17,42 +14,18 @@ public class BaseDynamicTemplate extends MapperTemplate {
         super(mapperClass, mapperResolver);
     }
 
-    protected String selectColumnsFromTable(Class<?> entityClass) {
-        StringBuilder sql = new StringBuilder();
-        if (AssociationSqlHelper.hasAssociation(entityClass)) {
-            AssociationSqlHelper.registerEntityClass(entityClass, context.getConfig());
-            sql.append(AssociationSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass));
-        } else {
-            sql.append(TemplateSqlHelper.selectColumnsFromTable(context.getConfig(), entityClass));
-        }
-        return sql.toString();
-
-    }
-
     /**
      * 聚合多条件查询
      *
      * @param ms 映射申明
      */
     public String dynamicSelective(MappedStatement ms) {
-
-        String sql = "select " +
-                ObjectSqlHelper.getQueryFieldColumnSql() +
-                " from ${_table} " +
-                ObjectSqlHelper.getWhereSql("_clause", 5) +
-                " " +
-                ObjectSqlHelper.getQueryFieldGroupBySql() +
-                " ";
-        return sql;
+        return getSqlBuilder(ms).dynamicSelective();
     }
 
 
     public String dynamicQuery(MappedStatement ms) {
-
-        String sql = "select * from ${_table} " +
-                ObjectSqlHelper.getWhereSql("_clause", 5) +
-                ObjectSqlHelper.getSortingSql();
-        return sql;
+        return getSqlBuilder(ms).dynamicQuery();
     }
 
 }

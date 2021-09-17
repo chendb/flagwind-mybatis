@@ -43,7 +43,6 @@ public class TableScriptMethod implements XmlScriptMethod {
                         .orElse("存在方法调用实体类型数据出现索引越界"));
             }
 
-
             EntityType entityType = EntityTypeHolder.getEntityType(entityClasses.get(classIndex));
             String tableName = entityType.getAnnotation(Table.class).name();
             script = matcher.replaceFirst(tableName);
