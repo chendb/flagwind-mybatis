@@ -243,16 +243,29 @@
 	</build>
 	<distributionManagement>
 		<repository>
-			<id>egova-nexus-releases</id>
+			<id>wizdom-nexus-releases</id>
 			<name>Nexus Release Repository</name>
-			<url>http://egova.top:2981/repository/maven-releases</url>
+			<url>http://192.168.101.98:18081/repository/maven-releases</url>
 		</repository>
 		<snapshotRepository>
-			<id>egova-nexus-snapshots</id>
+			<id>wizdom-nexus-snapshots</id>
 			<name>Nexus Snapshot Repository</name>
-			<url>http://egova.top:2981/repository/maven-snapshots</url>
+			<url>http://192.168.101.98:18081/repository/maven-snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
+
+<!--	<distributionManagement>-->
+<!--		<repository>-->
+<!--			<id>egova-nexus-releases</id>-->
+<!--			<name>Nexus Release Repository</name>-->
+<!--			<url>http://egova.top:2981/repository/maven-releases</url>-->
+<!--		</repository>-->
+<!--		<snapshotRepository>-->
+<!--			<id>egova-nexus-snapshots</id>-->
+<!--			<name>Nexus Snapshot Repository</name>-->
+<!--			<url>http://egova.top:2981/repository/maven-snapshots</url>-->
+<!--		</snapshotRepository>-->
+<!--	</distributionManagement>-->
 
 	<!--	<distributionManagement>-->
 <!--		&lt;!&ndash; 需要与conf/Setting.xml文件中的id保持一致 &ndash;&gt;-->

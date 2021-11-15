@@ -76,6 +76,23 @@ public class SingleQueryService {
     }
 
     @Test
+    public void testCase() {
+
+
+        List<QueryField> fields = new ArrayList<>();
+        fields.add(new QueryField() {{
+            setColumn("@decode(sex,0:'女士',1:'男士','未知') ");
+            setAlias("sex");
+            setType(AggregateType.Max);
+        }});
+        Sorting[] sorts = new Sorting[]{Sorting.ascending("sex")};
+        List<Map<String, Object>> menuList1 = dynamicRepository.dynamicSelective("com_user", fields, null, -1, -1, sorts);
+
+        TestCase.assertTrue("查询总数量为：" + menuList1.size(), menuList1.size() > 0);
+    }
+
+
+    @Test
     public void testPage() {
         Paging paging = new Paging(1L, 10L);
         List<Role> menuList = roleRepository.query(SingleClause.equal("disabled", 0), paging, new Sorting[]{Sorting.ascending("createTime")});
