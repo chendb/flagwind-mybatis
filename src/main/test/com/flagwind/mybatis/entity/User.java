@@ -1,5 +1,7 @@
 package com.flagwind.mybatis.entity;
 
+import com.flagwind.mybatis.entity.codes.Sex;
+import com.flagwind.mybatis.entity.codes.UserType;
 import com.flagwind.mybatis.tenant.Tenant;
 import lombok.Data;
 
@@ -19,6 +21,10 @@ public class User
 	@Id
 	@Column(name = "Id")
 	private String id;
+
+	private Sex sex;
+
+	private UserType userType;
 
 	private String name;
 

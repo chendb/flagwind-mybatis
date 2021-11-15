@@ -103,11 +103,29 @@ public class PaginationInterceptor extends AbstractSqlParserHandler implements I
         return originalSql;
     }
 
+    protected static boolean sqlValidate(String str) {
+        //统一转为小写
+        str = str.toLowerCase();
+        String badStr = "'|select|update|and|or|delete|insert|truncate|char|into|iframe|href|script|activex|html|flash"
+                + "|substr|declare|exec|master|drop|execute|"
+                + "union|;|--|+|,|like|%|#|*|<|>|$|@|\"|http|cr|lf|<|>|(|)";//过滤掉的sql关键字，可以手动添加
+        String[] badStrs = badStr.split("\\|");
+        for (int i = 0; i < badStrs.length; i++) {
+            if (str.indexOf(badStrs[i]) >= 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private static List<OrderByElement> addOrderByElements(List<Sorting> sorts, List<OrderByElement> orderByElements) {
         orderByElements = Optional.ofNullable(orderByElements).orElse(new ArrayList<>());
 
         for (Sorting sorting : sorts) {
             for (String field : sorting.getFields()) {
+                if (sqlValidate(field)) {
+                    throw new MapperException(String.format("sort 值 {} 的参数存在sql注入风险", field));
+                }
                 OrderByElement element = new OrderByElement();
                 element.setExpression(new Column(field));
                 element.setAsc(sorting.getMode() == Sorting.SortingMode.Ascending);

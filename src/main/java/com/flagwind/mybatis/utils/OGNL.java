@@ -1,6 +1,7 @@
 package com.flagwind.mybatis.utils;
 
 import com.flagwind.lang.CodeType;
+import com.flagwind.mybatis.exceptions.MapperException;
 import com.flagwind.persistent.Functions;
 import com.flagwind.persistent.QueryField;
 import com.flagwind.persistent.model.*;
@@ -34,13 +35,20 @@ public abstract class OGNL {
             return null;
         }
         String str = name.toString();
-        if (str.startsWith(SINGLE_QUOTE) || str.startsWith(DOUBLE_QUOTE) ) {
-            return str;
-        }
+
         if (str.indexOf(DOT) > 0) {
-            String[] arr = str.split(DOT);
-            if (arr.length == 2 && !StringUtils.containsAny(arr[1], SINGLE_QUOTE, SINGLE_QUOTE)) {
-                return String.format("%s.`%s`", arr[0], arr[1]);
+            String[] arr = str.split("\\" + DOT);
+            if (arr.length == 2) {
+                if (!StringUtils.containsAny(arr[1], SINGLE_QUOTE, SINGLE_QUOTE)) {
+                    return String.format("%s.`%s`", arr[0], arr[1]);
+                }
+                return str;
+            } else {
+                throw new MapperException(str + "不合法");
+            }
+        } else {
+            if (str.startsWith(SINGLE_QUOTE) || str.startsWith(DOUBLE_QUOTE)) {
+                return str;
             }
         }
         return str.indexOf("@") >= 0 ? Functions.invoke(str) : String.format("`%s`", str);
@@ -51,13 +59,20 @@ public abstract class OGNL {
             return null;
         }
         String str = name.toString();
-        if (str.startsWith(SINGLE_QUOTE) || str.startsWith(DOUBLE_QUOTE)) {
-            return str;
-        }
+
         if (str.indexOf(DOT) > 0) {
-            String[] arr = str.split(DOT);
-            if (arr.length == 2 && !StringUtils.containsAny(arr[1], SINGLE_QUOTE, SINGLE_QUOTE)) {
-                return String.format("%s.\"%s\"", arr[0], arr[1]);
+            String[] arr = str.split("\\" + DOT);
+            if (arr.length == 2) {
+                if (!StringUtils.containsAny(arr[1], SINGLE_QUOTE, SINGLE_QUOTE)) {
+                    return String.format("%s.\"%s\"", arr[0], arr[1]);
+                }
+                return str;
+            } else {
+                throw new MapperException(str + "不合法");
+            }
+        } else {
+            if (str.startsWith(SINGLE_QUOTE) || str.startsWith(DOUBLE_QUOTE)) {
+                return str;
             }
         }
         return str.indexOf("@") >= 0 ? Functions.invoke(str) : String.format("\"%s\"", str);

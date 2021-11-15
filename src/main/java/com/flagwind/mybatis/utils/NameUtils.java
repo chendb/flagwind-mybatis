@@ -11,17 +11,15 @@ public class NameUtils {
     public static String SINGLE_QUOTE="\"";
     public static String DOUBLE_QUOTE="`";
 
-    /**
-     *
-     * @param config
-     * @param name
-     * @return
-     */
-    public static String formatName(Config config, String name) {
+
+    public static String DOT=".";
+
+    private static String getFormatName(Config config, String name) {
         if (name == null) {
             return null;
         }
-        if (name.startsWith(SINGLE_QUOTE) || name.startsWith(DOUBLE_QUOTE)) {
+
+        if (name.startsWith(SINGLE_QUOTE) || name.startsWith(DOUBLE_QUOTE) || name.indexOf(DOT) > 0) {
             return name;
         }
         switch (config.getNameQuote()) {
@@ -32,6 +30,30 @@ public class NameUtils {
             default:
                 return String.format("%s", name);
         }
+    }
+    /**
+     *
+     * @param config
+     * @param name
+     * @return
+     */
+    public static String formatName(Config config, String name) {
+        if (name == null) {
+            return null;
+        }
+
+        if (name.indexOf(DOT) > 0) {
+            String[] arr = name.split("\\"+DOT);
+            if (arr.length == 2) {
+                return String.format("%s.%s", arr[0], getFormatName(config, arr[1]));
+            }
+            return name;
+        } else {
+            if (name.startsWith(SINGLE_QUOTE) || name.startsWith(DOUBLE_QUOTE)) {
+                return name;
+            }
+        }
+        return getFormatName(config, name);
     }
 
 

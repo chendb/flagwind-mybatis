@@ -146,7 +146,7 @@ public  class AssociationSqlBuilder {
             if (StringUtils.isNotEmpty(columnPrefix) && !entityColumn.getColumn().contains(".")) {
                 selectBuilder.append(columnPrefix).append(".");
             }
-            selectBuilder.append(entityColumn.getColumn());
+            selectBuilder.append(BaseSqlBuilder.getColumnName(config,entityColumn));
             selectBuilder.append(" as ");
             if (StringUtils.isNotEmpty(aliasPrefix)) {
                 selectBuilder.append(aliasPrefix);

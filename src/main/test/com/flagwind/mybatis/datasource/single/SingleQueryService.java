@@ -3,7 +3,9 @@ package com.flagwind.mybatis.datasource.single;
 
 import com.flagwind.mybatis.datasource.single.domain.DynamicRepository;
 import com.flagwind.mybatis.datasource.single.domain.RoleRepository;
+import com.flagwind.mybatis.datasource.single.domain.UserRepository;
 import com.flagwind.mybatis.entity.Role;
+import com.flagwind.mybatis.entity.User;
 import com.flagwind.persistent.AggregateType;
 import com.flagwind.persistent.QueryField;
 import com.flagwind.persistent.model.*;
@@ -29,6 +31,11 @@ public class SingleQueryService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private DynamicRepository dynamicRepository;
@@ -62,6 +69,11 @@ public class SingleQueryService {
         roleRepository.insert(role);
     }
 
+    @Test
+    public void testUser() {
+        List<User> menuList = userRepository.departmentId("1");
+        TestCase.assertTrue("查询总数量为：" + menuList.size(), menuList.size() > 0);
+    }
 
     @Test
     public void testPage() {

@@ -2,11 +2,13 @@ package com.flagwind.mybatis;
 
 import com.flagwind.mybatis.definition.Config;
 import com.flagwind.mybatis.definition.builder.CompositeSqlBuilder;
+import com.flagwind.mybatis.handlers.FlagwindEnumOrdinalTypeHandler;
 import com.flagwind.mybatis.scripting.RepositoryDriver;
 import lombok.Data;
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
  * @author chendb
@@ -36,6 +38,7 @@ public class FlagwindConfiguration extends Configuration {
         this.sqlBuilder = new CompositeSqlBuilder(this.properties);
 //        this.formulaExecutor = new FormulaExecutor();
         this.setDefaultScriptingLanguage(RepositoryDriver.class);
+        this.setDefaultEnumTypeHandler(FlagwindEnumOrdinalTypeHandler.class);
     }
 //
 //    public static void setDefaultScriptPlugin() {
@@ -45,6 +48,12 @@ public class FlagwindConfiguration extends Configuration {
 //    public String getXmlScript(String scriptText, Binding binding) {
 //        return formulaExecutor.run(scriptText, binding).toString();
 //    }
+
+
+    @Override
+    public TypeHandlerRegistry getTypeHandlerRegistry() {
+        return super.getTypeHandlerRegistry();
+    }
 
     public CompositeSqlBuilder getSqlBuilder() {
         return sqlBuilder;

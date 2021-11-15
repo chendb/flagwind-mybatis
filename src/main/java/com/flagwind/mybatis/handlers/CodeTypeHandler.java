@@ -72,7 +72,7 @@ public class CodeTypeHandler<E extends CodeType> extends BaseTypeHandler<E> {
     private static <E> E valueOf(Class<E> type, String s) {
         E[] enumValues = type.getEnumConstants();
 
-        if (Enum.class.isAssignableFrom(type)) {
+        if (CodeType.class.isAssignableFrom(type)) {
             E e = Arrays.stream(enumValues).filter(g -> ((CodeType) g).getValue().equalsIgnoreCase(s) || ((CodeType) g).getText().equalsIgnoreCase(s)).findFirst().orElse(null);
             if (e != null) {
                 return e;
