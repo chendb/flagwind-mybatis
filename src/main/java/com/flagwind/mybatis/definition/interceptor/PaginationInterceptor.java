@@ -106,9 +106,9 @@ public class PaginationInterceptor extends AbstractSqlParserHandler implements I
     protected static boolean sqlValidate(String str) {
         //统一转为小写
         str = str.toLowerCase();
-        String badStr = "'|select|update|and|or|delete|insert|truncate|char|into|iframe|href|script|activex|html|flash"
+        String badStr = "select|update|and|or|delete|insert|truncate|char|into|iframe|href|script|activex|html|flash"
                 + "|substr|declare|exec|master|drop|execute|"
-                + "union|;|--|+|,|like|%|#|*|<|>|$|@|\"|http|cr|lf|<|>|(|)";//过滤掉的sql关键字，可以手动添加
+                + "union|--|+|like|%|#|*|<|>|$|@|http|<|>";//过滤掉的sql关键字，可以手动添加
         String[] badStrs = badStr.split("\\|");
         for (int i = 0; i < badStrs.length; i++) {
             if (str.indexOf(badStrs[i]) >= 0) {
@@ -123,8 +123,8 @@ public class PaginationInterceptor extends AbstractSqlParserHandler implements I
 
         for (Sorting sorting : sorts) {
             for (String field : sorting.getFields()) {
-                if (sqlValidate(field)) {
-                    throw new MapperException(String.format("sort 值 {} 的参数存在sql注入风险", field));
+                if (!sqlValidate(field)) {
+                    throw new MapperException(String.format("sort 值 {%s} 的参数存在sql注入风险", field));
                 }
                 OrderByElement element = new OrderByElement();
                 element.setExpression(new Column(field));

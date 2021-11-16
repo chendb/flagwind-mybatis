@@ -95,7 +95,8 @@ public class SingleQueryService {
     @Test
     public void testPage() {
         Paging paging = new Paging(1L, 10L);
-        List<Role> menuList = roleRepository.query(SingleClause.equal("disabled", 0), paging, new Sorting[]{Sorting.ascending("createTime")});
+        List<Role> menuList = roleRepository.query(SingleClause.equal("disabled", 0), paging,
+                new Sorting[]{Sorting.ascending("createTime"),Sorting.ascending("disabled")});
         TestCase.assertTrue("查询总数量为：" + menuList.size(), menuList.size() > 0);
     }
 

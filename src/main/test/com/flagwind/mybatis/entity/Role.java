@@ -18,18 +18,23 @@ public class Role
 	@Id
 	@Column(name = "Id")
 	private String id;
-
+	@Column(name = "name")
 	private String name;
-
+	@Column(name = "description")
 	private String description;
-	private String icon;
-
+//	@Column(name = "icon")
+//	private String icon;
+	@Column(name = "creator")
 	private String creator;
-	private String modifier;
+//	@Column(name = "modifier")
+//	private String modifier;
+	@Column(name = "createTime")
 	private Timestamp createTime;
-	private Timestamp modifyTime;
+//	@Column(name = "modifyTime")
+//	private Timestamp modifyTime;
+	@Column(name = "disabled")
 	private boolean disabled;
-
-	private String tenantId;
+//	@Column(name = "tenantId")
+//	private String tenantId;
 
 }
