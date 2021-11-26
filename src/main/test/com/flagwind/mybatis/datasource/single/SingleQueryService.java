@@ -69,9 +69,16 @@ public class SingleQueryService {
         roleRepository.insert(role);
     }
 
+
+    @Test
+    public void testSeekById() {
+        User user = userRepository.seekById("10022");
+        TestCase.assertTrue("查询总数量为：", user != null);
+    }
+
     @Test
     public void testUser() {
-        List<User> menuList = userRepository.departmentId("1");
+        List<User> menuList = userRepository.query(null,null,null);
         TestCase.assertTrue("查询总数量为：" + menuList.size(), menuList.size() > 0);
     }
 

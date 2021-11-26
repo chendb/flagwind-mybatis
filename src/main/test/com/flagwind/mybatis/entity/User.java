@@ -20,10 +20,11 @@ public class User {
 	@Id
 	@Column(name = "Id")
 	private String id;
+	@Column(name = "sex")
+	private Sex sexType;
 
-	private Sex sex;
-
-	private UserType userType;
+	@Column(name = "sex")
+	private UserType type;
 
 	private String name;
 
@@ -33,11 +34,13 @@ public class User {
 
 	private String creator;
 	private String modifier;
+	@Column(name = "createTime")
 	private Timestamp createTime;
+	@Column(name = "modifyTime")
 	private Timestamp modifyTime;
 
 	private boolean disabled;
-
+	@Column(name = "tenantId")
 	private String tenantId;
 
 
