@@ -106,6 +106,23 @@ public class SingleQueryService {
         TestCase.assertTrue("查询总数量为：" + menuList.size(), menuList.size() > 0);
     }
 
+    @Test
+    public void testUserQuery() {
+
+        while (true) {
+            Paging paging = new Paging();
+
+            paging.setPageSize(1L);
+            List<User> menuList = userRepository.querys(SingleClause.equal("disabled", 0), paging
+                    , new Sorting[]{Sorting.ascending("createTime")});
+            paging.setPageIndex(paging.getPageIndex() + 1);
+            TestCase.assertTrue("查询总数量为：" + menuList.size(), menuList.size() > 0);
+            if (paging.getPageIndex() > 10) {
+                return;
+            }
+
+        }
+    }
 
     @Test
     public void testQuery() {

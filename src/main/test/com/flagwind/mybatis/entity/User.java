@@ -16,8 +16,7 @@ import java.sql.Timestamp;
 @Data
 @Entity
 @Table(name = "com_user")
-public class User
-{
+public class User {
 	@Id
 	@Column(name = "Id")
 	private String id;
@@ -40,5 +39,6 @@ public class User
 	private boolean disabled;
 
 	private String tenantId;
+
 
 }
