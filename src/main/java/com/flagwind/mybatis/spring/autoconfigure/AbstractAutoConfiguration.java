@@ -7,6 +7,7 @@ import com.flagwind.mybatis.utils.JdbcUtils;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.ObjectProvider;
@@ -84,7 +85,9 @@ public class AbstractAutoConfiguration {
             }
         }
         //configuration.getTypeHandlerRegistry().register(CodeType.class, CodeTypeHandler.class);
+        configuration.setLocalCacheScope(LocalCacheScope.STATEMENT);
         factory.setConfiguration(configuration);
+
         if (this.properties.getConfigurationProperties() != null) {
             factory.setConfigurationProperties(this.properties.getConfigurationProperties());
         }
