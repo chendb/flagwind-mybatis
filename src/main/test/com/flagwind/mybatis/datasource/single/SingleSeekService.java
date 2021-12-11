@@ -32,9 +32,9 @@ public class SingleSeekService {
 //	}
 
 	@Test
-	public void  testSeekById(){
-		FocusItem focusItem = focusItemRepository.seekById("01a79f2f-6c5b-48b9-86ff-051ac5421c3a");
-		TestCase.assertTrue("查询总数量为：" , focusItem!=null);
+	public void  testSeekById() {
+		FocusItem focusItem = focusItemRepository.seekById("39c9ea6f-2882-45df-9dc0-865504cd9a96");
+		TestCase.assertTrue("查询总数量为：", focusItem != null);
 	}
 
 	@Test

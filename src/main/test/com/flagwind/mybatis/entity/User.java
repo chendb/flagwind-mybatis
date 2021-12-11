@@ -20,10 +20,12 @@ public class User {
 	@Id
 	@Column(name = "Id")
 	private String id;
+
+
 	@Column(name = "sex")
 	private Sex sexType;
 
-	@Column(name = "sex")
+	@Column(name = "userType")
 	private UserType type;
 
 	private String name;

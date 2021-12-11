@@ -33,7 +33,6 @@ public class SingleQueryService {
     private RoleRepository roleRepository;
 
 
-
     @Autowired
     private UserRepository userRepository;
 
@@ -49,13 +48,13 @@ public class SingleQueryService {
 
     @Test
     public void testDynamicDriver() {
-        List<Role> roles = dynamicRepository.selectRole( SingleClause.equal("disabled", 0));
+        List<Role> roles = dynamicRepository.selectRole(SingleClause.equal("disabled", 0));
         TestCase.assertTrue("查询总数量为：" + roles.size(), roles.size() > 0);
     }
 
     @Test
     public void testDynamicQuery() {
-        List<Map<String, Object>> roles = dynamicRepository.dynamicQuery("com_role", SingleClause.equal("disabled", 0), Paging.build(1L,10L), null);
+        List<Map<String, Object>> roles = dynamicRepository.dynamicQuery("com_role", SingleClause.equal("disabled", 0), Paging.build(1L, 10L), null);
         TestCase.assertTrue("查询总数量为：" + roles.size(), roles.size() > 0);
     }
 
@@ -72,20 +71,18 @@ public class SingleQueryService {
 
     @Test
     public void testSeekById() {
-        User user = userRepository.seekById("10022");
+        User user = userRepository.seekById("20382");
         TestCase.assertTrue("查询总数量为：", user != null);
     }
 
     @Test
     public void testUser() {
-        List<User> menuList = userRepository.query(null,null,null);
+        List<User> menuList = userRepository.query(null, null, null);
         TestCase.assertTrue("查询总数量为：" + menuList.size(), menuList.size() > 0);
     }
 
     @Test
     public void testCase() {
-
-
         List<QueryField> fields = new ArrayList<>();
         fields.add(new QueryField() {{
             setColumn("@decode(sex,0:'女士',1:'男士','未知') ");
@@ -103,7 +100,7 @@ public class SingleQueryService {
     public void testPage() {
         Paging paging = new Paging(1L, 10L);
         List<Role> menuList = roleRepository.query(SingleClause.equal("disabled", 0), paging,
-                new Sorting[]{Sorting.ascending("createTime"),Sorting.ascending("sort")});
+                new Sorting[]{Sorting.ascending("createTime"), Sorting.ascending("sort")});
         TestCase.assertTrue("查询总数量为：" + menuList.size(), menuList.size() > 0);
     }
 

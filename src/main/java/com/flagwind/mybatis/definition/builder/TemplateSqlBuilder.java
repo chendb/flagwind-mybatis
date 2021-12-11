@@ -66,7 +66,7 @@ public class TemplateSqlBuilder extends BaseSqlBuilder {
         StringBuilder selectBuilder = new StringBuilder();
         for (EntityColumn entityColumn : columnList) {
             selectBuilder.append(StringUtils.isNotEmpty(alias) ? alias + "." : "");
-            selectBuilder.append(getColumnName(config, entityColumn)).append(",");
+            selectBuilder.append(getColumnAlias(config, entityColumn)).append(",");
         }
         String sql = selectBuilder.substring(0, selectBuilder.length() - 1);
         entityTable.setBaseSelect(sql);

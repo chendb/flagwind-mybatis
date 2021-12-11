@@ -30,17 +30,17 @@ public class FocusItem {
 
 
         @Column(name = "instanceId")
-        private String instanceId;
+        private String testInstanceId;
 
 
         @Column(name = "creator")
-        private String creator;
+        private String testcreator;
 
 
         @Column(name = "createTime")
         @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-        private Timestamp createTime;
+        private Timestamp testcreateTime;
 
 
         @Column(name = "tenantId")

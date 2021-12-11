@@ -245,7 +245,8 @@ public class EntityTable {
         }
         List<ResultMapping> resultMappings = new ArrayList<>();
         for (EntityColumn entityColumn : entityClassColumns) {
-            String column = entityColumn.getColumn();
+            // 如果用 column = entityColumn.getColumn()  当 property 与 column 不一致时会出现问题
+            String column = entityColumn.getProperty();
             //去掉可能存在的分隔符
             Matcher matcher = DELIMITER.matcher(column);
             if (matcher.find()) {

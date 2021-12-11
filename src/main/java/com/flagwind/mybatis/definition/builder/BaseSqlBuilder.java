@@ -45,6 +45,7 @@ public class BaseSqlBuilder {
             if (StringUtils.isNotEmpty(columnPrefix) && !entityColumn.getColumn().contains(".")) {
                 selectBuilder.append(columnPrefix).append(".");
             }
+
             if (entityColumn.getColumn().equalsIgnoreCase(entityColumn.getProperty())
                     && StringUtils.isEmpty(aliasPrefix)) {
                 selectBuilder.append(getColumnName(config,entityColumn));
@@ -64,6 +65,13 @@ public class BaseSqlBuilder {
     public static String getTableAlias(Class<?> entityClass) {
         String name = entityClass.getSimpleName();
         return "_" + name.substring(0, 1).toLowerCase() + name.substring(1);
+    }
+
+    public static String getColumnAlias(Config config, EntityColumn column) {
+        if (!column.getProperty().equalsIgnoreCase(column.getColumn())) {
+            return NameUtils.formatName(config, column.getColumn()) + " as " + NameUtils.formatName(config, column.getProperty());
+        }
+        return NameUtils.formatName(config, column.getColumn());
     }
 
     public static String getColumnName(Config config, EntityColumn column) {
