@@ -6,7 +6,6 @@ import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.handlers.CodeTypeHandler;
 import com.flagwind.mybatis.metadata.EntityTableUtils;
 import com.flagwind.mybatis.utils.AssociationUtils;
-import com.flagwind.mybatis.utils.NameUtils;
 import com.flagwind.persistent.ColumnTypeEntry;
 import com.flagwind.reflect.EntityTypeHolder;
 import com.flagwind.reflect.SimpleTypeUtils;
@@ -121,9 +120,11 @@ public class ResultMapSwapper {
 //        String column = EntityTableUtils.getColumnName(field, style);
 //        return (StringUtils.isEmpty(columnPrefix) ? "" : columnPrefix) + column;
 //    }
+
     private String getColumnAlias(EntityField field,Style style,  String columnPrefix) {
         String columnAlias = (StringUtils.isEmpty(columnPrefix) ? "" : columnPrefix) + field.getName();
-        return NameUtils.convertByStyle(columnAlias, style);
+        // return NameUtils.convertByStyle(columnAlias, style);
+        return columnAlias;
     }
 
     public ResultMapping resolveOneToManyResultMapping(String columnPrefix, EntityField field, MapperBuilderAssistant assistant, String resource, String id, Class<?> type, Style style) {

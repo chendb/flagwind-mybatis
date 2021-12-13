@@ -46,16 +46,30 @@ public class BaseSqlBuilder {
                 selectBuilder.append(columnPrefix).append(".");
             }
 
-            if (entityColumn.getColumn().equalsIgnoreCase(entityColumn.getProperty())
-                    && StringUtils.isEmpty(aliasPrefix)) {
-                selectBuilder.append(getColumnName(config,entityColumn));
-            } else {
-                selectBuilder.append(entityColumn.getColumn()).append(" as ");
+            selectBuilder.append(getColumnName(config, entityColumn));
+
+            if (!entityColumn.getColumn().equalsIgnoreCase(entityColumn.getProperty())
+                    || StringUtils.isNotEmpty(aliasPrefix)) {
+
+                selectBuilder.append(" as ");
+
+                String asColumnAlias = "";
                 if (StringUtils.isNotEmpty(aliasPrefix)) {
-                    selectBuilder.append(aliasPrefix);
+                    asColumnAlias = aliasPrefix;
                 }
-                selectBuilder.append(entityColumn.getProperty());
+                asColumnAlias = asColumnAlias + entityColumn.getProperty();
+                selectBuilder.append(NameUtils.formatName(config, asColumnAlias));
             }
+//            if (entityColumn.getColumn().equalsIgnoreCase(entityColumn.getProperty())
+//                    && StringUtils.isEmpty(aliasPrefix)) {
+//                selectBuilder.append(getColumnName(config,entityColumn));
+//            } else {
+//                selectBuilder.append(entityColumn.getColumn()).append(" as ");
+//                if (StringUtils.isNotEmpty(aliasPrefix)) {
+//                    selectBuilder.append(aliasPrefix);
+//                }
+//                selectBuilder.append(entityColumn.getProperty());
+//            }
             selectBuilder.append(",");
         }
         String sql = selectBuilder.substring(0, selectBuilder.length() - 1);

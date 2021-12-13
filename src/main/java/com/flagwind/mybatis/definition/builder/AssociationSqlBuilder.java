@@ -6,6 +6,7 @@ import com.flagwind.mybatis.metadata.EntityColumn;
 import com.flagwind.mybatis.metadata.EntityTable;
 import com.flagwind.mybatis.metadata.EntityTableFactory;
 import com.flagwind.mybatis.utils.AssociationUtils;
+import com.flagwind.mybatis.utils.NameUtils;
 import com.flagwind.reflect.entities.EntityField;
 
 import javax.persistence.JoinColumn;
@@ -146,12 +147,16 @@ public  class AssociationSqlBuilder {
             if (StringUtils.isNotEmpty(columnPrefix) && !entityColumn.getColumn().contains(".")) {
                 selectBuilder.append(columnPrefix).append(".");
             }
-            selectBuilder.append(BaseSqlBuilder.getColumnName(config,entityColumn));
+            selectBuilder.append(BaseSqlBuilder.getColumnName(config, entityColumn));
             selectBuilder.append(" as ");
-            if (StringUtils.isNotEmpty(aliasPrefix)) {
-                selectBuilder.append(aliasPrefix);
+            {
+                String asColumnAlias = "";
+                if (StringUtils.isNotEmpty(aliasPrefix)) {
+                    asColumnAlias = aliasPrefix;
+                }
+                asColumnAlias = asColumnAlias + entityColumn.getProperty();
+                selectBuilder.append(NameUtils.formatName(config, asColumnAlias)).append(",");
             }
-            selectBuilder.append(entityColumn.getProperty()).append(",");
         }
         return selectBuilder.substring(0, selectBuilder.length() - 1);
     }
