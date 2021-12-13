@@ -6,6 +6,7 @@ import com.flagwind.mybatis.code.Style;
 import com.flagwind.mybatis.handlers.CodeTypeHandler;
 import com.flagwind.mybatis.metadata.EntityTableUtils;
 import com.flagwind.mybatis.utils.AssociationUtils;
+import com.flagwind.mybatis.utils.NameUtils;
 import com.flagwind.persistent.ColumnTypeEntry;
 import com.flagwind.reflect.EntityTypeHolder;
 import com.flagwind.reflect.SimpleTypeUtils;
@@ -70,7 +71,7 @@ public class ResultMapSwapper {
         ResultMapping.Builder builder = new ResultMapping.Builder(configuration, field.getName());
 
 
-        builder.column(getColumnAlias(field, columnPrefix));
+        builder.column(getColumnAlias(field,style, columnPrefix));
 
 
         ColumnTypeEntry columnTypeEntry = EntityTableUtils.getColumnTypeEntry(field);
@@ -120,9 +121,9 @@ public class ResultMapSwapper {
 //        String column = EntityTableUtils.getColumnName(field, style);
 //        return (StringUtils.isEmpty(columnPrefix) ? "" : columnPrefix) + column;
 //    }
-    private String getColumnAlias(EntityField field, String columnPrefix) {
-    //        String column = NameUtils.convertByStyle(field.getName(), style);
-        return (StringUtils.isEmpty(columnPrefix) ? "" : columnPrefix) + field.getName();
+    private String getColumnAlias(EntityField field,Style style,  String columnPrefix) {
+        String columnAlias = (StringUtils.isEmpty(columnPrefix) ? "" : columnPrefix) + field.getName();
+        return NameUtils.convertByStyle(columnAlias, style);
     }
 
     public ResultMapping resolveOneToManyResultMapping(String columnPrefix, EntityField field, MapperBuilderAssistant assistant, String resource, String id, Class<?> type, Style style) {
@@ -136,7 +137,7 @@ public class ResultMapSwapper {
 
         ResultMapping.Builder builder = new ResultMapping.Builder(configuration, field.getName());
 
-        builder.column(getColumnAlias(field, columnPrefix));
+        builder.column(getColumnAlias(field,style, columnPrefix));
 
         ColumnTypeEntry columnTypeEntry = EntityTableUtils.getColumnTypeEntry(field);
 
@@ -216,7 +217,7 @@ public class ResultMapSwapper {
             ResultMapping.Builder builder = new ResultMapping.Builder(configuration, field.getName());
 
 
-            String col = getColumnAlias(field, columnPrefix);
+            String col = getColumnAlias(field,style, columnPrefix);
             builder.column(col);
 
 
