@@ -130,7 +130,7 @@ public class CompositeSqlBuilder {
         sql.append(templateSqlBuilder.insertColumns(entityClass, false));
         sql.append("  ");
         DatabaseType databaseType = DatabaseType.parse(config.getDatabase());
-        if (DatabaseType.MySQL == databaseType || DatabaseType.DM == databaseType || DatabaseType.Oscar == databaseType) {
+        if (DatabaseType.DM == databaseType || DatabaseType.Oscar == databaseType) {
             sql.append("<foreach collection=\"_list\" item=\"record\" separator=\"UNION ALL\" >");
             sql.append(" select ");
 

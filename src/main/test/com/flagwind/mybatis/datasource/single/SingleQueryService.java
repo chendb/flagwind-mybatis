@@ -68,6 +68,20 @@ public class SingleQueryService {
         roleRepository.insert(role);
     }
 
+    @Test
+    public void testInsertList() {
+        List<Role> roles = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Role role = new Role();
+            role.setId("test_tenant_" + UUID.randomUUID().toString().substring(0, 10));
+            role.setName("租房新增");
+            role.setCreateTime(new Timestamp(System.currentTimeMillis()));
+            roles.add(role);
+        }
+        roleRepository.insertList(roles);
+        roleRepository.delete(SingleClause.like("id","test_tenant_%"));
+    }
+
 
     @Test
     public void testSeekById() {
