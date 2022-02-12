@@ -70,7 +70,7 @@ public class ResultMapSwapper {
         ResultMapping.Builder builder = new ResultMapping.Builder(configuration, field.getName());
 
 
-        builder.column(getColumnAlias(field,style, columnPrefix));
+        builder.column(getColumnAlias(field, style, columnPrefix));
 
 
         ColumnTypeEntry columnTypeEntry = EntityTableUtils.getColumnTypeEntry(field);
@@ -82,7 +82,7 @@ public class ResultMapSwapper {
         // 注册关联结果
 
 
-        String nestedResultMap = id + ".association[" + field.getJavaType().getSimpleName() + "]";
+        String nestedResultMap = id + "." + field.getName() + ".association[" + field.getJavaType().getSimpleName() + "]";
         String childColumnPrefix = columnPrefix;
         if (StringUtils.isEmpty(childColumnPrefix)) {
             childColumnPrefix = field.getName() + "_";
@@ -138,7 +138,7 @@ public class ResultMapSwapper {
 
         ResultMapping.Builder builder = new ResultMapping.Builder(configuration, field.getName());
 
-        builder.column(getColumnAlias(field,style, columnPrefix));
+        builder.column(getColumnAlias(field, style, columnPrefix));
 
         ColumnTypeEntry columnTypeEntry = EntityTableUtils.getColumnTypeEntry(field);
 
@@ -146,7 +146,7 @@ public class ResultMapSwapper {
         builder.foreignColumn(oneToMany.mappedBy());
 
 
-        String nestedResultMap = id + ".association[" + oneToMany.targetEntity().getSimpleName() + "]";
+        String nestedResultMap = id + "." + field.getName() + ".association[" + oneToMany.targetEntity().getSimpleName() + "]";
         String childColumnPrefix = columnPrefix;
         if (StringUtils.isEmpty(childColumnPrefix)) {
             childColumnPrefix = field.getName() + "_";
@@ -232,7 +232,7 @@ public class ResultMapSwapper {
             if (AssociationUtils.isAssociationField(field)) {
 
                 // OneToOne
-                nestedResultMap = id + ".association[" + field.getJavaType().getSimpleName() + "]";
+                nestedResultMap = id+ "."+field.getName() + ".association[" + field.getJavaType().getSimpleName() + "]";
 
                 registerResultMap(resolveResultMap(columnPrefix, resource, nestedResultMap, field.getJavaType(), style));
             }
